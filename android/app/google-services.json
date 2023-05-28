@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "446418708811",
+    "project_id": "famto-project",
+    "storage_bucket": "famto-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446418708811:android:1060680c1832c5be3fe0ce",
+        "android_client_info": {
+          "package_name": "com.example.famto_admin_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDeDg3FSBgKzHl3tmubNUlzDPr5sB4NIg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446418708811:android:34b428435351d6d33fe0ce",
+        "android_client_info": {
+          "package_name": "com.example.famto_delivery_person_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDeDg3FSBgKzHl3tmubNUlzDPr5sB4NIg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446418708811:android:564b6faafd2eb0f33fe0ce",
+        "android_client_info": {
+          "package_name": "com.famto.customerapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDeDg3FSBgKzHl3tmubNUlzDPr5sB4NIg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

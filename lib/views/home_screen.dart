@@ -1,0 +1,277 @@
+import 'dart:io';
+
+import 'package:famto_admin_app/controller/delivery_category_management.dart';
+import 'package:famto_admin_app/views/delivery_person_registration.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void setState(VoidCallback fn) {
+    // TODO: implement setState
+    super.setState(fn);
+  }
+
+  String page = '';
+  final DeliveryCategoryController _deliveryCategoryController =
+      Get.put(DeliveryCategoryController());
+
+  XFile? image;
+
+  final ImagePicker picker = ImagePicker();
+
+  //we can upload image from camera or from gallery based on parameter
+  Future getImage(ImageSource media) async {
+    var img = await picker.pickImage(source: media);
+
+    setState(() {
+      image = img;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Admin Dashboard'),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('Admin Dashboard'),
+            ),
+            ListTile(
+              title: Text('Delivery Categories Management'),
+              onTap: () {
+                setState(() {
+                  page = 'Delivery Categories';
+                });
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Order Management'),
+              onTap: () {
+                setState(() {
+                  page = 'Order Management';
+                });
+              },
+            ),
+            ListTile(
+              title: Text('User Management'),
+              onTap: () {
+                setState(() {
+                  page = 'User Management';
+                });
+              },
+            ),
+            ListTile(
+              title: Text('Delivery Person Management'),
+              onTap: () {
+                setState(() {
+                  page = 'Delivery Person Management';
+                  Navigator.pop(context);
+                });
+              },
+            ),
+            ListTile(
+              title: Text('Vendor Management'),
+              onTap: () {
+                setState(() {
+                  page = 'Vendor Management';
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+      body: page == 'Delivery Categories'
+          ? DeliveryScreen()
+          : page == 'Order Management'
+              ? OrderManagementScreen()
+              : page == 'List Delivery Categories'
+                  ? DeliveryCategoryListScreen()
+                  : page == 'Create Delivery Categories'
+                      ? DeliveryCategoryAddScreen()
+                      : page == 'Delivery Person Management'
+                          ? DeliveryPersonManagementScreen()
+                          : page == 'List Delivery Person'
+                              ? DeliveryPersonListScreen()
+                              : page == 'Create Delivery Person'
+                                  ? DeliveryPersonRegistrationForm()
+                                  : Container(),
+    );
+  }
+
+  // ignore: non_constant_identifier_names
+  DeliveryScreen() {
+    return Container(
+      child: Column(
+        children: [
+          ListTile(
+            title: Text('List Delivery Categories'),
+            onTap: () {
+              setState(() {
+                page = 'List Delivery Categories';
+              });
+              _deliveryCategoryController.getDeliveryCategoriesAll();
+            },
+          ),
+          ListTile(
+            title: Text('Create Delivery Categories'),
+            onTap: () {
+              setState(() {
+                page = 'Create Delivery Categories';
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ignore: non_constant_identifier_names
+  OrderManagementScreen() {
+    return Container(
+      child: Text('Order Management'),
+    );
+  }
+
+  DeliveryCategoryListScreen() {
+    return Center(
+      child: Obx(() => ListView.builder(
+            itemCount: _deliveryCategoryController
+                    .deliveryCategoryAllModel.payload?.length ??
+                0,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Row(
+                  children: [
+                    Text(
+                        '${_deliveryCategoryController.deliveryCategoryAllModel.payload?[index].deliveryName}'),
+                    Icon(Icons.edit),
+                    InkWell(
+                      onTap: () {
+                        _deliveryCategoryController.deleteDeliveryCategory(
+                            _deliveryCategoryController.deliveryCategoryAllModel
+                                    .payload?[index].deliveryId ??
+                                0);
+                        setState(() {
+                          _deliveryCategoryController
+                              .deliveryCategoryAllModel.payload
+                              ?.removeAt(index);
+                        });
+                      },
+                      child: Icon(Icons.delete),
+                    ),
+                  ],
+                ),
+                onTap: () {},
+              );
+            },
+          )),
+    );
+  }
+
+  DeliveryCategoryAddScreen() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          TextField(
+            controller: _deliveryCategoryController.nameController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Delivery Category Name',
+            ),
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              getImage(ImageSource.gallery);
+            },
+            child: Text('Image upload'),
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+          //if image not null show the image
+          //if image null show text
+          image != null
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.file(
+                      //to show image, you type like this.
+                      File(image!.path),
+                      fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.width,
+                      height: 300,
+                    ),
+                  ),
+                )
+              : Text(
+                  "No Image",
+                  style: TextStyle(fontSize: 20),
+                ),
+          SizedBox(
+            height: 20.0,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _deliveryCategoryController.createDeliveryCategory();
+            },
+            child: Text('Create Delivery Category'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  DeliveryPersonManagementScreen() {
+    return Column(
+      children: [
+        ListTile(
+          title: Text('List Delivery Person'),
+          onTap: () {
+            setState(() {
+              page = 'List Delivery Person';
+            });
+          },
+        ),
+        ListTile(
+          title: Text('Create Delivery Person'),
+          onTap: () {
+            setState(() {
+              page = 'Create Delivery Person';
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  DeliveryPersonListScreen() {
+    return Container(
+      child: Text('Delivery Person List'),
+    );
+  }
+}
