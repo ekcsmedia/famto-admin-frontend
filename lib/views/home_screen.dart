@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'delivery_person_management.dart';
+import 'order_management.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -67,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 setState(() {
                   page = 'Order Management';
+                  Navigator.pop(context);
                 });
               },
             ),
@@ -75,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 setState(() {
                   page = 'User Management';
+                  Navigator.pop(context);
                 });
               },
             ),
@@ -107,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   : page == 'Create Delivery Categories'
                       ? DeliveryCategoryAddScreen()
                       : page == 'Delivery Person Management'
-                          ? DeliveryPersonManagementScreen()
+                          ? DeliveryPersonManagement()
                           : page == 'List Delivery Person'
                               ? DeliveryPersonListScreen()
                               : page == 'Create Delivery Person'
@@ -144,11 +149,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // ignore: non_constant_identifier_names
-  OrderManagementScreen() {
-    return Container(
-      child: Text('Order Management'),
-    );
-  }
+  // OrderManagementScreen() {
+  //   return Container(
+  //     child: Text('Order Management'),
+  //   );
+  // }
 
   DeliveryCategoryListScreen() {
     return Center(
@@ -246,27 +251,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  DeliveryPersonManagementScreen() {
-    return Column(
-      children: [
-        ListTile(
-          title: Text('List Delivery Person'),
-          onTap: () {
-            setState(() {
-              page = 'List Delivery Person';
-            });
-          },
-        ),
-        ListTile(
-          title: Text('Create Delivery Person'),
-          onTap: () {
-            setState(() {
-              page = 'Create Delivery Person';
-            });
-          },
-        ),
-      ],
-    );
+  DeliveryPersonManagement() {
+    return DeliveryPersonManagementScreen();
   }
 
   DeliveryPersonListScreen() {

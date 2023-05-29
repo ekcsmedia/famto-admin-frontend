@@ -12,6 +12,9 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      primarySwatch: Colors.grey,
+    ),
     title: 'Famto Admin App',
     home: MainApp(),
   ));
