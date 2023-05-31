@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:get/get.dart';
+
+import '../controller/registration_controller.dart';
 
 class OrderManagementScreen extends StatefulWidget {
   const OrderManagementScreen({super.key});
@@ -11,6 +14,14 @@ class OrderManagementScreen extends StatefulWidget {
 
 class _OrderManagementScreenState extends State<OrderManagementScreen> {
   String page = '';
+  final RegistrationController _registrationController =
+      Get.put(RegistrationController());
+  @override
+  void initState() {
+    // TODO: implement initState
+    _registrationController.getDeliveryPersonRegistrationDetailsAll();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,9 +185,26 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                         Flexible(
                           flex: 1,
                           fit: FlexFit.tight,
-                          child: Container(
-                            color: Colors.yellow,
-                            child: Text("Order Details"),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              color: Colors.yellow,
+                              child: ListView.builder(
+                                  itemCount: _registrationController
+                                      .registrationAllDataModel.length,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      title: Text(_registrationController
+                                              .registrationAllDataModel[index]
+                                              .name ??
+                                          ""),
+                                      subtitle: Text(_registrationController
+                                              .registrationAllDataModel[index]
+                                              .phoneNumber ??
+                                          ""),
+                                    );
+                                  }),
+                            ),
                           ),
                         ),
                         Flexible(
@@ -184,7 +212,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                           fit: FlexFit.tight,
                           child: Container(
                             color: Colors.pink,
-                            child: Text("Order Details"),
+                            child: Text("God's View"),
                           ),
                         ),
                       ]),
@@ -193,7 +221,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                   flex: 1,
                   fit: FlexFit.tight,
                   child: Container(
-                    color: Colors.purple,
+                    color: Colors.white,
                     child: Row(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -202,16 +230,16 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                             flex: 1,
                             fit: FlexFit.tight,
                             child: Container(
-                              color: Colors.green,
-                              child: Text("Order Details"),
+                              color: Colors.white10,
+                              child: Text("Delivery Person Details"),
                             ),
                           ),
                           Flexible(
                             flex: 1,
                             fit: FlexFit.tight,
                             child: Container(
-                              color: Colors.blue,
-                              child: Text("Order Details"),
+                              color: Colors.white12,
+                              child: Text("Assign Order"),
                             ),
                           ),
                         ]),

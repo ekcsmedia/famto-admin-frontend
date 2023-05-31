@@ -30,7 +30,7 @@ class DeliveryPersonRegistrationRepository {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.post(
         // "http://10.0.2.2:8080/api/delivery-category/",
-        "http://192.168.1.7:8080/api/delivery-person-registration/",
+        "http://192.168.75.117:8080/api/delivery-person-registration/",
 
         {
           "phoneNumber": phoneNumber,
@@ -63,7 +63,79 @@ class DeliveryPersonRegistrationRepository {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.get(
         // "localhost:8080//api/delivery-category/$id",
-        "http://192.168.1.7:8080/api/delivery-person-registration/$id",
+        "http://192.168.75.117:8080/api/delivery-person-registration/$id",
+        // "http://10.0.2.2:8080/api/delivery-category/$id",
+
+        isTokenMandatory: false,
+      );
+
+      var response = DeliveryPersonRegistrationModel.fromJson(jsonResponse);
+      return right(response);
+    } on AppException catch (error) {
+      return left(ApiFailure(message: error.message));
+    } catch (error) {
+      return left(ApiFailure(message: error.toString()));
+    }
+  }
+
+  Future<Either<Failure, DeliveryPersonRegistrationModel>>
+      updateDeliveryPersonRegistrationByID(
+          id,
+          phoneNumber,
+          name,
+          address,
+          pan,
+          photo,
+          aadhaar,
+          drivingLicense,
+          status,
+          vehicleRegistration,
+          emergencyContact,
+          availability) async {
+    try {
+      // var jsonResponse = json.decode(await getJson());
+      var jsonResponse = await _apiManager.put(
+        // "localhost:8080//api/delivery-category/$id",
+        "http://192.168.75.117:8080/api/delivery-person-registration/$id",
+
+        {
+          "phoneNumber": phoneNumber,
+          "name": name,
+          "address": address,
+          "pan": pan,
+          "photo": photo,
+          "aadhaar": aadhaar,
+          "drivingLicense": drivingLicense,
+          "status": status,
+          "vehicleRegistration": vehicleRegistration,
+          "emergencyContact": emergencyContact,
+          "availability": availability ?? false
+        },
+        // "http://10.0.2.2:8080/api/delivery-category/$id",
+
+        isTokenMandatory: false,
+      );
+
+      var response = DeliveryPersonRegistrationModel.fromJson(jsonResponse);
+      return right(response);
+    } on AppException catch (error) {
+      return left(ApiFailure(message: error.message));
+    } catch (error) {
+      return left(ApiFailure(message: error.toString()));
+    }
+  }
+
+  Future<Either<Failure, DeliveryPersonRegistrationModel>>
+      updateDeliveryPersonRegistrationStatus(id, status) async {
+    try {
+      // var jsonResponse = json.decode(await getJson());
+      var jsonResponse = await _apiManager.put(
+        // "localhost:8080//api/delivery-category/$id",
+        "http://192.168.75.117:8080/api/delivery-person-registration/$id",
+
+        {
+          "status": status,
+        },
         // "http://10.0.2.2:8080/api/delivery-category/$id",
 
         isTokenMandatory: false,
@@ -85,7 +157,7 @@ class DeliveryPersonRegistrationRepository {
       var jsonResponse = await _apiManager.get(
         // "localhost:8080//api/delivery-category/",
         // "http://127.0.0.1:9999/api/delivery-category/",
-        "http://192.168.1.7:8080/api/delivery-person-registration/",
+        "http://192.168.75.117:8080/api/delivery-person-registration/",
 
         // "http://10.0.2.2:8080/api/delivery-category/",
         isTokenMandatory: false,
@@ -105,7 +177,7 @@ class DeliveryPersonRegistrationRepository {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.delete(
         // "localhost:8080//api/delivery-category/$id",
-        "http://192.168.1.7:8080/api/delivery-person-registration/$id",
+        "http://192.168.75.117:8080/api/delivery-person-registration/$id",
         // "http://10.0.2.2:8080/api/delivery-category/$id",
         id,
         isTokenMandatory: false,
