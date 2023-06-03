@@ -1,89 +1,128 @@
-import 'package:famto_admin_app/model/delivery_category_all_model.dart';
-import 'package:famto_admin_app/model/delivery_category_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import '../model/order_model.dart';
+import '../repository/order_management_repository.dart';
 
-import '../repository/delivery_category_repository.dart';
+class OrderController extends GetxController {
+  final OrderRepository _orderRepository = OrderRepository();
 
-class OrderManagementController extends GetxController {
-  final DeliveryCategoryRepository _deliveryCategoryRepository =
-      DeliveryCategoryRepository();
+  final _orderModel = OrderModel().obs;
+  OrderModel get orderModel => _orderModel.value;
 
-  final _deliveryCategoryModel = DeliveryCategory().obs;
-  DeliveryCategory get deliveryCategoryModel => _deliveryCategoryModel.value;
+  final RxList<OrderModel> _orderModelAll = <OrderModel>[].obs;
+  List<OrderModel> get orderModelAll => _orderModelAll;
 
-  final _deliveryCategoryAllModel = DeliveryCategoryAll().obs;
-  DeliveryCategoryAll get deliveryCategoryAllModel =>
-      _deliveryCategoryAllModel.value;
-
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _imageUrlController = TextEditingController();
-
-  TextEditingController get nameController => _nameController;
-  TextEditingController get imageUrlController => _imageUrlController;
-
-  createDeliveryCategory() async {
+  createOrder(
+      {phoneNumber,
+      name,
+      deliveryType,
+      vehicleType,
+      deliveryCharges,
+      pickupLocation,
+      dropLocation,
+      deliveryPerson,
+      status,
+      deliveryPersonNumber}) async {
     // _isDataLoading(true);
-    print("name from controller ${nameController.text}");
 
-    var response = await _deliveryCategoryRepository.createDeliveryCategory(
-        name: nameController.text, imageUrl: imageUrlController.text);
+    var response = await _orderRepository.createOrder(
+        phoneNumber: phoneNumber,
+        name: name,
+        deliveryType: deliveryType,
+        vehicleType: vehicleType,
+        deliveryCharges: deliveryCharges,
+        pickupLocation: pickupLocation,
+        dropLocation: dropLocation,
+        deliveryPerson: deliveryPerson,
+        deliveryPersonNumber: deliveryPersonNumber,
+        status: status);
 
     response.fold((failure) {
+      print("FAILED");
       // _isDataLoading(false);
       // _errorMessage.value = failure.message;
     }, (data) async {
       // _isDataLoading(false);
       // _errorMessage.value = "";
-      _deliveryCategoryModel.value = data;
-      print("Data: ${data.deliveryName} ${data.image}");
+      _orderModel.value = data;
+      print("Test Name: ${data.name} ${data.deliveryType}");
     });
   }
 
-  getDeliveryCategory(int id) async {
-    // _isDataLoading(true);
-
-    var response = await _deliveryCategoryRepository.getDeliveryCategory(id);
+  getOrderDetails() async {
+    var response = await _orderRepository.getOrdersAll();
     response.fold((failure) {
       // _isDataLoading(false);
       // _errorMessage.value = failure.message;
     }, (data) async {
-      // _isDataLoading(false);
-      // _errorMessage.value = "";
-      _deliveryCategoryModel.value = data.payload ?? DeliveryCategory();
-      print(
-          "Test Name: ${data.payload?.deliveryName ?? ""} ${data.payload?.image ?? ""}");
+      print("-------------");
+      print(data.payload?.length);
+      print(data.payload?[0].name);
+      print("-------------");
+      print(orderModelAll.toString());
+      _orderModelAll.value = data.payload ?? [];
     });
   }
 
-  deleteDeliveryCategory(int id) async {
-    // _isDataLoading(true);
-
-    var response = await _deliveryCategoryRepository.deleteDeliveryCategory(id);
+  getOrderDetailById(int id) async {
+    var response = await _orderRepository.getOrderDetailsByID(id);
     response.fold((failure) {
       // _isDataLoading(false);
       // _errorMessage.value = failure.message;
     }, (data) async {
-      getDeliveryCategoriesAll();
-      _deliveryCategoryAllModel.refresh();
-      // _isDataLoading(false);
-      // _errorMessage.value = "";
+      _orderModel.value = data;
     });
   }
 
-  getDeliveryCategoriesAll() async {
-    // _isDataLoading(true);
-
-    var response = await _deliveryCategoryRepository.getDeliveryCategoriesAll();
+  updateOrderStatus(int id, String status) async {
+    var response =
+        await _orderRepository.updateOrderStatus(id: id, status: status);
     response.fold((failure) {
       // _isDataLoading(false);
       // _errorMessage.value = failure.message;
     }, (data) async {
+      _orderModel.value = data;
+    });
+  }
+
+  updateOrderById(
+      {required int id,
+      String? status,
+      String? phoneNumber,
+      String? name,
+      String? deliveryType,
+      String? vehicleType,
+      String? deliveryCharges,
+      String? pickupLocation,
+      String? deliveryPerson,
+      String? dropLocation,
+      String? deliveryPersonNumber}) async {
+    var response = await _orderRepository.updateOrderByID(
+        id: id,
+        status: status,
+        phoneNumber: phoneNumber,
+        name: name,
+        deliveryType: deliveryType,
+        vehicleType: vehicleType,
+        deliveryCharges: deliveryCharges,
+        pickupLocation: pickupLocation,
+        dropLocation: dropLocation,
+        deliveryPerson: deliveryPerson,
+        deliveryPersonNumber: deliveryPersonNumber);
+    response.fold((failure) {
       // _isDataLoading(false);
-      // _errorMessage.value = "";
-      _deliveryCategoryAllModel.value = data;
-      print(
-          "Test Name: ${data.payload?[0].deliveryName} ${data.payload?[0].image}");
+      // _errorMessage.value = failure.message;
+    }, (data) async {
+      _orderModel.value = data;
+    });
+  }
+
+  deleteOrderById(int id) async {
+    var response = await _orderRepository.deleteOrderById(id);
+    response.fold((failure) {
+      // _isDataLoading(false);
+      // _errorMessage.value = failure.message;
+    }, (data) async {
+      print(data);
     });
   }
 }

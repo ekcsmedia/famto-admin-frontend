@@ -1,28 +1,50 @@
 import 'package:dartz/dartz.dart';
-import 'package:famto_admin_app/model/delivery_category_all_model.dart';
-import 'package:famto_admin_app/model/delivery_category_id_model.dart';
-import 'package:famto_admin_app/model/delivery_category_model.dart';
-
+import '../model/order_all_model.dart';
+import '../model/order_model.dart';
+import '../services/api_endpoints.dart';
 import '../services/api_exception.dart';
 import '../services/api_manager.dart';
 import '../utils/failure.dart';
 
-class DeliveryCategoryRepository {
+class OrderRepository {
   final _apiManager = ApiManager();
 
-  Future<Either<Failure, DeliveryCategory>> createDeliveryCategory(
-      {name, imageUrl}) async {
+  Future<Either<Failure, OrderModel>> createOrder(
+      {phoneNumber,
+      name,
+      deliveryType,
+      vehicleType,
+      pickupLocation,
+      dropLocation,
+      deliveryCharges,
+      deliveryPerson,
+      deliveryPersonNumber,
+      orderId,
+      status}) async {
     try {
+      print("inside order repository");
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.post(
-        // "http://10.0.2.2:8080/api/delivery-category/",
-        "http://192.168.1.7:8080/api/delivery-category/",
+        // "http://192.168.1.3:8080/api/orders/",
+        "http://10.0.2.2:8080/api/orders/",
 
-        {"deliveryName": name, "image": imageUrl},
+        {
+          "phoneNumber": phoneNumber,
+          "name": name,
+          "deliveryType": deliveryType,
+          "vehicleType": vehicleType,
+          "pickupLocation": pickupLocation,
+          "dropLocation": dropLocation,
+          "deliveryCharge": deliveryCharges,
+          "orderId": orderId,
+          "status": status,
+          "deliveryPerson": deliveryPerson,
+          "deliveryPersonNumber": deliveryPersonNumber
+        },
         isTokenMandatory: false,
       );
 
-      var response = DeliveryCategory.fromJson(jsonResponse);
+      var response = OrderModel.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));
@@ -31,19 +53,18 @@ class DeliveryCategoryRepository {
     }
   }
 
-  Future<Either<Failure, DeliveryCategoryId>> getDeliveryCategory(
-      int id) async {
+  Future<Either<Failure, OrderModel>> getOrderDetailsByID(int id) async {
     try {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.get(
         // "localhost:8080//api/delivery-category/$id",
-        "http://192.168.1.7:8080/api/delivery-category/$id",
+        "${ApiEndpoints.apiBaseUrl}orders/$id",
         // "http://10.0.2.2:8080/api/delivery-category/$id",
 
         isTokenMandatory: false,
       );
 
-      var response = DeliveryCategoryId.fromJson(jsonResponse);
+      var response = OrderModel.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));
@@ -52,19 +73,18 @@ class DeliveryCategoryRepository {
     }
   }
 
-  Future<Either<Failure, DeliveryCategoryAll>>
-      getDeliveryCategoriesAll() async {
+  Future<Either<Failure, OrderAll>> getOrdersAll() async {
     try {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.get(
         // "localhost:8080//api/delivery-category/",
         // "http://127.0.0.1:9999/api/delivery-category/",
-        "http://192.168.1.7:8080/api/delivery-category/",
+        "${ApiEndpoints.apiBaseUrl}orders/",
 
         // "http://10.0.2.2:8080/api/delivery-category/",
         isTokenMandatory: false,
       );
-      var response = DeliveryCategoryAll.fromJson(jsonResponse);
+      var response = OrderAll.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));
@@ -73,19 +93,85 @@ class DeliveryCategoryRepository {
     }
   }
 
-  Future<Either<Failure, DeliveryCategoryId>> deleteDeliveryCategory(
-      int id) async {
+  Future<Either<Failure, OrderModel>> updateOrderByID(
+      {int? id,
+      String? phoneNumber,
+      String? name,
+      String? deliveryType,
+      String? vehicleType,
+      String? pickupLocation,
+      String? dropLocation,
+      String? deliveryCharges,
+      String? deliveryPerson,
+      String? deliveryPersonNumber,
+      String? orderId,
+      String? status}) async {
+    try {
+      // var jsonResponse = json.decode(await getJson());
+      var jsonResponse = await _apiManager.put(
+        // "localhost:8080//api/delivery-category/$id",
+        "${ApiEndpoints.apiBaseUrl}orders/$id",
+        {
+          "phoneNumber": phoneNumber,
+          "name": name,
+          "deliveryType": deliveryType,
+          "vehicleType": vehicleType,
+          "pickupLocation": pickupLocation,
+          "dropLocation": dropLocation,
+          "deliveryCharge": deliveryCharges,
+          "deliveryPerson": deliveryPerson,
+          "deliveryPersonNumber": deliveryPersonNumber,
+          "orderId": orderId,
+          "status": status
+        },
+        // "http://10.0.2.2:8080/api/delivery-category/$id",
+
+        isTokenMandatory: false,
+      );
+
+      var response = OrderModel.fromJson(jsonResponse);
+      return right(response);
+    } on AppException catch (error) {
+      return left(ApiFailure(message: error.message));
+    } catch (error) {
+      return left(ApiFailure(message: error.toString()));
+    }
+  }
+
+  Future<Either<Failure, OrderModel>> updateOrderStatus(
+      {required int id, String? status}) async {
+    try {
+      // var jsonResponse = json.decode(await getJson());
+      var jsonResponse = await _apiManager.put(
+        // "localhost:8080//api/delivery-category/$id",
+        "${ApiEndpoints.apiBaseUrl}orders/$id",
+        {"status": status},
+        // "http://10.0.2.2:8080/api/delivery-category/$id",
+
+        isTokenMandatory: false,
+      );
+
+      var response = OrderModel.fromJson(jsonResponse);
+      return right(response);
+    } on AppException catch (error) {
+      return left(ApiFailure(message: error.message));
+    } catch (error) {
+      return left(ApiFailure(message: error.toString()));
+    }
+  }
+
+  Future<Either<Failure, OrderModel>> deleteOrderById(int id) async {
     try {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.delete(
         // "localhost:8080//api/delivery-category/$id",
-        "http://192.168.1.7:8080/api/delivery-category/$id",
+        "${ApiEndpoints.apiBaseUrl}orders/$id",
         // "http://10.0.2.2:8080/api/delivery-category/$id",
         id,
         isTokenMandatory: false,
       );
 
-      var response = DeliveryCategoryId.fromJson(jsonResponse);
+      var response = OrderModel.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));

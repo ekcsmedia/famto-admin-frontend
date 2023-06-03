@@ -16,6 +16,12 @@ class RegistrationController extends GetxController {
   List<DeliveryPersonRegistration> get registrationAllDataModel =>
       _registrationAllDataModel;
 
+  final _registrationAvailableDeliveryPersonModel =
+      <DeliveryPersonRegistration>[].obs;
+  List<DeliveryPersonRegistration>
+      get registrationAvailableDeliveryPersonModel =>
+          _registrationAvailableDeliveryPersonModel;
+
   final TextEditingController _nameController = TextEditingController();
 
   TextEditingController get nameController => _nameController;
@@ -127,6 +133,15 @@ class RegistrationController extends GetxController {
       // _isDataLoading(false);
       // _errorMessage.value = "";
       _registrationAllDataModel.value = data.payload ?? [];
+      if (data.payload != null) {
+        List<DeliveryPersonRegistration> availableDeliveryPersonList =
+            <DeliveryPersonRegistration>[];
+        availableDeliveryPersonList = data.payload!
+            .where((element) => element.availability == true)
+            .toList();
+        _registrationAvailableDeliveryPersonModel.value =
+            availableDeliveryPersonList;
+      }
       print("Test Name: ${data.payload?[0].name} ${data.payload?[0].address}");
     });
   }
@@ -170,6 +185,8 @@ class RegistrationController extends GetxController {
       _registrationModel.value = data.payload ?? DeliveryPersonRegistration();
       // _registrationModel.refresh();
       print("Test Name: ${data.payload?.name} ${data.payload?.address}");
+      getDeliveryPersonRegistrationDetailsAll();
+      getDeliveryPersonRegistrationDetail(id);
     });
   }
 

@@ -6,6 +6,7 @@ import 'package:famto_admin_app/model/delivery_category_model.dart';
 import '../model/delivery_person_registration_all_model.dart';
 import '../model/delivery_person_registration_id_model.dart';
 import '../model/delivery_person_registration_model.dart';
+import '../services/api_endpoints.dart';
 import '../services/api_exception.dart';
 import '../services/api_manager.dart';
 import '../utils/failure.dart';
@@ -30,7 +31,7 @@ class DeliveryPersonRegistrationRepository {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.post(
         // "http://10.0.2.2:8080/api/delivery-category/",
-        "http://192.168.75.117:8080/api/delivery-person-registration/",
+        "${ApiEndpoints.apiBaseUrl}delivery-person-registration/",
 
         {
           "phoneNumber": phoneNumber,
@@ -43,7 +44,7 @@ class DeliveryPersonRegistrationRepository {
           "status": status,
           "vehicleRegistration": vehicleRegistration,
           "emergencyContact": emergencyContact,
-          "availability": availability ?? false
+          "availability": availability
         },
         isTokenMandatory: false,
       );
@@ -63,7 +64,7 @@ class DeliveryPersonRegistrationRepository {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.get(
         // "localhost:8080//api/delivery-category/$id",
-        "http://192.168.75.117:8080/api/delivery-person-registration/$id",
+        "${ApiEndpoints.apiBaseUrl}delivery-person-registration/$id",
         // "http://10.0.2.2:8080/api/delivery-category/$id",
 
         isTokenMandatory: false,
@@ -96,7 +97,7 @@ class DeliveryPersonRegistrationRepository {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.put(
         // "localhost:8080//api/delivery-category/$id",
-        "http://192.168.75.117:8080/api/delivery-person-registration/$id",
+        "${ApiEndpoints.apiBaseUrl}delivery-person-registration/$id",
 
         {
           "phoneNumber": phoneNumber,
@@ -109,7 +110,7 @@ class DeliveryPersonRegistrationRepository {
           "status": status,
           "vehicleRegistration": vehicleRegistration,
           "emergencyContact": emergencyContact,
-          "availability": availability ?? false
+          "availability": availability 
         },
         // "http://10.0.2.2:8080/api/delivery-category/$id",
 
@@ -131,7 +132,7 @@ class DeliveryPersonRegistrationRepository {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.put(
         // "localhost:8080//api/delivery-category/$id",
-        "http://192.168.75.117:8080/api/delivery-person-registration/$id",
+        "${ApiEndpoints.apiBaseUrl}delivery-person-registration/$id",
 
         {
           "status": status,
@@ -157,7 +158,7 @@ class DeliveryPersonRegistrationRepository {
       var jsonResponse = await _apiManager.get(
         // "localhost:8080//api/delivery-category/",
         // "http://127.0.0.1:9999/api/delivery-category/",
-        "http://192.168.75.117:8080/api/delivery-person-registration/",
+        "${ApiEndpoints.apiBaseUrl}delivery-person-registration/",
 
         // "http://10.0.2.2:8080/api/delivery-category/",
         isTokenMandatory: false,
@@ -177,7 +178,7 @@ class DeliveryPersonRegistrationRepository {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.delete(
         // "localhost:8080//api/delivery-category/$id",
-        "http://192.168.75.117:8080/api/delivery-person-registration/$id",
+        "${ApiEndpoints.apiBaseUrl}delivery-person-registration/$id",
         // "http://10.0.2.2:8080/api/delivery-category/$id",
         id,
         isTokenMandatory: false,

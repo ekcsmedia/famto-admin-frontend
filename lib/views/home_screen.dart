@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../controller/order_management_controller.dart';
+import '../controller/registration_controller.dart';
 import 'delivery_person_management.dart';
 import 'order_management.dart';
 
@@ -26,6 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
   String page = '';
   final DeliveryCategoryController _deliveryCategoryController =
       Get.put(DeliveryCategoryController());
+  final RegistrationController _registrationController =
+      Get.put(RegistrationController());
+  final OrderController _orderController = Get.put(OrderController());
 
   XFile? image;
 
@@ -70,6 +75,10 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {
                 setState(() {
                   page = 'Order Management';
+                  _registrationController
+                      .getDeliveryPersonRegistrationDetailsAll();
+                  _orderController.getOrderDetails();
+
                   Navigator.pop(context);
                 });
               },
