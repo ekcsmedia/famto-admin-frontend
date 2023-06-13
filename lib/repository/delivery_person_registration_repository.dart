@@ -31,8 +31,9 @@ class DeliveryPersonRegistrationRepository {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.post(
         // "http://10.0.2.2:8080/api/delivery-category/",
-        "${ApiEndpoints.apiBaseUrl}delivery-person-registration/",
-
+        // "${ApiEndpoints.apiBaseUrl}delivery-person-registration/",
+        // "https://cxk4wh3u4b.execute-api.ap-south-1.amazonaws.com/create-delivery-person",
+        "https://8v07bxn9n3.execute-api.ap-south-1.amazonaws.com/create-delivery-person",
         {
           "phoneNumber": phoneNumber,
           "name": name,
@@ -64,8 +65,9 @@ class DeliveryPersonRegistrationRepository {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.get(
         // "localhost:8080//api/delivery-category/$id",
-        "${ApiEndpoints.apiBaseUrl}delivery-person-registration/$id",
+        // "${ApiEndpoints.apiBaseUrl}delivery-person-registration/$id",
         // "http://10.0.2.2:8080/api/delivery-category/$id",
+        "https://8v07bxn9n3.execute-api.ap-south-1.amazonaws.com/v1/$id",
 
         isTokenMandatory: false,
       );
@@ -97,7 +99,8 @@ class DeliveryPersonRegistrationRepository {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.put(
         // "localhost:8080//api/delivery-category/$id",
-        "${ApiEndpoints.apiBaseUrl}delivery-person-registration/$id",
+        // "${ApiEndpoints.apiBaseUrl}delivery-person-registration/$id",
+        "https://cxk4wh3u4b.execute-api.ap-south-1.amazonaws.com/create-delivery-person",
 
         {
           "phoneNumber": phoneNumber,
@@ -110,7 +113,7 @@ class DeliveryPersonRegistrationRepository {
           "status": status,
           "vehicleRegistration": vehicleRegistration,
           "emergencyContact": emergencyContact,
-          "availability": availability 
+          "availability": availability
         },
         // "http://10.0.2.2:8080/api/delivery-category/$id",
 
@@ -158,8 +161,8 @@ class DeliveryPersonRegistrationRepository {
       var jsonResponse = await _apiManager.get(
         // "localhost:8080//api/delivery-category/",
         // "http://127.0.0.1:9999/api/delivery-category/",
-        "${ApiEndpoints.apiBaseUrl}delivery-person-registration/",
-
+        // "${ApiEndpoints.apiBaseUrl}delivery-person-registration/",
+        "https://qe7y5ivre3.execute-api.ap-south-1.amazonaws.com/delivery-person",
         // "http://10.0.2.2:8080/api/delivery-category/",
         isTokenMandatory: false,
       );

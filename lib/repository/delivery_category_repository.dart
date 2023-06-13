@@ -60,8 +60,8 @@ class DeliveryCategoryRepository {
       var jsonResponse = await _apiManager.get(
         // "localhost:8080//api/delivery-category/",
         // "http://127.0.0.1:9999/api/delivery-category/",
-        "${ApiEndpoints.apiBaseUrl}delivery-category/",
-
+        // "${ApiEndpoints.apiBaseUrl}delivery-category/",
+        "https://bnzyo2asgi.execute-api.ap-south-1.amazonaws.com/alpha/",
         // "http://10.0.2.2:8080/api/delivery-category/",
         isTokenMandatory: false,
       );

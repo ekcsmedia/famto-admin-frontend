@@ -81,7 +81,7 @@ class ApiManager {
     String url,
     var parameters, {
     String contentType = jsonContentType,
-    bool isTokenMandatory = true,
+    bool isTokenMandatory = false,
   }) async {
     await _getToken();
 
@@ -89,7 +89,7 @@ class ApiManager {
       // Declare the header for the request, if user not loged in then pass empty array as header
       Map<String, String> headers = {
         'Content-Type': contentType,
-        'tenantName': tenantName,
+        // 'tenantName': tenantName,
       };
 
       if (isTokenMandatory) {
@@ -130,7 +130,7 @@ class ApiManager {
     String url,
     var parameters, {
     String contentType = jsonContentType,
-    bool isTokenMandatory = true,
+    bool isTokenMandatory = false,
   }) async {
     await _getToken();
 
@@ -138,7 +138,7 @@ class ApiManager {
       // Declare the header for the request, if user not logged in then pass empty array as header or else pass the authentication token stored on login time
       Map<String, String> headers = {
         'Content-Type': contentType,
-        'tenantName': tenantName,
+        // 'tenantName': tenantName,
       };
 
       if (isTokenMandatory) {
@@ -178,7 +178,7 @@ class ApiManager {
     String url,
     var parameters, {
     String contentType = jsonContentType,
-    bool isTokenMandatory = true,
+    bool isTokenMandatory = false,
   }) async {
     await _getToken();
 
@@ -186,7 +186,7 @@ class ApiManager {
       // Declare the header for the request, if user not logged in then pass empty array as header or else pass the authentication token stored on login time
       Map<String, String> headers = {
         'Content-Type': contentType,
-        'tenantName': tenantName,
+        // 'tenantName': tenantName,
       };
 
       if (isTokenMandatory) {

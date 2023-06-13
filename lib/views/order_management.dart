@@ -7,6 +7,7 @@ import '../controller/order_management_controller.dart';
 import '../controller/registration_controller.dart';
 import '../model/delivery_person_registration_model.dart';
 import '../model/order_model.dart';
+import 'widget/gods_view.dart';
 
 class OrderManagementScreen extends StatefulWidget {
   const OrderManagementScreen({super.key});
@@ -276,13 +277,10 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                             ),
                           ),
                         ),
-                        Flexible(
+                        const Flexible(
                           flex: 1,
                           fit: FlexFit.tight,
-                          child: Container(
-                            color: Colors.pink,
-                            child: const Text("God's View"),
-                          ),
+                          child: GodsViewDart(),
                         ),
                       ]),
                 ),

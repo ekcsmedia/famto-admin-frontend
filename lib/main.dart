@@ -3,6 +3,7 @@ import 'package:famto_admin_app/views/delivery_person_registration.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import 'views/delivery_person_dashboard.dart';
 import 'views/home_screen.dart';
 import 'views/login_screen.dart';
 import 'views/login_with_phone_number.dart';
@@ -13,7 +14,7 @@ Future<void> main() async {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
-      primarySwatch: Colors.grey,
+      primarySwatch: Colors.blue,
     ),
     title: 'Famto Admin App',
     home: MainApp(),
@@ -39,7 +40,7 @@ class MainApp extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
+            MaterialPageRoute(builder: (context) => DeliveryAgentDashboard()),
           );
         },
         child: const Icon(Icons.login),

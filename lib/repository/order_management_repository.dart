@@ -79,7 +79,8 @@ class OrderRepository {
       var jsonResponse = await _apiManager.get(
         // "localhost:8080//api/delivery-category/",
         // "http://127.0.0.1:9999/api/delivery-category/",
-        "${ApiEndpoints.apiBaseUrl}orders/",
+        // "${ApiEndpoints.apiBaseUrl}orders/",
+        "https://utb9cx6tx1.execute-api.ap-south-1.amazonaws.com/orders",
 
         // "http://10.0.2.2:8080/api/delivery-category/",
         isTokenMandatory: false,

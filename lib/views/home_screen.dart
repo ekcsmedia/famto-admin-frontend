@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../controller/order_management_controller.dart';
 import '../controller/registration_controller.dart';
+import 'delivery_person_dashboard.dart';
 import 'delivery_person_management.dart';
 import 'order_management.dart';
 
@@ -55,14 +56,14 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
               child: Text('Admin Dashboard'),
             ),
             ListTile(
-              title: Text('Delivery Categories Management'),
+              title: const Text('Delivery Categories Management'),
               onTap: () {
                 setState(() {
                   page = 'Delivery Categories';
@@ -71,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             ListTile(
-              title: Text('Order Management'),
+              title: const Text('Order Management'),
               onTap: () {
                 setState(() {
                   page = 'Order Management';
@@ -84,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             ListTile(
-              title: Text('User Management'),
+              title: const Text('User Management'),
               onTap: () {
                 setState(() {
                   page = 'User Management';
@@ -93,16 +94,23 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             ListTile(
-              title: Text('Delivery Person Management'),
+              title: const Text('Delivery Person Management'),
               onTap: () {
-                setState(() {
-                  page = 'Delivery Person Management';
-                  Navigator.pop(context);
-                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DeliveryAgentDashboard(),
+                  ),
+                );
+                // setState(() {
+                //   // page = 'Delivery Person Management';
+
+                //   // Navigator.pop(context);
+                // });
               },
             ),
             ListTile(
-              title: Text('Vendor Management'),
+              title: const Text('Vendor Management'),
               onTap: () {
                 setState(() {
                   page = 'Vendor Management';
@@ -115,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: page == 'Delivery Categories'
           ? DeliveryScreen()
           : page == 'Order Management'
-              ? OrderManagementScreen()
+              ? const OrderManagementScreen()
               : page == 'List Delivery Categories'
                   ? DeliveryCategoryListScreen()
                   : page == 'Create Delivery Categories'
@@ -136,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         children: [
           ListTile(
-            title: Text('List Delivery Categories'),
+            title: const Text('List Delivery Categories'),
             onTap: () {
               setState(() {
                 page = 'List Delivery Categories';
@@ -145,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
           ListTile(
-            title: Text('Create Delivery Categories'),
+            title: const Text('Create Delivery Categories'),
             onTap: () {
               setState(() {
                 page = 'Create Delivery Categories';
@@ -176,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                         '${_deliveryCategoryController.deliveryCategoryAllModel.payload?[index].deliveryName}'),
-                    Icon(Icons.edit),
+                    const Icon(Icons.edit),
                     InkWell(
                       onTap: () {
                         _deliveryCategoryController.deleteDeliveryCategory(
@@ -189,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ?.removeAt(index);
                         });
                       },
-                      child: Icon(Icons.delete),
+                      child: const Icon(Icons.delete),
                     ),
                   ],
                 ),
@@ -209,21 +217,21 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           TextField(
             controller: _deliveryCategoryController.nameController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Delivery Category Name',
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
           ElevatedButton(
             onPressed: () {
               getImage(ImageSource.gallery);
             },
-            child: Text('Image upload'),
+            child: const Text('Image upload'),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
           //if image not null show the image
@@ -242,18 +250,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 )
-              : Text(
+              : const Text(
                   "No Image",
                   style: TextStyle(fontSize: 20),
                 ),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
           ElevatedButton(
             onPressed: () {
               _deliveryCategoryController.createDeliveryCategory();
             },
-            child: Text('Create Delivery Category'),
+            child: const Text('Create Delivery Category'),
           ),
         ],
       ),
@@ -261,12 +269,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   DeliveryPersonManagement() {
-    return DeliveryPersonManagementScreen();
+    return const DeliveryPersonManagementScreen();
   }
 
   DeliveryPersonListScreen() {
     return Container(
-      child: Text('Delivery Person List'),
+      child: const Text('Delivery Person List'),
     );
   }
 }

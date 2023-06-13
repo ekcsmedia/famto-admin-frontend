@@ -62,8 +62,8 @@ class _DeliveryPersonManagementScreenState
                     onTap: () {
                       setState(() {
                         page = 'List Delivery Person';
-                        _registrationController
-                            .getDeliveryPersonRegistrationDetailsAll();
+                        // _registrationController
+                        //     .getDeliveryPersonRegistrationDetailsAll();
                       });
                     },
                   ),
@@ -207,7 +207,12 @@ class _DeliveryPersonManagementScreenState
                   },
                 ),
               )
-            : Flexible(flex: 5, child: DeliveryPersonRegistrationForm()),
+            : AlertDialog(
+                content: Container(
+                width: 100,
+                height: 300,
+                child: DeliveryPersonRegistrationForm(),
+              )),
         page == "List Delivery Person"
             ? Obx(
                 () => Flexible(
