@@ -23,7 +23,11 @@ class DeliveryPersonRegistrationForm extends StatefulWidget {
 class _DeliveryPersonRegistrationFormState
     extends State<DeliveryPersonRegistrationForm> {
   String _selectedCategory = "Approved";
-
+  var deliveryCategoryList = [
+    "Approved",
+    "Pending",
+    "Rejected",
+  ];
   String photoImageUrl = "";
 
   @override
@@ -37,11 +41,6 @@ class _DeliveryPersonRegistrationFormState
 
   @override
   Widget build(BuildContext context) {
-    var deliveryCategoryList = [
-      "Approved",
-      "Pending",
-      "Rejected",
-    ];
     return SingleChildScrollView(
       child: Container(
         width: 500,
