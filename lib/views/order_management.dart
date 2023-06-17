@@ -262,9 +262,9 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                                                 .deliveryUserId ??
                                                             0);
                                               },
-                                              title: Text(
-                                                  snapshot.data?[index].name ??
-                                                      ""),
+                                              title: Text(snapshot
+                                                      .data?[index].firstName ??
+                                                  ""),
                                               subtitle: Text(snapshot
                                                       .data?[index]
                                                       .phoneNumber ??
@@ -321,7 +321,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                           height: 20,
                                         ),
                                         Text(
-                                            "Name: ${_registrationController.registrationModel.name}"),
+                                            "Name: ${_registrationController.registrationModel.firstName}"),
                                         SizedBox(
                                           height: 20,
                                         ),

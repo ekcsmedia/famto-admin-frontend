@@ -146,7 +146,7 @@ class _DeliveryPersonManagementScreenState
                                                         fontSize: 16)),
                                                 Text(
                                                     snapshot.data?[index]
-                                                            .name ??
+                                                            .firstName ??
                                                         "",
                                                     style: const TextStyle(
                                                         fontSize: 16,
@@ -257,7 +257,7 @@ class _DeliveryPersonManagementScreenState
                               height: 20,
                             ),
                             Text(
-                                "Name: ${_registrationController.registrationModel.name}"),
+                                "Name: ${_registrationController.registrationModel.firstName}"),
                             SizedBox(
                               height: 20,
                             ),

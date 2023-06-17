@@ -6,7 +6,21 @@ part 'delivery_person_registration_model.g.dart';
 class DeliveryPersonRegistration {
   int? deliveryUserId;
   String? phoneNumber;
-  String? name;
+  String? firstName;
+  String? lastName;
+  String? email;
+  String? userName;
+  String? password;
+  String? team;
+  String? role;
+  String? type;
+  String? geofence;
+  String? transportType;
+  String? transportDescription;
+  String? licensePlate;
+  String? color;
+  double? latitude;
+  double? longitude;
   String? address;
   String? pan;
   String? photo;
@@ -20,7 +34,21 @@ class DeliveryPersonRegistration {
   DeliveryPersonRegistration({
     this.deliveryUserId,
     this.phoneNumber,
-    this.name,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.userName,
+    this.password,
+    this.team,
+    this.role,
+    this.type,
+    this.geofence,
+    this.transportType,
+    this.transportDescription,
+    this.licensePlate,
+    this.color,
+    this.latitude,
+    this.longitude,
     this.address,
     this.pan,
     this.photo,

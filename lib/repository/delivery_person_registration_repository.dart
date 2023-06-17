@@ -26,7 +26,22 @@ class DeliveryPersonRegistrationRepository {
           String? status,
           String? vehicleRegistration,
           String? emergencyContact,
-          bool? availability}) async {
+          bool? availability,
+          String? password,
+          String? firstName,
+          String? lastName,
+          String? email,
+          String? userName,
+          String? team,
+          String? role,
+          String? type,
+          String? geofence,
+          String? transportType,
+          String? transportDescription,
+          String? licensePlate,
+          String? color,
+          double? latitude,
+          double? longitude}) async {
     try {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.post(
@@ -45,7 +60,22 @@ class DeliveryPersonRegistrationRepository {
           "status": status,
           "vehicleRegistration": vehicleRegistration,
           "emergencyContact": emergencyContact,
-          "availability": availability
+          "availability": availability,
+          "email": email,
+          "firstName": firstName,
+          "lastName": lastName,
+          "password": password,
+          "userName": userName,
+          "team": team,
+          "role": role,
+          "type": type,
+          "geofence": geofence,
+          "transportType": transportType,
+          "transportDescription": transportDescription,
+          "licensePlate": licensePlate,
+          "color": color,
+          "latitude": latitude,
+          "longitude": longitude
         },
         isTokenMandatory: false,
       );

@@ -1,9 +1,14 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../controller/registration_controller.dart';
 import 'create_task_screen.dart';
+import 'package:google_maps/google_maps.dart' hide Icon hide Padding;
+import 'dart:ui' as ui hide VoidCallback;
+import 'dart:html' hide VoidCallback;
 
 class DeliveryAgentDashboard extends StatefulWidget {
   const DeliveryAgentDashboard({super.key});
@@ -13,6 +18,39 @@ class DeliveryAgentDashboard extends StatefulWidget {
 }
 
 class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
+  Widget getMap() {
+    String htmlId = "7";
+
+    // ignore: undefined_prefixed_name
+    ui.platformViewRegistry.registerViewFactory(htmlId, (int viewId) {
+      final myLatlng = new LatLng(30.2669444, -97.7427778);
+
+      final mapOptions = new MapOptions()
+        ..zoom = 8
+        ..center = new LatLng(30.2669444, -97.7427778);
+
+      final elem = DivElement()
+        ..id = htmlId
+        ..style.width = "100%"
+        ..style.height = "100%"
+        ..style.border = 'none';
+
+      final map = new GMap(elem, mapOptions);
+
+      Marker(MarkerOptions()
+        ..position = myLatlng
+        ..map = map
+        ..title = 'Hello World!');
+
+      return elem;
+    });
+
+    return HtmlElementView(viewType: htmlId);
+  }
+
+  final RegistrationController _registrationController =
+      Get.put(RegistrationController());
+
   int? unassigned = 0;
   int? assigned = 0;
   int? completed = 0;
@@ -69,6 +107,18 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
   TextEditingController geofencecontroller = TextEditingController();
   TextEditingController transportcontroller = TextEditingController();
   TextEditingController licensecontroller = TextEditingController();
+  TextEditingController colorcontroller = TextEditingController();
+  TextEditingController latitudecontroller = TextEditingController();
+  TextEditingController longitudecontroller = TextEditingController();
+  TextEditingController transportTypeController = TextEditingController();
+
+  TextEditingController pancontroller = TextEditingController();
+  TextEditingController aadhaarcontroller = TextEditingController();
+  TextEditingController drivinglicensecontroller = TextEditingController();
+  TextEditingController statuscontroller = TextEditingController();
+  TextEditingController vehicleregistrationcontroller = TextEditingController();
+  TextEditingController emergencycontactcontroller = TextEditingController();
+  TextEditingController availabilitycontroller = TextEditingController();
 
   @override
   void setState(VoidCallback fn) {
@@ -146,6 +196,31 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
               ),
               TextButton(
                 onPressed: () {
+                  _registrationController.createDeliveryPersonRegistration(
+                    phoneNumber: phonecontroller.text,
+                    firstName: firstnamecontroller.text,
+                    lastName: lastnamecontroller.text,
+                    email: emailcontroller.text,
+                    userName: usernamecontroller.text,
+                    password: passwordcontroller.text,
+                    team: _selectedTeam,
+                    role: _selectedRole,
+                    type: _selectedType,
+                    geofence: _selectedGeoFence,
+                    transportType: transportTypeController.text,
+                    transportDescription: transportcontroller.text,
+                    licensePlate: licensecontroller.text,
+                    color: colorcontroller.text,
+                    address: addresscontroller.text,
+                    pan: pancontroller.text,
+                    photo: photoImageUrl,
+                    aadhaar: aadhaarcontroller.text,
+                    drivingLicense: drivinglicensecontroller.text,
+                    status: statuscontroller.text,
+                    vehicleRegistration: vehicleregistrationcontroller.text,
+                    emergencyContact: emergencycontactcontroller.text,
+                    availability: false,
+                  );
                   Navigator.pop(context);
                 },
                 child: const Text('Add'),
@@ -202,17 +277,17 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
                   ),
                   _rolesAndTeamDropdown(setState),
                   _typeAndGeoFenceDropdown(setState),
-                  _addAgentRowFormField(
-                    label1: "ASSIGN ROLE",
-                    label2: "ASSIGN TO TEAM",
-                    controller1: rolecontroller,
-                    controller2: addresscontroller,
-                  ),
-                  _addAgentRowFormField(
-                      label1: "TYPE",
-                      label2: "GEO FENCE",
-                      controller1: typecontroller,
-                      controller2: geofencecontroller),
+                  // _addAgentRowFormField(
+                  //   label1: "ASSIGN ROLE",
+                  //   label2: "ASSIGN TO TEAM",
+                  //   controller1: rolecontroller,
+                  //   controller2: teamcontroller,
+                  // ),
+                  // _addAgentRowFormField(
+                  //     label1: "TYPE",
+                  //     label2: "GEO FENCE",
+                  //     controller1: typecontroller,
+                  //     controller2: geofencecontroller),
                   _addAgentRowFormField(
                       label1: "TRANSPORT DESCRIPTION (YEAR, MODEL))",
                       label2: "LICENSE PLATE",
@@ -221,8 +296,8 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
                   _addAgentRowFormField(
                       label1: "TRANSPORT TYPE",
                       label2: "COLOR",
-                      controller1: transportcontroller,
-                      controller2: licensecontroller),
+                      controller1: transportTypeController,
+                      controller2: colorcontroller),
                   _sizedBoxVertical(),
                   if (photoImageUrl != "")
                     _imageNetwork()
@@ -601,15 +676,7 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
 
   Center _mapBackground() {
     return Center(
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.grey,
-          // image: DecorationImage(
-          //   image: AssetImage('assets/images/background.png'),
-          //   fit: BoxFit.cover,
-          // ),
-        ),
-      ),
+      child: getMap(),
     );
   }
 

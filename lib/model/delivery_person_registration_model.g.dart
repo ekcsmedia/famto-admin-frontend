@@ -11,7 +11,6 @@ DeliveryPersonRegistration _$DeliveryPersonRegistrationFromJson(
     DeliveryPersonRegistration(
       deliveryUserId: json['deliveryUserId'] as int?,
       phoneNumber: json['phoneNumber'] as String?,
-      name: json['name'] as String?,
       address: json['address'] as String?,
       pan: json['pan'] as String?,
       photo: json['photo'] as String?,
@@ -28,7 +27,6 @@ Map<String, dynamic> _$DeliveryPersonRegistrationToJson(
     <String, dynamic>{
       'deliveryUserId': instance.deliveryUserId,
       'phoneNumber': instance.phoneNumber,
-      'name': instance.name,
       'address': instance.address,
       'pan': instance.pan,
       'photo': instance.photo,

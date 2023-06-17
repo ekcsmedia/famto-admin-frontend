@@ -68,12 +68,17 @@ class RegistrationController extends GetxController {
   bool get isEditMode => _isEditMode.value;
   set setEditMode(bool value) => _isEditMode.value = value;
 
+  final Rx<String> _errorMessage = "".obs;
+  String get errorMessage => _errorMessage.value;
+
+  final Rx<String> _successMessage = "".obs;
+  String get successMessage => _successMessage.value;
+
   clearData() {
     _aadharController.clear();
     _addressController.clear();
     _drivingLicenseController.clear();
     _emergencyContactNumberController.clear();
-    _nameController.clear();
     _panController.clear();
     _phoneNumberController.clear();
     _vehicleLicenseNumberController.clear();
@@ -81,25 +86,37 @@ class RegistrationController extends GetxController {
     _vehicleTypeController.clear();
   }
 
-  createDeliveryPersonRegistration({
-    phoneNumber,
-    name,
-    address,
-    pan,
-    photo,
-    aadhaar,
-    drivingLicense,
-    status,
-    vehicleRegistration,
-    emergencyContact,
-    availability,
-  }) async {
+  createDeliveryPersonRegistration(
+      {phoneNumber,
+      address,
+      pan,
+      photo,
+      aadhaar,
+      drivingLicense,
+      status,
+      vehicleRegistration,
+      emergencyContact,
+      availability,
+      email,
+      password,
+      userName,
+      firstName,
+      lastName,
+      team,
+      role,
+      type,
+      geofence,
+      transportType,
+      transportDescription,
+      licensePlate,
+      color,
+      latitude,
+      longitude}) async {
     // _isDataLoading(true);
 
     var response =
         await _registrationRepository.createDeliveryPersonRegistration(
             phoneNumber: phoneNumber,
-            name: name,
             address: address,
             pan: pan,
             photo: photo,
@@ -108,16 +125,34 @@ class RegistrationController extends GetxController {
             status: status,
             vehicleRegistration: vehicleRegistration,
             emergencyContact: emergencyContact,
-            availability: availability);
+            availability: availability,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            password: password,
+            userName: userName,
+            team: team,
+            role: role,
+            type: type,
+            geofence: geofence,
+            transportType: transportType,
+            transportDescription: transportDescription,
+            licensePlate: licensePlate,
+            color: color,
+            latitude: latitude,
+            longitude: longitude);
 
     response.fold((failure) {
+      print("Failure");
       // _isDataLoading(false);
       // _errorMessage.value = failure.message;
     }, (data) async {
+      print("Success");
       // _isDataLoading(false);
-      // _errorMessage.value = "";
+      _errorMessage.value = "";
+      _successMessage.value = "Agent Successfully Added";
       _registrationModel.value = data;
-      print("Test Name: ${data.name} ${data.address}");
+      print(data.email);
     });
   }
 
@@ -142,7 +177,6 @@ class RegistrationController extends GetxController {
         _registrationAvailableDeliveryPersonModel.value =
             availableDeliveryPersonList;
       }
-      print("Test Name: ${data.payload?[0].name} ${data.payload?[0].address}");
     });
   }
 
@@ -158,13 +192,11 @@ class RegistrationController extends GetxController {
       // _isDataLoading(false);
       // _errorMessage.value = "";
       _registrationModel.value = data.payload ?? DeliveryPersonRegistration();
-      print("Test Name: ${data.payload?.name} ${data.payload?.address}");
       _aadharController.text = data.payload?.aadhaar ?? "";
       _addressController.text = data.payload?.address ?? "";
       _drivingLicenseController.text = data.payload?.drivingLicense ?? "";
       _emergencyContactNumberController.text =
           data.payload?.emergencyContact ?? "";
-      _nameController.text = data.payload?.name ?? "";
       _panController.text = data.payload?.pan ?? "";
       _phoneNumberController.text = data.payload?.phoneNumber ?? "";
       _photoController.text = data.payload?.photo ?? "";
@@ -184,7 +216,6 @@ class RegistrationController extends GetxController {
       // _errorMessage.value = "";
       _registrationModel.value = data.payload ?? DeliveryPersonRegistration();
       // _registrationModel.refresh();
-      print("Test Name: ${data.payload?.name} ${data.payload?.address}");
       getDeliveryPersonRegistrationDetailsAll();
       getDeliveryPersonRegistrationDetail(id);
     });
@@ -226,7 +257,6 @@ class RegistrationController extends GetxController {
       // _isDataLoading(false);
       // _errorMessage.value = "";
       _registrationModel.value = data.payload ?? DeliveryPersonRegistration();
-      print("Test Name: ${data.payload?.name} ${data.payload?.address}");
     });
   }
 }

@@ -359,7 +359,7 @@ class _DeliveryPersonRegistrationFormState
                                   .createDeliveryPersonRegistration(
                                 phoneNumber: _registrationController
                                     .phoneNumberController.text,
-                                name:
+                                firstName:
                                     _registrationController.nameController.text,
                                 address: _registrationController
                                     .addressController.text,
