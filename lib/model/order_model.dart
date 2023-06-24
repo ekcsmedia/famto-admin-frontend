@@ -1,37 +1,26 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'delivery_model.dart';
+import 'pickup_model.dart';
+
 part 'order_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class OrderModel {
-  int? newId;
-  String? name;
-  String? phoneNumber;
-  String? deliveryType;
-  String? vehicleType;
-  String? pickupLocation;
-  String? dropLocation;
-  double? deliveryCharge;
-  String? orderId;
-  String? status;
-  String? deliveryPerson;
-  String? deliveryPersonNumber;
-  DateTime? createdAt;
+  String? taskId;
+  String? assignee;
+  String? type;
+  List<Pickup>? pickupDetails;
+  List<Delivery>? deliveryDetails;
+  String? agent;
 
-  OrderModel(
-      {this.newId,
-      this.name,
-      this.phoneNumber,
-      this.deliveryType,
-      this.vehicleType,
-      this.pickupLocation,
-      this.dropLocation,
-      this.deliveryCharge,
-      this.deliveryPerson,
-      this.deliveryPersonNumber,
-      this.orderId,
-      this.createdAt,
-      this.status});
+  OrderModel({
+    this.assignee,
+    this.type,
+    this.pickupDetails,
+    this.deliveryDetails,
+    this.agent,
+  });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
       _$OrderModelFromJson(json);

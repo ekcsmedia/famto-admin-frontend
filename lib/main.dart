@@ -8,6 +8,7 @@ import 'views/delivery_person_dashboard.dart';
 import 'views/home_screen.dart';
 import 'views/login_screen.dart';
 import 'views/login_with_phone_number.dart';
+import 'views/map_view_agent_home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,7 +42,7 @@ class MainApp extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => DeliveryAgentDashboard()),
+            MaterialPageRoute(builder: (context) => const CreateTask()),
           );
         },
         child: const Icon(Icons.login),

@@ -11,30 +11,10 @@ class OrderController extends GetxController {
   final RxList<OrderModel> _orderModelAll = <OrderModel>[].obs;
   List<OrderModel> get orderModelAll => _orderModelAll;
 
-  createOrder(
-      {phoneNumber,
-      name,
-      deliveryType,
-      vehicleType,
-      deliveryCharges,
-      pickupLocation,
-      dropLocation,
-      deliveryPerson,
-      status,
-      deliveryPersonNumber}) async {
+  createOrder({parameters}) async {
     // _isDataLoading(true);
 
-    var response = await _orderRepository.createOrder(
-        phoneNumber: phoneNumber,
-        name: name,
-        deliveryType: deliveryType,
-        vehicleType: vehicleType,
-        deliveryCharges: deliveryCharges,
-        pickupLocation: pickupLocation,
-        dropLocation: dropLocation,
-        deliveryPerson: deliveryPerson,
-        deliveryPersonNumber: deliveryPersonNumber,
-        status: status);
+    var response = await _orderRepository.createOrder(parameters: parameters);
 
     response.fold((failure) {
       print("FAILED");
@@ -44,7 +24,7 @@ class OrderController extends GetxController {
       // _isDataLoading(false);
       // _errorMessage.value = "";
       _orderModel.value = data;
-      print("Test Name: ${data.name} ${data.deliveryType}");
+      // print("Test Name: ${data.name} ${data.deliveryType}");
     });
   }
 
@@ -56,7 +36,6 @@ class OrderController extends GetxController {
     }, (data) async {
       print("-------------");
       print(data.payload?.length);
-      print(data.payload?[0].name);
       print("-------------");
       print(orderModelAll.toString());
       _orderModelAll.value = data.payload ?? [];

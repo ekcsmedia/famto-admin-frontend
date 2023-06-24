@@ -122,19 +122,19 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: page == 'Delivery Categories'
           ? DeliveryScreen()
-          : page == 'Order Management'
-              ? const OrderManagementScreen()
-              : page == 'List Delivery Categories'
-                  ? DeliveryCategoryListScreen()
-                  : page == 'Create Delivery Categories'
-                      ? DeliveryCategoryAddScreen()
-                      : page == 'Delivery Person Management'
-                          ? DeliveryPersonManagement()
-                          : page == 'List Delivery Person'
-                              ? DeliveryPersonListScreen()
-                              : page == 'Create Delivery Person'
-                                  ? DeliveryPersonRegistrationForm()
-                                  : Container(),
+          // : page == 'Order Management'
+          //     ? const OrderManagementScreen()
+          : page == 'List Delivery Categories'
+              ? DeliveryCategoryListScreen()
+              : page == 'Create Delivery Categories'
+                  ? DeliveryCategoryAddScreen()
+                  : page == 'Delivery Person Management'
+                      ? DeliveryPersonManagement()
+                      : page == 'List Delivery Person'
+                          ? DeliveryPersonListScreen()
+                          : page == 'Create Delivery Person'
+                              ? DeliveryPersonRegistrationForm()
+                              : Container(),
     );
   }
 

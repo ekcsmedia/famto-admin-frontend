@@ -1,21 +1,34 @@
+import 'package:famto_admin_app/controller/task_management_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../model/task_details.dart';
 
 class OrderDetails extends StatefulWidget {
-  const OrderDetails({super.key});
+  const OrderDetails({String? orderType, super.key});
 
   @override
   State<OrderDetails> createState() => _OrderDetailsState();
 }
 
 class _OrderDetailsState extends State<OrderDetails> {
-  final List<OrderSet> _sets = <OrderSet>[];
+  final TaskManagementController _taskManagementController =
+      TaskManagementController();
+
+  List<TaskDetails> taskDetailsList = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void removeSetAt(index) {
-    print(_sets);
+    print(taskDetailsList.toString());
     setState(() {
-      _sets.removeAt(index);
+      taskDetailsList.removeAt(index);
+      _taskManagementController.removeTaskDetailsListPickup(index);
     });
-    print(_sets);
+    print(taskDetailsList);
   }
 
   @override
@@ -63,9 +76,9 @@ class _OrderDetailsState extends State<OrderDetails> {
             ),
           ],
           rows: [
-            for (var i = 0; i < _sets.length; i++)
+            for (var i = 0; i < taskDetailsList.length; i++)
               DataRow(
-                  key: ObjectKey(_sets[i]),
+                  key: ObjectKey(taskDetailsList[i]),
                   onSelectChanged: (bool) => print("select $bool"),
                   cells: [
                     // SET NUMBER
@@ -74,10 +87,12 @@ class _OrderDetailsState extends State<OrderDetails> {
                     DataCell(Container(
                         width: MediaQuery.of(context).size.width * 0.05,
                         child: TextFormField(
-                            initialValue: "${_sets[i].items}",
+                            initialValue: "${taskDetailsList[i].items}",
                             onChanged: (value) {
                               setState(() {
-                                _sets[i].items = value;
+                                taskDetailsList[i].items = value;
+                                _taskManagementController
+                                    .taskListPickup[i].items = value;
                               });
                             },
                             cursorColor: Colors.black,
@@ -95,11 +110,13 @@ class _OrderDetailsState extends State<OrderDetails> {
                     DataCell(Container(
                         width: MediaQuery.of(context).size.width * 0.05,
                         child: TextFormField(
-                            initialValue: "${_sets[i].qty}",
+                            // initialValue: "${taskDetailsList[i].qty}",
                             onChanged: (value) {
-                              setState(() {
-                                _sets[i].qty = value;
-                              });
+                              // setState(() {
+                              //   taskDetailsList[i].qty = value as double?;
+                              //   _taskManagementController
+                              //       .taskListPickup[i].qty = value as double?;
+                              // });
                             },
                             cursorColor: Colors.black,
                             decoration: new InputDecoration(
@@ -116,11 +133,14 @@ class _OrderDetailsState extends State<OrderDetails> {
                     DataCell(Container(
                         width: MediaQuery.of(context).size.width * 0.05,
                         child: TextFormField(
-                            initialValue: "${_sets[i].amount}",
+                            // initialValue: "${taskDetailsList[i].amount}",
                             onChanged: (value) {
-                              setState(() {
-                                _sets[i].amount = value;
-                              });
+                              // setState(() {
+                              //   taskDetailsList[i].amount = double.parse(value);
+
+                              //   _taskManagementController.taskListPickup[i]
+                              //       .amount = value as double?;
+                              // });
                             },
                             cursorColor: Colors.black,
                             decoration: new InputDecoration(
@@ -148,8 +168,12 @@ class _OrderDetailsState extends State<OrderDetails> {
           padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
           child: InkWell(
               onTap: () {
-                _sets.add(OrderSet("", "", "", "", ""));
-                setState(() {});
+                setState(() {
+                  taskDetailsList
+                      .add(TaskDetails(id: 0, items: "", qty: 0.0, amount: 0));
+                  _taskManagementController.addTaskDetailsListPickup(
+                      TaskDetails(id: 0, items: "", qty: 0.0, amount: 0));
+                });
               },
               child: const Text(
                 "+ Add Row",
@@ -159,14 +183,4 @@ class _OrderDetailsState extends State<OrderDetails> {
       ],
     );
   }
-}
-
-class OrderSet {
-  String id;
-  String items;
-  String qty;
-  String amount;
-  String action;
-
-  OrderSet(this.id, this.items, this.qty, this.amount, this.action);
 }

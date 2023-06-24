@@ -7,36 +7,24 @@ part of 'order_model.dart';
 // **************************************************************************
 
 OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
-      newId: json['newId'] as int?,
-      name: json['name'] as String?,
-      phoneNumber: json['phoneNumber'] as String?,
-      deliveryType: json['deliveryType'] as String?,
-      vehicleType: json['vehicleType'] as String?,
-      pickupLocation: json['pickupLocation'] as String?,
-      dropLocation: json['dropLocation'] as String?,
-      deliveryCharge: (json['deliveryCharge'] as num?)?.toDouble(),
-      deliveryPerson: json['deliveryPerson'] as String?,
-      deliveryPersonNumber: json['deliveryPersonNumber'] as String?,
-      orderId: json['orderId'] as String?,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      status: json['status'] as String?,
-    );
+      assignee: json['assignee'] as String?,
+      type: json['type'] as String?,
+      pickupDetails: (json['pickupDetails'] as List<dynamic>?)
+          ?.map((e) => Pickup.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      deliveryDetails: (json['deliveryDetails'] as List<dynamic>?)
+          ?.map((e) => Delivery.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      agent: json['agent'] as String?,
+    )..taskId = json['taskId'] as String?;
 
 Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
     <String, dynamic>{
-      'newId': instance.newId,
-      'name': instance.name,
-      'phoneNumber': instance.phoneNumber,
-      'deliveryType': instance.deliveryType,
-      'vehicleType': instance.vehicleType,
-      'pickupLocation': instance.pickupLocation,
-      'dropLocation': instance.dropLocation,
-      'deliveryCharge': instance.deliveryCharge,
-      'orderId': instance.orderId,
-      'status': instance.status,
-      'deliveryPerson': instance.deliveryPerson,
-      'deliveryPersonNumber': instance.deliveryPersonNumber,
-      'createdAt': instance.createdAt?.toIso8601String(),
+      'taskId': instance.taskId,
+      'assignee': instance.assignee,
+      'type': instance.type,
+      'pickupDetails': instance.pickupDetails?.map((e) => e.toJson()).toList(),
+      'deliveryDetails':
+          instance.deliveryDetails?.map((e) => e.toJson()).toList(),
+      'agent': instance.agent,
     };

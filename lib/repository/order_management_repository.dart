@@ -9,38 +9,16 @@ import '../utils/failure.dart';
 class OrderRepository {
   final _apiManager = ApiManager();
 
-  Future<Either<Failure, OrderModel>> createOrder(
-      {phoneNumber,
-      name,
-      deliveryType,
-      vehicleType,
-      pickupLocation,
-      dropLocation,
-      deliveryCharges,
-      deliveryPerson,
-      deliveryPersonNumber,
-      orderId,
-      status}) async {
+  Future<Either<Failure, OrderModel>> createOrder({parameters}) async {
     try {
       print("inside order repository");
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.post(
+        "http://ec2-3-111-2-150.ap-south-1.compute.amazonaws.com:8080/famto-backend/api/orders/",
         // "http://192.168.1.3:8080/api/orders/",
-        "http://10.0.2.2:8080/api/orders/",
+        // "http://10.0.2.2:8080/api/orders/",
 
-        {
-          "phoneNumber": phoneNumber,
-          "name": name,
-          "deliveryType": deliveryType,
-          "vehicleType": vehicleType,
-          "pickupLocation": pickupLocation,
-          "dropLocation": dropLocation,
-          "deliveryCharge": deliveryCharges,
-          "orderId": orderId,
-          "status": status,
-          "deliveryPerson": deliveryPerson,
-          "deliveryPersonNumber": deliveryPersonNumber
-        },
+        parameters,
         isTokenMandatory: false,
       );
 

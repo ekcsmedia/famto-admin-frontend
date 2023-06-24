@@ -1,11 +1,14 @@
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' hide VoidCallback;
-import 'dart:js';
+import 'dart:js' hide context;
 
+import 'package:famto_admin_app/controller/task_management_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_maps/google_maps.dart' hide Icon hide Padding;
 import 'dart:ui' as ui hide VoidCallback;
 
+import 'map_view_order.dart';
 import 'order_details_table.dart';
 
 class CreateTask extends StatefulWidget {
@@ -16,14 +19,8 @@ class CreateTask extends StatefulWidget {
 }
 
 class _CreateTaskState extends State<CreateTask> {
-  var selectedTeam = 'Admin';
-  var teamList = ['Admin', 'Delivery Agent', 'Customer'];
-
-  var taskType = 'Pickup and Delivery';
-  var taskTypeList = ['Pickup and Delivery', 'Appointment', 'Field Workforce'];
-
-  var templateType = 'Order Template';
-  var templateList = ['Order Template', 'Other Template'];
+  TaskManagementController _taskManagementController =
+      TaskManagementController();
 
   var countRow = 1;
 
@@ -42,12 +39,13 @@ class _CreateTaskState extends State<CreateTask> {
   List<DataRow> listDataRow = <DataRow>[];
 
   Widget getMap() {
-    String htmlId = "7";
+    String htmlId = "2";
 
     // ignore: undefined_prefixed_name
     ui.platformViewRegistry.registerViewFactory(htmlId, (int viewId) {
-      final myLatlng = new LatLng(30.2669444, -97.7427778);
+      final myLatlng1 = new LatLng(30.2669444, -97.7427778);
       final myLatlng2 = new LatLng(29.2669444, -97.7427778);
+      final myLatlng3 = new LatLng(31.2669444, -97.7427778);
 
       final mapOptions = new MapOptions()
         ..zoom = 8
@@ -61,10 +59,20 @@ class _CreateTaskState extends State<CreateTask> {
 
       final map = new GMap(elem, mapOptions);
 
-      Marker(MarkerOptions()
-        ..position = myLatlng
-        ..map = map
-        ..title = 'Hello World!');
+      final markers = <Marker>[
+        Marker(MarkerOptions()
+          ..position = myLatlng1
+          ..map = map
+          ..title = 'Hello Suvi!'),
+        Marker(MarkerOptions()
+          ..position = myLatlng2
+          ..map = map
+          ..title = 'Hello Laddu!'),
+        Marker(MarkerOptions()
+          ..position = myLatlng3
+          ..map = map
+          ..title = 'Hello Santhosh!')
+      ];
 
       // Marker(MarkerOptions()
       //   ..position = myLatlng2
@@ -97,133 +105,244 @@ class _CreateTaskState extends State<CreateTask> {
   }
 
   _createTaskForm() {
-    return Flexible(
-      flex: 1,
-      fit: FlexFit.tight,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 50,
-              width: double.infinity,
-              color: Colors.transparent,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'New Task',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+    return Obx(() => Flexible(
+          flex: 1,
+          fit: FlexFit.tight,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 50,
+                  width: double.infinity,
+                  color: Colors.transparent,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'New Task',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(Icons.close)),
+                      ],
                     ),
-                    IconButton(
-                        onPressed: () {
-                          // Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.close)),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownButton(
-                  style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.normal,
-                      fontStyle: FontStyle.normal),
-                  value: selectedTeam,
-                  items: teamList
-                      .map((e) => DropdownMenuItem(
-                            value: e,
-                            child: Text(e),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedTeam = value.toString();
-                    });
-                  },
-                  hint: const Text("Select Assignee"),
+                SizedBox(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButton(
+                      style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          fontStyle: FontStyle.normal),
+                      value: _taskManagementController.selectedTeamValue,
+                      items: _taskManagementController.teamList
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        _taskManagementController.selectedTeamValue =
+                            value.toString();
+                      },
+                      hint: const Text("Select Assignee"),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownButton(
-                  style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.normal,
-                      fontStyle: FontStyle.normal),
-                  value: taskType,
-                  items: taskTypeList
-                      .map((e) => DropdownMenuItem(
-                            value: e,
-                            child: Text(e),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      taskType = value.toString();
-                    });
-                  },
-                  hint: const Text("Select Task Type"),
+                SizedBox(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButton(
+                      style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          fontStyle: FontStyle.normal),
+                      value: _taskManagementController.taskTypeValue,
+                      items: _taskManagementController.taskTypeList
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        _taskManagementController.taskTypeValue =
+                            value.toString();
+                      },
+                      hint: const Text("Select Task Type"),
+                    ),
+                  ),
                 ),
-              ),
+                Obx(
+                  () => Column(
+                    children: [
+                      for (var i = 0;
+                          i < _taskManagementController.pickupListValue.length;
+                          i++)
+                        _pickupWidget(i),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      _taskManagementController.addPickup();
+                    },
+                    child: Text("Add Pickup")),
+                Obx(
+                  () => Column(
+                    children: [
+                      for (var i = 0;
+                          i <
+                              _taskManagementController
+                                  .deliveryListValue.length;
+                          i++)
+                        _deliveryWidget(i),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      _taskManagementController.addDelivery();
+                    },
+                    child: Text("Add Delivery")),
+                SizedBox(
+                  height: 40,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      _taskManagementController.createTask();
+                    },
+                    child: Text("Create Task")),
+              ],
             ),
-            _pickupWidget(),
-            const SizedBox(
-              height: 20,
-            ),
-            _deliveryWidget(),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 
-  ExpansionTile _pickupWidget() {
+  ExpansionTile _pickupWidget(int i) {
     return ExpansionTile(
-      title: const Text("Pick Up", style: TextStyle(fontSize: 12)),
-      children: [
-        Column(
-          children: [
-            _addAgentRowFormField(
-              label1: "Name",
-              label2: "Phone Number",
-            ),
-            _addAgentRowFormField(
-              label1: "Email",
-              label2: "Order ID",
-            ),
-            _pickupDropTextField(label: "Pickup Address"),
-            _pickupDropTextField(label: "Pickup Before"),
-            _pickupDropTextField(label: "Description"),
-            _selectTemplatePickup(),
-            _orderFieldsHeader(),
-            _taskDetailsHeader(),
-            _keyValueWidget(key: "Special Instructions", value: "Value"),
-            _keyValueWidget(key: "Tip", value: "Value"),
-            _keyValueWidget(key: "Delivery Charges", value: "Value"),
-            _keyValueWidget(key: "Discount", value: "Value"),
-            _keyValueWidget(key: "Payment Type", value: "Value"),
-            _keyValueWidget(key: "Sub Total", value: "Value"),
-            const SizedBox(
-              height: 20,
-            )
-          ],
-        )
-      ],
-    );
+        title: const Text("Pick Up", style: TextStyle(fontSize: 12)),
+        trailing: i == 0
+            ? const SizedBox.shrink()
+            : IconButton(
+                onPressed: () {
+                  _taskManagementController.removePickup(i);
+                },
+                icon: const Icon(Icons.delete)),
+        children: [
+          Column(
+            children: [
+              _addAgentRowFormField(
+                label1: "Name",
+                label2: "Phone Number",
+                onChanged1: (value) {
+                  _taskManagementController.pickupList[i].name = value;
+                },
+                onChanged2: (value) {
+                  _taskManagementController.pickupList[i].phone = value;
+                },
+              ),
+              _addAgentRowFormField(
+                label1: "Email",
+                label2: "Order ID",
+                onChanged1: (value) {
+                  _taskManagementController.pickupList[i].email = value;
+                },
+                onChanged2: (value) {
+                  _taskManagementController.pickupList[i].orderId = value;
+                },
+              ),
+              _pickupDropTextField(
+                  label: "Pickup Address",
+                  onChanged: (value) {
+                    _taskManagementController.pickupList[i].pickupAddress =
+                        value;
+                  }),
+              _pickupDropTextField(
+                  label: "Pickup Before",
+                  onChanged: (value) {
+                    _taskManagementController.pickupList[i].pickupBefore =
+                        value as DateTime;
+                  }),
+              _pickupDropTextField(
+                  label: "Description",
+                  onChanged: (value) {
+                    _taskManagementController.pickupList[i].description = value;
+                  }),
+              _selectTemplatePickup(),
+              _orderFieldsHeader(),
+              _taskDetailsHeader("Pickup"),
+              _keyValueWidget(
+                  key: "Special Instructions",
+                  value: "Special Instructions",
+                  onChanged: (value) {
+                    _taskManagementController
+                        .orderDetailsPickUpList[i].instructions = value;
+                  }),
+              _keyValueWidget(
+                  key: "Tip",
+                  value: "Tip",
+                  onChanged: (value) {
+                    _taskManagementController.orderDetailsPickUpList[i].tip =
+                        value;
+                  }),
+              _keyValueWidget(
+                  key: "Delivery Charges",
+                  value: "Delivery Charges",
+                  onChanged: (value) {
+                    _taskManagementController.orderDetailsPickUpList[i]
+                        .deliveryCharges = double.parse(value);
+                  }),
+              _keyValueWidget(
+                key: "Discount",
+                value: "Value",
+                onChanged: (value) {
+                  _taskManagementController.orderDetailsPickUpList[i].discount =
+                      double.parse(value);
+                },
+              ),
+              _keyValueWidget(
+                key: "Payment Type",
+                value: "Value",
+                onChanged: (value) {
+                  _taskManagementController
+                      .orderDetailsPickUpList[i].paymentType = value;
+                },
+              ),
+              _keyValueWidget(
+                key: "Sub Total",
+                value: "Value",
+                onChanged: (value) {
+                  _taskManagementController.orderDetailsPickUpList[i].subTotal =
+                      double.parse(value);
+                },
+              ),
+              const SizedBox(
+                height: 20,
+              )
+            ],
+          )
+        ]);
   }
 
   SizedBox _selectTemplatePickup() {
@@ -236,17 +355,15 @@ class _CreateTaskState extends State<CreateTask> {
               fontSize: 12,
               fontWeight: FontWeight.normal,
               fontStyle: FontStyle.normal),
-          value: templateType,
-          items: templateList
+          value: _taskManagementController.templateTypeValue,
+          items: _taskManagementController.templateList
               .map((e) => DropdownMenuItem(
                     value: e,
                     child: Text(e),
                   ))
               .toList(),
           onChanged: (value) {
-            setState(() {
-              templateType = value.toString();
-            });
+            _taskManagementController.templateTypeValue = value.toString();
           },
           hint: const Text("Select Template"),
         ),
@@ -254,32 +371,101 @@ class _CreateTaskState extends State<CreateTask> {
     );
   }
 
-  ExpansionTile _deliveryWidget() {
+  ExpansionTile _deliveryWidget(int i) {
     return ExpansionTile(
       title: const Text("Delivery", style: TextStyle(fontSize: 12)),
+      trailing: i == 0
+          ? const SizedBox.shrink()
+          : IconButton(
+              onPressed: () {
+                _taskManagementController.removeDelivery(i);
+              },
+              icon: const Icon(Icons.delete)),
       children: [
         Column(
           children: [
             _addAgentRowFormField(
               label1: "Name",
               label2: "Phone Number",
+              onChanged1: (value) {
+                _taskManagementController.deliveryList[i].name = value;
+              },
+              onChanged2: (value) {
+                _taskManagementController.deliveryList[i].phone = value;
+              },
             ),
             _addAgentRowFormField(
               label1: "Email",
               label2: "Order ID",
+              onChanged1: (value) {
+                _taskManagementController.deliveryList[i].email = value;
+              },
+              onChanged2: (value) {
+                _taskManagementController.pickupList[i].orderId = value;
+              },
             ),
-            _pickupDropTextField(label: "Delivery Address"),
-            _pickupDropTextField(label: "Delivery Before"),
-            _pickupDropTextField(label: "Description"),
+            _pickupDropTextField(
+                label: "Delivery Address",
+                onChanged: (value) {
+                  _taskManagementController.deliveryList[i].pickupAddress =
+                      value;
+                }),
+            _pickupDropTextField(
+                label: "Delivery Before",
+                onChanged: (value) {
+                  _taskManagementController.deliveryList[i].deliveryBefore =
+                      value as DateTime;
+                }),
+            _pickupDropTextField(
+                label: "Description",
+                onChanged: (value) {
+                  _taskManagementController.deliveryList[i].description = value;
+                }),
             _selectTemplate(),
             _orderFieldsHeader(),
-            _taskDetailsHeader(),
-            _keyValueWidget(key: "Special Instructions", value: "Value"),
-            _keyValueWidget(key: "Tip", value: "Value"),
-            _keyValueWidget(key: "Delivery Charges", value: "Value"),
-            _keyValueWidget(key: "Discount", value: "Value"),
-            _keyValueWidget(key: "Payment Type", value: "Value"),
-            _keyValueWidget(key: "Sub Total", value: "Value"),
+            _taskDetailsHeader("Delivery"),
+            _keyValueWidget(
+                key: "Special Instructions",
+                value: "Special Instructions",
+                onChanged: (value) {
+                  _taskManagementController
+                      .orderDetailsDeliveryList[i].instructions = value;
+                }),
+            _keyValueWidget(
+                key: "Tip",
+                value: "Tip",
+                onChanged: (value) {
+                  _taskManagementController.orderDetailsDeliveryList[i].tip =
+                      value;
+                }),
+            _keyValueWidget(
+                key: "Delivery Charges",
+                value: "Delivery Charges",
+                onChanged: (value) {
+                  _taskManagementController.orderDetailsDeliveryList[i]
+                      .deliveryCharges = value as double;
+                }),
+            _keyValueWidget(
+                key: "Discount",
+                value: "Discount",
+                onChanged: (value) {
+                  _taskManagementController
+                      .orderDetailsDeliveryList[i].discount = value as double;
+                }),
+            _keyValueWidget(
+                key: "Payment Type",
+                value: "Payment Type",
+                onChanged: (value) {
+                  _taskManagementController
+                      .orderDetailsDeliveryList[i].paymentType = value;
+                }),
+            _keyValueWidget(
+                key: "Sub Total",
+                value: "Sub Total",
+                onChanged: (value) {
+                  _taskManagementController
+                      .orderDetailsDeliveryList[i].subTotal = value as double;
+                }),
             const SizedBox(
               height: 20,
             )
@@ -299,8 +485,8 @@ class _CreateTaskState extends State<CreateTask> {
               fontSize: 12,
               fontWeight: FontWeight.normal,
               fontStyle: FontStyle.normal),
-          value: templateType,
-          items: templateList
+          value: _taskManagementController.templateTypeValue,
+          items: _taskManagementController.templateList
               .map((e) => DropdownMenuItem(
                     value: e,
                     child: Text(e),
@@ -308,7 +494,7 @@ class _CreateTaskState extends State<CreateTask> {
               .toList(),
           onChanged: (value) {
             setState(() {
-              templateType = value.toString();
+              _taskManagementController.templateTypeValue = value.toString();
             });
           },
           hint: const Text("Select Template"),
@@ -358,7 +544,7 @@ class _CreateTaskState extends State<CreateTask> {
     );
   }
 
-  _taskDetailsHeader() {
+  _taskDetailsHeader(String? type) {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Row(
@@ -384,7 +570,9 @@ class _CreateTaskState extends State<CreateTask> {
                     width: 0.5,
                   ),
                 ),
-                child: OrderDetails(),
+                child: OrderDetails(
+                  orderType: type,
+                ),
               ),
             ],
           )
@@ -455,7 +643,8 @@ class _CreateTaskState extends State<CreateTask> {
   //       ));
   // }
 
-  _keyValueWidget({String key = "", String value = ""}) {
+  _keyValueWidget(
+      {String key = "", String value = "", Function(String)? onChanged}) {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Row(
@@ -485,6 +674,7 @@ class _CreateTaskState extends State<CreateTask> {
               padding: const EdgeInsets.all(4.0),
               child: TextField(
                 maxLines: 1,
+                onChanged: onChanged,
                 style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.normal,
@@ -506,11 +696,13 @@ class _CreateTaskState extends State<CreateTask> {
     );
   }
 
-  SizedBox _pickupDropTextField({String? label = ""}) {
+  SizedBox _pickupDropTextField(
+      {String? label = "", Function(String)? onChanged}) {
     return SizedBox(
       width: 600,
       child: TextFormField(
         maxLines: 3,
+        onChanged: onChanged,
         style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.normal,
@@ -526,7 +718,9 @@ class _CreateTaskState extends State<CreateTask> {
       {String? label1 = "",
       String? label2 = "",
       TextEditingController? controller1,
-      TextEditingController? controller2}) {
+      TextEditingController? controller2,
+      Function(String)? onChanged1,
+      Function(String)? onChanged2}) {
     return ListTile(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -542,6 +736,7 @@ class _CreateTaskState extends State<CreateTask> {
                 labelText: label1,
               ),
               controller: controller1,
+              onChanged: onChanged1,
             ),
           ),
           const SizedBox(
@@ -558,6 +753,7 @@ class _CreateTaskState extends State<CreateTask> {
                 labelText: label2,
               ),
               controller: controller2,
+              onChanged: onChanged2,
             ),
           ),
         ],
@@ -569,6 +765,7 @@ class _CreateTaskState extends State<CreateTask> {
     return Flexible(
       flex: 1,
       fit: FlexFit.tight,
+      // child: mapView(),
       child: getMap(),
     );
   }
