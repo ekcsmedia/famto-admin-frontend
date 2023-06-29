@@ -10,8 +10,8 @@ class MyMapPlaceApp extends StatefulWidget {
 }
 
 class _MyMapPlaceAppState extends State<MyMapPlaceApp> {
-  String address = "null";
-  String autocompletePlace = "null";
+  String address = "";
+  String autocompletePlace = "";
   Prediction? initialValue;
 
   final TextEditingController _controller = TextEditingController();
@@ -112,7 +112,7 @@ class _MyMapPlaceAppState extends State<MyMapPlaceApp> {
                       return MapLocationPicker(
                         apiKey: "AIzaSyDG58jFDbAQQN5ycqbDUOnaY97ufgQ3C2E",
                         canPopOnNextButtonTaped: true,
-                        currentLatLng: const LatLng(29.121599, 76.396698),
+                        currentLatLng: const LatLng(8.524139, 76.936638),
                         onNext: (GeocodingResult? result) {
                           if (result != null) {
                             setState(() {

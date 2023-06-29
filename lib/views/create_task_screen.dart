@@ -6,8 +6,10 @@ import 'package:famto_admin_app/controller/task_management_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps/google_maps.dart' hide Icon hide Padding;
+import 'package:map_location_picker/map_location_picker.dart' as mlp;
 import 'dart:ui' as ui hide VoidCallback;
 
+import '../model/task_details.dart';
 import 'map_view_order.dart';
 import 'order_details_table.dart';
 
@@ -25,6 +27,9 @@ class _CreateTaskState extends State<CreateTask> {
   var countRow = 1;
 
   String? valueAtCell1;
+
+  String? address;
+  String? autocompletePlace;
 
   DataRow dataRow = DataRow(
     onSelectChanged: (value) {},
@@ -197,14 +202,17 @@ class _CreateTaskState extends State<CreateTask> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Center(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          _taskManagementController.addPickupAndOrderDetails();
+                          // _taskManagementController.addOrderDetailsPickup();
+                        },
+                        child: Text("Add Pickup")),
+                  ),
                 ),
-                ElevatedButton(
-                    onPressed: () {
-                      _taskManagementController.addPickup();
-                    },
-                    child: Text("Add Pickup")),
                 Obx(
                   () => Column(
                     children: [
@@ -217,132 +225,160 @@ class _CreateTaskState extends State<CreateTask> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Center(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          _taskManagementController
+                              .addDeliveryAndOrderDetails();
+                          // _taskManagementController.addOrderDetailsDelivery();
+                        },
+                        child: Text("Add Delivery")),
+                  ),
                 ),
-                ElevatedButton(
-                    onPressed: () {
-                      _taskManagementController.addDelivery();
-                    },
-                    child: Text("Add Delivery")),
                 SizedBox(
                   height: 40,
                 ),
-                ElevatedButton(
-                    onPressed: () {
-                      _taskManagementController.createTask();
-                    },
-                    child: Text("Create Task")),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          // _taskManagementController.createTask();
+                        },
+                        child: Text("Assign Agent")),
+                    ElevatedButton(
+                        onPressed: () {
+                          _taskManagementController.createTask();
+                        },
+                        child: Text("Create Task")),
+                  ],
+                ),
+                SizedBox(
+                  height: 40,
+                ),
               ],
             ),
           ),
         ));
   }
 
-  ExpansionTile _pickupWidget(int i) {
-    return ExpansionTile(
-        title: const Text("Pick Up", style: TextStyle(fontSize: 12)),
-        trailing: i == 0
-            ? const SizedBox.shrink()
-            : IconButton(
-                onPressed: () {
-                  _taskManagementController.removePickup(i);
-                },
-                icon: const Icon(Icons.delete)),
-        children: [
-          Column(
-            children: [
-              _addAgentRowFormField(
-                label1: "Name",
-                label2: "Phone Number",
-                onChanged1: (value) {
-                  _taskManagementController.pickupList[i].name = value;
-                },
-                onChanged2: (value) {
-                  _taskManagementController.pickupList[i].phone = value;
-                },
-              ),
-              _addAgentRowFormField(
-                label1: "Email",
-                label2: "Order ID",
-                onChanged1: (value) {
-                  _taskManagementController.pickupList[i].email = value;
-                },
-                onChanged2: (value) {
-                  _taskManagementController.pickupList[i].orderId = value;
-                },
-              ),
-              _pickupDropTextField(
-                  label: "Pickup Address",
-                  onChanged: (value) {
-                    _taskManagementController.pickupList[i].pickupAddress =
-                        value;
-                  }),
-              _pickupDropTextField(
-                  label: "Pickup Before",
-                  onChanged: (value) {
-                    _taskManagementController.pickupList[i].pickupBefore =
-                        value as DateTime;
-                  }),
-              _pickupDropTextField(
-                  label: "Description",
-                  onChanged: (value) {
-                    _taskManagementController.pickupList[i].description = value;
-                  }),
-              _selectTemplatePickup(),
-              _orderFieldsHeader(),
-              _taskDetailsHeader("Pickup"),
-              _keyValueWidget(
-                  key: "Special Instructions",
-                  value: "Special Instructions",
-                  onChanged: (value) {
-                    _taskManagementController
-                        .orderDetailsPickUpList[i].instructions = value;
-                  }),
-              _keyValueWidget(
-                  key: "Tip",
-                  value: "Tip",
-                  onChanged: (value) {
-                    _taskManagementController.orderDetailsPickUpList[i].tip =
-                        value;
-                  }),
-              _keyValueWidget(
-                  key: "Delivery Charges",
-                  value: "Delivery Charges",
-                  onChanged: (value) {
-                    _taskManagementController.orderDetailsPickUpList[i]
-                        .deliveryCharges = double.parse(value);
-                  }),
-              _keyValueWidget(
-                key: "Discount",
-                value: "Value",
-                onChanged: (value) {
-                  _taskManagementController.orderDetailsPickUpList[i].discount =
-                      double.parse(value);
-                },
-              ),
-              _keyValueWidget(
-                key: "Payment Type",
-                value: "Value",
-                onChanged: (value) {
-                  _taskManagementController
-                      .orderDetailsPickUpList[i].paymentType = value;
-                },
-              ),
-              _keyValueWidget(
-                key: "Sub Total",
-                value: "Value",
-                onChanged: (value) {
-                  _taskManagementController.orderDetailsPickUpList[i].subTotal =
-                      double.parse(value);
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              )
-            ],
-          )
-        ]);
+  _pickupWidget(int i) {
+    return Obx(() => Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ExpansionTile(
+              backgroundColor: Colors.white,
+              collapsedBackgroundColor: Colors.grey[300],
+              title: const Text("Pick Up", style: TextStyle(fontSize: 12)),
+              trailing: i == 0
+                  ? const SizedBox.shrink()
+                  : IconButton(
+                      onPressed: () {
+                        _taskManagementController.removePickup(i);
+                      },
+                      icon: const Icon(Icons.delete)),
+              children: [
+                Column(
+                  children: [
+                    _addAgentRowFormField(
+                      label1: "Name",
+                      label2: "Phone Number",
+                      onChanged1: (value) {
+                        _taskManagementController.pickupList[i].name = value;
+                      },
+                      onChanged2: (value) {
+                        _taskManagementController.pickupList[i].phone = value;
+                      },
+                    ),
+                    _addAgentRowFormField(
+                      label1: "Email",
+                      label2: "Order ID",
+                      onChanged1: (value) {
+                        _taskManagementController.pickupList[i].email = value;
+                      },
+                      onChanged2: (value) {
+                        _taskManagementController.pickupList[i].orderId = value;
+                      },
+                    ),
+                    _pickupDropTextField(
+                        label: "Pickup Address",
+                        onChanged: (value) {
+                          _taskManagementController
+                              .pickupList[i].pickupAddress = value;
+                        }),
+                    _pickupDropTextField(
+                        label: "Pickup Before",
+                        onChanged: (value) {
+                          _taskManagementController.pickupList[i].pickupBefore =
+                              value as DateTime;
+                        }),
+                    _pickupDropTextField(
+                        label: "Description",
+                        onChanged: (value) {
+                          _taskManagementController.pickupList[i].description =
+                              value;
+                        }),
+                    _selectTemplatePickup(),
+                    _orderFieldsHeader(),
+                    _taskDetailsHeader(
+                      type: "Pickup",
+                      i: i,
+                      list: _taskManagementController
+                          .pickupList[i].orderDetails?.taskDetails,
+                    ),
+                    _keyValueWidget(
+                        key: "Special Instructions",
+                        value: "Special Instructions",
+                        onChanged: (value) {
+                          _taskManagementController
+                              .pickupList[i].orderDetails?.instructions = value;
+                        }),
+                    _keyValueWidget(
+                        key: "Tip",
+                        value: "Tip",
+                        onChanged: (value) {
+                          _taskManagementController
+                              .pickupList[i].orderDetails?.tip = value;
+                        }),
+                    _keyValueWidget(
+                        key: "Delivery Charges",
+                        value: "Delivery Charges",
+                        onChanged: (value) {
+                          _taskManagementController.pickupList[i].orderDetails
+                              ?.deliveryCharges = double.parse(value);
+                        }),
+                    _keyValueWidget(
+                      key: "Discount",
+                      value: "Value",
+                      onChanged: (value) {
+                        _taskManagementController.pickupList[i].orderDetails
+                            ?.discount = double.parse(value);
+                      },
+                    ),
+                    _keyValueWidget(
+                      key: "Payment Type",
+                      value: "Value",
+                      onChanged: (value) {
+                        _taskManagementController
+                            .pickupList[i].orderDetails?.paymentType = value;
+                      },
+                    ),
+                    _keyValueWidget(
+                      key: "Sub Total",
+                      value: "Value",
+                      onChanged: (value) {
+                        _taskManagementController.pickupList[i].orderDetails
+                            ?.subTotal = double.parse(value);
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    )
+                  ],
+                )
+              ]),
+        ));
   }
 
   SizedBox _selectTemplatePickup() {
@@ -371,107 +407,117 @@ class _CreateTaskState extends State<CreateTask> {
     );
   }
 
-  ExpansionTile _deliveryWidget(int i) {
-    return ExpansionTile(
-      title: const Text("Delivery", style: TextStyle(fontSize: 12)),
-      trailing: i == 0
-          ? const SizedBox.shrink()
-          : IconButton(
-              onPressed: () {
-                _taskManagementController.removeDelivery(i);
-              },
-              icon: const Icon(Icons.delete)),
-      children: [
-        Column(
-          children: [
-            _addAgentRowFormField(
-              label1: "Name",
-              label2: "Phone Number",
-              onChanged1: (value) {
-                _taskManagementController.deliveryList[i].name = value;
-              },
-              onChanged2: (value) {
-                _taskManagementController.deliveryList[i].phone = value;
-              },
-            ),
-            _addAgentRowFormField(
-              label1: "Email",
-              label2: "Order ID",
-              onChanged1: (value) {
-                _taskManagementController.deliveryList[i].email = value;
-              },
-              onChanged2: (value) {
-                _taskManagementController.pickupList[i].orderId = value;
-              },
-            ),
-            _pickupDropTextField(
-                label: "Delivery Address",
-                onChanged: (value) {
-                  _taskManagementController.deliveryList[i].pickupAddress =
-                      value;
-                }),
-            _pickupDropTextField(
-                label: "Delivery Before",
-                onChanged: (value) {
-                  _taskManagementController.deliveryList[i].deliveryBefore =
-                      value as DateTime;
-                }),
-            _pickupDropTextField(
-                label: "Description",
-                onChanged: (value) {
-                  _taskManagementController.deliveryList[i].description = value;
-                }),
-            _selectTemplate(),
-            _orderFieldsHeader(),
-            _taskDetailsHeader("Delivery"),
-            _keyValueWidget(
-                key: "Special Instructions",
-                value: "Special Instructions",
-                onChanged: (value) {
-                  _taskManagementController
-                      .orderDetailsDeliveryList[i].instructions = value;
-                }),
-            _keyValueWidget(
-                key: "Tip",
-                value: "Tip",
-                onChanged: (value) {
-                  _taskManagementController.orderDetailsDeliveryList[i].tip =
-                      value;
-                }),
-            _keyValueWidget(
-                key: "Delivery Charges",
-                value: "Delivery Charges",
-                onChanged: (value) {
-                  _taskManagementController.orderDetailsDeliveryList[i]
-                      .deliveryCharges = value as double;
-                }),
-            _keyValueWidget(
-                key: "Discount",
-                value: "Discount",
-                onChanged: (value) {
-                  _taskManagementController
-                      .orderDetailsDeliveryList[i].discount = value as double;
-                }),
-            _keyValueWidget(
-                key: "Payment Type",
-                value: "Payment Type",
-                onChanged: (value) {
-                  _taskManagementController
-                      .orderDetailsDeliveryList[i].paymentType = value;
-                }),
-            _keyValueWidget(
-                key: "Sub Total",
-                value: "Sub Total",
-                onChanged: (value) {
-                  _taskManagementController
-                      .orderDetailsDeliveryList[i].subTotal = value as double;
-                }),
-            const SizedBox(
-              height: 20,
-            )
-          ],
-        )
-      ],
+  _deliveryWidget(int i) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ExpansionTile(
+        title: const Text("Delivery", style: TextStyle(fontSize: 12)),
+        backgroundColor: Colors.white,
+        collapsedBackgroundColor: Colors.grey[300],
+        trailing: i == 0
+            ? const SizedBox.shrink()
+            : IconButton(
+                onPressed: () {
+                  _taskManagementController.removeDelivery(i);
+                },
+                icon: const Icon(Icons.delete)),
+        children: [
+          Column(
+            children: [
+              _addAgentRowFormField(
+                label1: "Name",
+                label2: "Phone Number",
+                onChanged1: (value) {
+                  _taskManagementController.deliveryList[i].name = value;
+                },
+                onChanged2: (value) {
+                  _taskManagementController.deliveryList[i].phone = value;
+                },
+              ),
+              _addAgentRowFormField(
+                label1: "Email",
+                label2: "Order ID",
+                onChanged1: (value) {
+                  _taskManagementController.deliveryList[i].email = value;
+                },
+                onChanged2: (value) {
+                  _taskManagementController.deliveryList[i].orderId = value;
+                },
+              ),
+              _pickupDropTextField(
+                  label: "Delivery Address",
+                  onChanged: (value) {
+                    _taskManagementController.deliveryList[i].pickupAddress =
+                        value;
+                  }),
+              _pickupDropTextField(
+                  label: "Delivery Before",
+                  onChanged: (value) {
+                    _taskManagementController.deliveryList[i].deliveryBefore =
+                        value as DateTime;
+                  }),
+              _pickupDropTextField(
+                  label: "Description",
+                  onChanged: (value) {
+                    _taskManagementController.deliveryList[i].description =
+                        value;
+                  }),
+              _selectTemplate(),
+              _orderFieldsHeader(),
+              _taskDetailsHeader(
+                  type: "Delivery",
+                  i: i,
+                  list: _taskManagementController
+                      .deliveryList[i].orderDetails?.taskDetails),
+              _keyValueWidget(
+                  key: "Special Instructions",
+                  value: "Special Instructions",
+                  onChanged: (value) {
+                    _taskManagementController
+                        .deliveryList[i].orderDetails?.instructions = value;
+                  }),
+              _keyValueWidget(
+                  key: "Tip",
+                  value: "Tip",
+                  onChanged: (value) {
+                    _taskManagementController
+                        .deliveryList[i].orderDetails?.tip = value;
+                  }),
+              _keyValueWidget(
+                  key: "Delivery Charges",
+                  value: "Delivery Charges",
+                  onChanged: (value) {
+                    _taskManagementController.deliveryList[i].orderDetails
+                        ?.deliveryCharges = value as double;
+                  }),
+              _keyValueWidget(
+                  key: "Discount",
+                  value: "Discount",
+                  onChanged: (value) {
+                    _taskManagementController.deliveryList[i].orderDetails
+                        ?.discount = value as double;
+                  }),
+              _keyValueWidget(
+                  key: "Payment Type",
+                  value: "Payment Type",
+                  onChanged: (value) {
+                    _taskManagementController
+                        .deliveryList[i].orderDetails?.paymentType = value;
+                  }),
+              _keyValueWidget(
+                  key: "Sub Total",
+                  value: "Sub Total",
+                  onChanged: (value) {
+                    _taskManagementController.deliveryList[i].orderDetails
+                        ?.subTotal = value as double;
+                  }),
+              const SizedBox(
+                height: 20,
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -544,7 +590,7 @@ class _CreateTaskState extends State<CreateTask> {
     );
   }
 
-  _taskDetailsHeader(String? type) {
+  _taskDetailsHeader({String? type, int? i, List<TaskDetails>? list}) {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Row(
@@ -570,8 +616,10 @@ class _CreateTaskState extends State<CreateTask> {
                     width: 0.5,
                   ),
                 ),
-                child: OrderDetails(
-                  orderType: type,
+                child: OrderDetailsScreen(
+                  taskDetailsList: list,
+                  orderType: type ?? "",
+                  index: i ?? 0,
                 ),
               ),
             ],
@@ -766,7 +814,28 @@ class _CreateTaskState extends State<CreateTask> {
       flex: 1,
       fit: FlexFit.tight,
       // child: mapView(),
-      child: getMap(),
+      child: mlp.MapLocationPicker(
+        apiKey: "AIzaSyDG58jFDbAQQN5ycqbDUOnaY97ufgQ3C2E",
+        canPopOnNextButtonTaped: false,
+        currentLatLng: const mlp.LatLng(8.524139, 76.936638),
+        onNext: (mlp.GeocodingResult? result) {
+          if (result != null) {
+            setState(() {
+              address = result.formattedAddress ?? "";
+              print("$address");
+            });
+          }
+        },
+        onSuggestionSelected: (mlp.PlacesDetailsResponse? result) {
+          if (result != null) {
+            setState(() {
+              autocompletePlace = result.result.formattedAddress ?? "";
+              print("$autocompletePlace --  hi");
+            });
+          }
+        },
+      ),
+      // getMap(),
     );
   }
 }

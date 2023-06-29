@@ -1,6 +1,4 @@
-import 'package:dartz/dartz.dart';
 import 'package:famto_admin_app/model/order_details_model.dart';
-import 'package:famto_admin_app/views/create_task_screen.dart';
 import 'package:get/get.dart';
 
 import '../model/delivery_model.dart';
@@ -13,59 +11,28 @@ class TaskManagementController extends GetxController {
   final _orderModel = OrderModel().obs;
   OrderModel get orderModel => _orderModel.value;
 
-  RxList<OrderDetails> orderDetailsDeliveryList = <OrderDetails>[
-    OrderDetails(
-      taskDetails: [],
-      instructions: "",
-      tip: "",
-      deliveryCharges: 0.0,
-      discount: 0.0,
-      paymentType: "",
-      subTotal: 0.0,
-    )
-  ].obs;
-
-  List<OrderDetails> get orderDetailsDeliveryListValue =>
-      orderDetailsDeliveryList.value;
-
-  RxList<OrderDetails> orderDetailsPickUpList = <OrderDetails>[
-    OrderDetails(
-      taskDetails: [],
-      instructions: "",
-      tip: "",
-      deliveryCharges: 0.0,
-      discount: 0.0,
-      paymentType: "",
-      subTotal: 0.0,
-    )
-  ].obs;
-
-  List<OrderDetails> get orderDetailsPickUpListValue =>
-      orderDetailsPickUpList.value;
-
-  // OrderDetails get orderDetails => _orderDetails.value;
-
-  // final _taskDetails = TaskDetails().obs;
-  // TaskDetails get taskDetails => _taskDetails.value;
-
   RxList<TaskDetails> taskListPickup = <TaskDetails>[].obs;
   List<TaskDetails> get taskListPickupValue => taskListPickup.value;
 
-  addTaskDetailsListPickup(TaskDetails taskDetails) {
-    taskListPickup.add(taskDetails);
-    print(taskListPickupValue.length);
-    print(taskListPickupValue[0].items);
-  }
+  RxList<List<TaskDetails>> taskListPickupList = <List<TaskDetails>>[
+    [TaskDetails()],
+  ].obs;
+  List<List<TaskDetails>> get taskListPickupListValue =>
+      taskListPickupList.value;
 
-  removeTaskDetailsListPickup(index) {
-    taskListPickup.removeAt(index);
-    print(taskListPickupValue.length);
-  }
+  // addTaskDetailsListPickup(TaskDetails taskDetails) {
+  //   taskListPickup.add(taskDetails);
+  // }
+
+  // removeTaskDetailsListPickup(index) {
+  //   taskListPickup.removeAt(index);
+  //   print(taskListPickupValue.length);
+  // }
 
   List<TaskDetails> taskListDelivery = [];
 
-  final _pickUpDetails = Pickup().obs;
-  Pickup get pickUpDetails => _pickUpDetails.value;
+  // final _pickUpDetails = Pickup().obs;
+  // Pickup get pickUpDetails => _pickUpDetails.value;
 
   RxList<Pickup> pickupList = <Pickup>[
     Pickup(
@@ -78,13 +45,28 @@ class TaskManagementController extends GetxController {
       description: "",
       imageUrl: "",
       template: "",
-      orderDetails: OrderDetails(),
+      orderDetails: OrderDetails(
+        taskDetails: [
+          TaskDetails(
+            id: 0,
+            items: "",
+            qty: 0.0,
+            amount: 0.0,
+          )
+        ],
+        instructions: "",
+        tip: "",
+        deliveryCharges: 0.0,
+        discount: 0.0,
+        paymentType: "",
+        subTotal: 0.0,
+      ),
     )
   ].obs;
 
   List<Pickup> get pickupListValue => pickupList.value;
 
-  addPickup() {
+  addPickupAndOrderDetails() {
     pickupList.add(Pickup(
       name: "",
       phone: "",
@@ -95,18 +77,31 @@ class TaskManagementController extends GetxController {
       description: "",
       imageUrl: "",
       template: "",
-      orderDetails: OrderDetails(),
+      orderDetails: OrderDetails(
+        taskDetails: [
+          TaskDetails(
+            id: 0,
+            items: "",
+            qty: 0.0,
+            amount: 0.0,
+          )
+        ],
+        instructions: "",
+        tip: "",
+        deliveryCharges: 0.0,
+        discount: 0.0,
+        paymentType: "",
+        subTotal: 0.0,
+      ),
     ));
-    print(taskListPickupValue.length);
-    print(taskListPickupValue[0].items);
   }
 
   removePickup(index) {
     pickupList.removeAt(index);
   }
 
-  final _deliveryDetails = Delivery().obs;
-  Delivery get deliveryDetails => _deliveryDetails.value;
+  // final _deliveryDetails = Delivery().obs;
+  // Delivery get deliveryDetails => _deliveryDetails.value;
 
   RxList<Delivery> deliveryList = <Delivery>[
     Delivery(
@@ -119,13 +114,21 @@ class TaskManagementController extends GetxController {
       description: "",
       imageUrl: "",
       template: "",
-      orderDetails: OrderDetails(),
+      orderDetails: OrderDetails(
+        taskDetails: [],
+        instructions: "",
+        tip: "",
+        deliveryCharges: 0.0,
+        discount: 0.0,
+        paymentType: "",
+        subTotal: 0.0,
+      ),
     )
   ].obs;
 
   List<Delivery> get deliveryListValue => deliveryList.value;
 
-  addDelivery() {
+  addDeliveryAndOrderDetails() {
     deliveryList.add(Delivery(
       name: "",
       phone: "",
@@ -136,7 +139,15 @@ class TaskManagementController extends GetxController {
       description: "",
       imageUrl: "",
       template: "",
-      orderDetails: OrderDetails(),
+      orderDetails: OrderDetails(
+        taskDetails: [],
+        instructions: "",
+        tip: "",
+        deliveryCharges: 0.0,
+        discount: 0.0,
+        paymentType: "",
+        subTotal: 0.0,
+      ),
     ));
   }
 
@@ -164,25 +175,18 @@ class TaskManagementController extends GetxController {
   createTask() async {
     print("inside create task");
 
-    for (int i = 0; i < pickupList.length; i++) {
+    for (int i = 0; i < pickupListValue.length; i++) {
       pickupList[i].template = templateTypeValue;
-      pickupList[i].orderDetails = orderDetailsPickUpListValue[i];
-    }
-    for (int i = 0; i < deliveryList.length; i++) {
-      deliveryList[i].template = templateTypeValue;
-      deliveryList[i].orderDetails = orderDetailsDeliveryListValue[i];
-    }
-    for (int i = 0; i < orderDetailsPickUpListValue.length; i++) {
-      orderDetailsPickUpListValue[i].taskDetails =
-          taskListPickupValue.toSet().toList();
-    }
-    for (int i = 0; i < orderDetailsDeliveryListValue.length; i++) {
-      orderDetailsDeliveryListValue[i].taskDetails =
-          taskListDelivery.toSet().toList();
+      // pickupList[i].orderDetails!.taskDetails = taskListPickupValue;
     }
 
+    for (int i = 0; i < deliveryListValue.length; i++) {
+      deliveryList[i].template = templateTypeValue;
+      // deliveryList[i].orderDetails!.taskDetails = taskListDelivery;
+    }
     orderModel.assignee = selectedTeamValue;
     orderModel.type = taskTypeValue;
+
     orderModel.pickupDetails = pickupListValue;
     orderModel.deliveryDetails = deliveryListValue;
 
@@ -193,7 +197,7 @@ class TaskManagementController extends GetxController {
     var response = await _taskRepo.createTask(parameters: orderModel);
 
     response.fold((failure) {
-      print("FAILED");
+      print("Try Again");
     }, (data) async {
       print("Success");
     });

@@ -1,34 +1,54 @@
 import 'package:famto_admin_app/controller/task_management_controller.dart';
+import 'package:famto_admin_app/model/order_details_model.dart';
+import 'package:famto_admin_app/model/order_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../model/task_details.dart';
 
-class OrderDetails extends StatefulWidget {
-  const OrderDetails({String? orderType, super.key});
+class OrderDetailsScreen extends StatefulWidget {
+  OrderDetailsScreen(
+      {required this.orderType,
+      required this.index,
+      required this.taskDetailsList,
+      super.key});
+
+  String orderType;
+  int index;
+  List<TaskDetails>? taskDetailsList;
 
   @override
-  State<OrderDetails> createState() => _OrderDetailsState();
+  State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
 }
 
-class _OrderDetailsState extends State<OrderDetails> {
-  final TaskManagementController _taskManagementController =
-      TaskManagementController();
+class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
+  // final TaskManagementController _taskManagementController =
+  //     TaskManagementController();
 
-  List<TaskDetails> taskDetailsList = [];
+  // List<TaskDetails> taskDetailsListInherited = [];
+  late int indexAtReference;
+
+  var orderDetails = OrderModel();
 
   @override
   void initState() {
+    indexAtReference = widget.index;
+    // taskDetailsListInherited = widget.taskDetailsList ?? [];
+    // if (widget.orderType == "Pickup") {
+
+    // } else {
+    // taskDetailsList = _taskManagementController.orderModel.deliveryDetails![indexAtReference].orderDetails!.taskDetails!;
+    // }
     super.initState();
   }
 
   void removeSetAt(index) {
-    print(taskDetailsList.toString());
+    print(widget.taskDetailsList.toString());
     setState(() {
-      taskDetailsList.removeAt(index);
-      _taskManagementController.removeTaskDetailsListPickup(index);
+      widget.taskDetailsList!.removeAt(index);
+      // _taskManagementController.removeTaskDetailsListPickup(index);
     });
-    print(taskDetailsList);
+    print(widget.taskDetailsList);
   }
 
   @override
@@ -76,9 +96,9 @@ class _OrderDetailsState extends State<OrderDetails> {
             ),
           ],
           rows: [
-            for (var i = 0; i < taskDetailsList.length; i++)
+            for (var i = 0; i < widget.taskDetailsList!.length; i++)
               DataRow(
-                  key: ObjectKey(taskDetailsList[i]),
+                  key: ObjectKey(widget.taskDetailsList![i]),
                   onSelectChanged: (bool) => print("select $bool"),
                   cells: [
                     // SET NUMBER
@@ -87,12 +107,12 @@ class _OrderDetailsState extends State<OrderDetails> {
                     DataCell(Container(
                         width: MediaQuery.of(context).size.width * 0.05,
                         child: TextFormField(
-                            initialValue: "${taskDetailsList[i].items}",
+                            initialValue: "${widget.taskDetailsList![i].items}",
                             onChanged: (value) {
                               setState(() {
-                                taskDetailsList[i].items = value;
-                                _taskManagementController
-                                    .taskListPickup[i].items = value;
+                                widget.taskDetailsList![i].items = value;
+                                // _taskManagementController
+                                //     .taskListPickup[i].items = value;
                               });
                             },
                             cursorColor: Colors.black,
@@ -169,10 +189,19 @@ class _OrderDetailsState extends State<OrderDetails> {
           child: InkWell(
               onTap: () {
                 setState(() {
-                  taskDetailsList
+                  widget.taskDetailsList!
                       .add(TaskDetails(id: 0, items: "", qty: 0.0, amount: 0));
-                  _taskManagementController.addTaskDetailsListPickup(
-                      TaskDetails(id: 0, items: "", qty: 0.0, amount: 0));
+
+                  // _taskManagementController
+                  //     .orderModel
+                  //     .pickupDetails?[indexAtReference]
+                  //     .orderDetails
+                  //     ?.taskDetails
+                  //     ?.add(TaskDetails(
+                  //         id: 1, items: "item1", qty: 0.0, amount: 0));
+
+                  // _taskManagementController.addTaskDetailsListPickup(
+                  //     TaskDetails(id: 0, items: "", qty: 0.0, amount: 0));
                 });
               },
               child: const Text(

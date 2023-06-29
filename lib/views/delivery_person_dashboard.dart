@@ -139,6 +139,16 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
                 width: 20,
               ),
               _addAgentButton(),
+              const SizedBox(
+                width: 20,
+              ),
+              IconButton(
+                onPressed: () {
+                  _registrationController
+                      .getDeliveryPersonRegistrationDetailsAll();
+                },
+                icon: const Icon(Icons.refresh),
+              )
             ],
           ),
         ),
