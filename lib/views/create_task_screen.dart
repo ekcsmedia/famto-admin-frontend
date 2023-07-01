@@ -4,6 +4,7 @@ import 'dart:js' hide context;
 
 import 'package:famto_admin_app/controller/task_management_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_google_places_web/flutter_google_places_web.dart';
 import 'package:get/get.dart';
 import 'package:google_maps/google_maps.dart' hide Icon hide Padding;
 import 'package:map_location_picker/map_location_picker.dart' as mlp;
@@ -24,7 +25,11 @@ class _CreateTaskState extends State<CreateTask> {
   TaskManagementController _taskManagementController =
       TaskManagementController();
 
+  List<TextEditingController> _textEditingControllerList =
+      <TextEditingController>[];
+
   var countRow = 1;
+  String test = '';
 
   String? valueAtCell1;
 
@@ -258,6 +263,27 @@ class _CreateTaskState extends State<CreateTask> {
                 SizedBox(
                   height: 40,
                 ),
+                // FlutterGooglePlacesWeb(
+                //   apiKey: "AIzaSyDoEWQJI9N4EtAH11h7p3yKzm73rlgcFxY",
+                //   // proxyURL: 'https://cors-anywhere.herokuapp.com/',
+                //   // proxyURL: "https://app.cors.bridged.cc/",
+                //   required: true,
+                // ),
+                TextButton(
+                  onPressed: () {
+                    print(FlutterGooglePlacesWeb.value[
+                        'name']); // '1600 Amphitheatre Parkway, Mountain View, CA, USA'
+                    print(FlutterGooglePlacesWeb
+                        .value['streetAddress']); // '1600 Amphitheatre Parkway'
+                    print(FlutterGooglePlacesWeb.value['city']); // 'CA'
+                    print(FlutterGooglePlacesWeb.value['country']);
+                    setState(() {
+                      test = FlutterGooglePlacesWeb.value['name'] ?? '';
+                    });
+                  },
+                  child: Text('Press to test'),
+                ),
+                Text(test),
               ],
             ),
           ),
@@ -307,6 +333,14 @@ class _CreateTaskState extends State<CreateTask> {
                           _taskManagementController
                               .pickupList[i].pickupAddress = value;
                         }),
+                    FlutterGooglePlacesWeb(
+                      apiKey: "AIzaSyDoEWQJI9N4EtAH11h7p3yKzm73rlgcFxY",
+                      proxyURL: 'https://cors-anywhere.herokuapp.com/',
+                      required: true,
+                      controller: TextEditingController(
+                          text: _taskManagementController
+                              .pickupList[i].pickupAddress),
+                    ),
                     _pickupDropTextField(
                         label: "Pickup Before",
                         onChanged: (value) {
@@ -450,6 +484,14 @@ class _CreateTaskState extends State<CreateTask> {
                     _taskManagementController.deliveryList[i].pickupAddress =
                         value;
                   }),
+              FlutterGooglePlacesWeb(
+                apiKey: "AIzaSyDoEWQJI9N4EtAH11h7p3yKzm73rlgcFxY",
+                proxyURL: 'https://cors-anywhere.herokuapp.com/',
+                required: true,
+                controller: TextEditingController(
+                    text: _taskManagementController
+                        .deliveryList[i].pickupAddress),
+              ),
               _pickupDropTextField(
                   label: "Delivery Before",
                   onChanged: (value) {
@@ -815,7 +857,7 @@ class _CreateTaskState extends State<CreateTask> {
       fit: FlexFit.tight,
       // child: mapView(),
       child: mlp.MapLocationPicker(
-        apiKey: "AIzaSyDG58jFDbAQQN5ycqbDUOnaY97ufgQ3C2E",
+        apiKey: "AIzaSyDoEWQJI9N4EtAH11h7p3yKzm73rlgcFxY",
         canPopOnNextButtonTaped: false,
         currentLatLng: const mlp.LatLng(8.524139, 76.936638),
         onNext: (mlp.GeocodingResult? result) {

@@ -46,7 +46,8 @@ class TaskRepo {
       print("inside order repository");
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.post(
-        "http://ec2-3-111-2-150.ap-south-1.compute.amazonaws.com:8080/famto-backend/api/task/",
+        "https://5ti3frg6nk.execute-api.ap-south-1.amazonaws.com/v1/get-tasks",
+        // "http://ec2-3-111-2-150.ap-south-1.compute.amazonaws.com:8080/famto-backend/api/task/",
         // "http://192.168.1.3:8080/api/orders/",
         // "http://10.0.2.2:8080/api/orders/",
 

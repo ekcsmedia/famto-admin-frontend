@@ -22,6 +22,18 @@ class RegistrationController extends GetxController {
       get registrationAvailableDeliveryPersonModel =>
           _registrationAvailableDeliveryPersonModel;
 
+  final _freeDeliveryPerson = <DeliveryPersonRegistration>[].obs;
+  List<DeliveryPersonRegistration> get freeDeliveryPerson =>
+      _freeDeliveryPerson;
+
+  final _busyDeliveryPerson = <DeliveryPersonRegistration>[].obs;
+  List<DeliveryPersonRegistration> get busyDeliveryPerson =>
+      _busyDeliveryPerson;
+
+  final _inactiveAgentsList = <DeliveryPersonRegistration>[].obs;
+  List<DeliveryPersonRegistration> get inactiveAgentsList =>
+      _inactiveAgentsList;
+
   final TextEditingController _nameController = TextEditingController();
 
   TextEditingController get nameController => _nameController;
@@ -174,8 +186,35 @@ class RegistrationController extends GetxController {
         availableDeliveryPersonList = data.payload!
             .where((element) => element.availability == true)
             .toList();
+
         _registrationAvailableDeliveryPersonModel.value =
             availableDeliveryPersonList;
+
+        List<DeliveryPersonRegistration> freeDeliveryPersonList =
+            <DeliveryPersonRegistration>[];
+
+        freeDeliveryPersonList = availableDeliveryPersonList
+            .where((element) => element.status == "free")
+            .toList();
+
+        _freeDeliveryPerson.value = freeDeliveryPersonList;
+
+        List<DeliveryPersonRegistration> busyDeliveryPersonList =
+            <DeliveryPersonRegistration>[];
+
+        busyDeliveryPersonList = availableDeliveryPersonList
+            .where((element) => element.status == "busy")
+            .toList();
+
+        _busyDeliveryPerson.value = busyDeliveryPersonList;
+
+        List<DeliveryPersonRegistration> inactiveDeliveryPersonList =
+            <DeliveryPersonRegistration>[];
+        inactiveDeliveryPersonList = data.payload!
+            .where((element) => element.availability == false)
+            .toList();
+
+        _inactiveAgentsList.value = inactiveDeliveryPersonList;
       }
     });
   }

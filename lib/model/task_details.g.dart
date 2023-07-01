@@ -9,7 +9,7 @@ part of 'task_details.dart';
 TaskDetails _$TaskDetailsFromJson(Map<String, dynamic> json) => TaskDetails(
       id: json['id'] as int?,
       items: json['items'] as String?,
-      qty: json['qty'] as double?,
+      qty: (json['qty'] as num?)?.toDouble(),
       amount: (json['amount'] as num?)?.toDouble(),
     );
 

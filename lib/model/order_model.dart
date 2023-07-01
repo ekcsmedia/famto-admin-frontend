@@ -13,6 +13,7 @@ class OrderModel {
   List<Pickup>? pickupDetails;
   List<Delivery>? deliveryDetails;
   String? agent;
+  String? status;
 
   OrderModel({
     this.assignee,
@@ -20,6 +21,7 @@ class OrderModel {
     this.pickupDetails,
     this.deliveryDetails,
     this.agent,
+    this.status,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) =>

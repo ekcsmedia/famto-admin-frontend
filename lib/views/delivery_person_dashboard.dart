@@ -5,51 +5,37 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../controller/registration_controller.dart';
+import '../model/delivery_person_registration_model.dart';
 import 'create_task_screen.dart';
 import 'package:google_maps/google_maps.dart' hide Icon hide Padding;
 import 'dart:ui' as ui hide VoidCallback;
 import 'dart:html' hide VoidCallback;
 
 class DeliveryAgentDashboard extends StatefulWidget {
-  const DeliveryAgentDashboard({super.key});
+  DeliveryAgentDashboard(
+      {required this.itemFreePersonList, required this.itemBusy, super.key});
+
+  List<DeliveryPersonRegistration> itemFreePersonList = [];
+  List<DeliveryPersonRegistration> itemBusy = [];
 
   @override
   State<DeliveryAgentDashboard> createState() => _DeliveryAgentDashboardState();
 }
 
 class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
-  Widget getMap() {
-    String htmlId = "1";
-
-    // ignore: undefined_prefixed_name
-    ui.platformViewRegistry.registerViewFactory(htmlId, (int viewId) {
-      final myLatlng = new LatLng(30.2669444, -97.7427778);
-
-      final mapOptions = new MapOptions()
-        ..zoom = 8
-        ..center = new LatLng(30.2669444, -97.7427778);
-
-      final elem = DivElement()
-        ..id = htmlId
-        ..style.width = "100%"
-        ..style.height = "100%"
-        ..style.border = 'none';
-
-      final map = new GMap(elem, mapOptions);
-
-      Marker(MarkerOptions()
-        ..position = myLatlng
-        ..map = map
-        ..title = 'Hello Santhosh!');
-
-      return elem;
-    });
-
-    return HtmlElementView(viewType: htmlId);
-  }
-
   final RegistrationController _registrationController =
       Get.put(RegistrationController());
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _registrationController.getDeliveryPersonRegistrationDetailsAll();
+    free = _registrationController.freeDeliveryPerson.length;
+    busy = _registrationController.busyDeliveryPerson.length;
+    inactive = _registrationController.inactiveAgentsList.length;
+    // widget.itemFreePersonList = _registrationController.freeDeliveryPerson;
+    super.initState();
+  }
 
   int? unassigned = 0;
   int? assigned = 0;
@@ -122,8 +108,116 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
 
   @override
   void setState(VoidCallback fn) {
+    // itemFreePersonList = _registrationController.freeDeliveryPerson;
     // TODO: implement setState
     super.setState(fn);
+  }
+
+  Widget getFreeAgentMap() {
+    String htmlId = "1";
+
+    // ignore: undefined_prefixed_name
+    ui.platformViewRegistry.registerViewFactory(htmlId, (int viewId) {
+      final mapOptions = new MapOptions()
+        ..zoom = 8
+        ..center = new LatLng(30.2669444, -97.7427778);
+
+      final elem = DivElement()
+        ..id = htmlId
+        ..style.width = "100%"
+        ..style.height = "100%"
+        ..style.border = 'none';
+
+      final map = GMap(elem, mapOptions);
+
+      List<Marker> markers = <Marker>[];
+
+      print("item free length == ${widget.itemFreePersonList.length}");
+
+      if (widget.itemFreePersonList.isNotEmpty) {
+        print("item length == ${widget.itemFreePersonList.length}");
+
+        for (var i = 0; i < widget.itemFreePersonList.length; i++) {
+          if (widget.itemFreePersonList[i].latitude != null &&
+              widget.itemFreePersonList[i].longitude != null) {
+            var marker = Marker(MarkerOptions()
+              ..position = LatLng(widget.itemFreePersonList[i].latitude,
+                  widget.itemFreePersonList[i].longitude)
+              ..map = map
+              ..title = '${widget.itemFreePersonList[i].firstName}!');
+            markers.add(marker);
+          }
+        }
+      }
+      return elem;
+    });
+
+    return HtmlElementView(viewType: htmlId);
+  }
+
+  Widget getBusyAgentMap() {
+    String htmlId = "2";
+
+    // ignore: undefined_prefixed_name
+    ui.platformViewRegistry.registerViewFactory(htmlId, (int viewId) {
+      final mapOptions = new MapOptions()
+        ..zoom = 8
+        ..center = new LatLng(30.2669444, -97.7427778);
+
+      final elem = DivElement()
+        ..id = htmlId
+        ..style.width = "100%"
+        ..style.height = "100%"
+        ..style.border = 'none';
+
+      final map = GMap(elem, mapOptions);
+
+      List<Marker> markers = <Marker>[];
+
+      print("item busy length == ${widget.itemBusy.length}");
+
+      if (widget.itemBusy.isNotEmpty) {
+        print("item length == ${widget.itemBusy.length}");
+
+        for (var i = 0; i < widget.itemBusy.length; i++) {
+          if (widget.itemBusy[i].latitude != null &&
+              widget.itemBusy[i].longitude != null) {
+            var marker = Marker(MarkerOptions()
+              ..position = LatLng(
+                  widget.itemBusy[i].latitude, widget.itemBusy[i].longitude)
+              ..map = map
+              ..title = '${widget.itemBusy[i].firstName}!');
+            markers.add(marker);
+          }
+        }
+      }
+      return elem;
+    });
+
+    return HtmlElementView(viewType: htmlId);
+  }
+
+  Widget getMap() {
+    String htmlId = "3";
+
+    // ignore: undefined_prefixed_name
+    ui.platformViewRegistry.registerViewFactory(htmlId, (int viewId) {
+      final mapOptions = new MapOptions()
+        ..zoom = 8
+        ..center = null;
+
+      final elem = DivElement()
+        ..id = htmlId
+        ..style.width = "100%"
+        ..style.height = "100%"
+        ..style.border = 'none';
+
+      final map = GMap(elem, mapOptions);
+
+      return elem;
+    });
+
+    return HtmlElementView(viewType: htmlId);
   }
 
   @override
@@ -146,6 +240,12 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
                 onPressed: () {
                   _registrationController
                       .getDeliveryPersonRegistrationDetailsAll();
+
+                  inactive = _registrationController.inactiveAgentsList.length;
+                  busy = _registrationController.busyDeliveryPerson.length;
+                  free = _registrationController.freeDeliveryPerson.length;
+
+                  setState(() {});
                 },
                 icon: const Icon(Icons.refresh),
               )
@@ -158,11 +258,12 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
       ),
       body: Stack(
         children: [
-          _mapBackground(),
           Row(
             children: [
               _taskList(),
-              _spacer(),
+              _mapBackground(),
+
+              // _spacer(),
               _agentList(),
             ],
           ),
@@ -622,23 +723,31 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
       length: 3,
       child: Container(
         color: Colors.grey.withOpacity(0.8),
-        child: TabBar(
-          onTap: (value) {
-            setState(() {
-              if (value == 0) {
-                agentPage = 'free';
-              } else if (value == 1) {
-                agentPage = 'busy';
-              } else if (value == 2) {
-                agentPage = 'inactive';
-              }
-            });
-          },
-          tabs: [
-            Tab(text: '${free ?? ""} Free'),
-            Tab(text: '${busy ?? ""} Busy'),
-            Tab(text: '${inactive ?? ""} Inactive'),
-          ],
+        child: Obx(
+          () => TabBar(
+            onTap: (value) {
+              setState(() {
+                if (value == 0) {
+                  agentPage = 'free';
+                } else if (value == 1) {
+                  agentPage = 'busy';
+                } else if (value == 2) {
+                  agentPage = 'inactive';
+                }
+              });
+            },
+            tabs: [
+              Tab(
+                  text:
+                      '${_registrationController.freeDeliveryPerson.length} Free'),
+              Tab(
+                  text:
+                      '${_registrationController.busyDeliveryPerson.length} Busy'),
+              Tab(
+                  text:
+                      '${_registrationController.inactiveAgentsList.length} Inactive'),
+            ],
+          ),
         ),
       ),
     );
@@ -684,9 +793,19 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
     );
   }
 
-  Center _mapBackground() {
-    return Center(
-      child: getMap(),
+  _mapBackground() {
+    return Flexible(
+      flex: 2,
+      child: Center(
+        child: agentPage == "free"
+            ? getFreeAgentMap()
+            : agentPage == "busy"
+                ? getBusyAgentMap()
+                : Stack(children: [
+                    getMap(),
+                    Center(child: Text("No map data available")),
+                  ]),
+      ),
     );
   }
 
@@ -777,18 +896,28 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
   }
 
   Widget _availableAgentsList() {
-    return SizedBox(
-      height: 300.0, // Change as per your requirement
-      width: 300.0, // Change as per your requirement
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: 5,
-        itemBuilder: (BuildContext context, int index) {
-          return const ListTile(
-            title: Text('Agent007, India'),
-            subtitle: Text('+91 9876543210'),
-          );
-        },
+    return Obx(
+      () => SizedBox(
+        height: 300.0, // Change as per your requirement
+        width: 300.0, // Change as per your requirement
+        child: _registrationController
+                .registrationAvailableDeliveryPersonModel.isEmpty
+            ? const Center(
+                child: Text("No agent available"),
+              )
+            : ListView.builder(
+                shrinkWrap: true,
+                itemCount: _registrationController
+                    .registrationAvailableDeliveryPersonModel.length,
+                itemBuilder: (BuildContext context, int index) {
+                  var item = _registrationController
+                      .registrationAvailableDeliveryPersonModel[index];
+                  return ListTile(
+                    title: Text('${item.firstName}'),
+                    subtitle: Text('${item.phoneNumber}'),
+                  );
+                },
+              ),
       ),
     );
   }
@@ -874,38 +1003,80 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
   }
 
   _freeAgentsDetail() {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: const [
-          Text(
-            'No agents available',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
+    return Obx(
+      () => _registrationController.freeDeliveryPerson.isEmpty
+          ? Center(child: Text("No agents available"))
+          : Expanded(
+              child: ListView.builder(
+                itemCount: _registrationController.freeDeliveryPerson.length,
+                itemBuilder: (context, index) {
+                  var item = _registrationController.freeDeliveryPerson[index];
+                  return ListTile(
+                    selected: true,
+                    tileColor: Colors.red,
+                    leading: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.blue),
+                      child: Center(
+                        child: Text(
+                          "${item.firstName?.substring(0, 1).toUpperCase()}",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    title: Text(item.firstName ?? ""),
+                    subtitle: Text(item.phoneNumber ?? ""),
+                    trailing: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.blueGrey),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
-      ),
     );
   }
 
   _busyAgentsDetail() {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: const [
-          Text(
-            'No agents available',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
+    return Obx(
+      () => _registrationController.busyDeliveryPerson.isEmpty
+          ? Center(child: Text("No agents available"))
+          : Expanded(
+              child: ListView.builder(
+                itemCount: _registrationController.busyDeliveryPerson.length,
+                itemBuilder: (context, index) {
+                  var item = _registrationController.busyDeliveryPerson[index];
+                  return ListTile(
+                    selected: true,
+                    tileColor: Colors.red,
+                    leading: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.blue),
+                      child: Center(
+                        child: Text(
+                          "${item.firstName?.substring(0, 1).toUpperCase()}",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    title: Text(item.firstName ?? ""),
+                    subtitle: Text(item.phoneNumber ?? ""),
+                    trailing: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.blueGrey),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -932,20 +1103,41 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
   }
 
   _inactiveAgentsDetail() {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: const [
-          Text(
-            'No agents available',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
+    return Obx(
+      () => _registrationController.inactiveAgentsList.isEmpty
+          ? Center(child: Text("No agents available"))
+          : Expanded(
+              child: ListView.builder(
+                itemCount: _registrationController.inactiveAgentsList.length,
+                itemBuilder: (context, index) {
+                  var item = _registrationController.inactiveAgentsList[index];
+                  return ListTile(
+                    selected: true,
+                    tileColor: Colors.red,
+                    leading: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.blue),
+                      child: Center(
+                        child: Text(
+                          "${item.firstName?.substring(0, 1).toUpperCase()}",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    title: Text(item.firstName ?? ""),
+                    subtitle: Text(item.phoneNumber ?? ""),
+                    trailing: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.blueGrey),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
-      ),
     );
   }
 }

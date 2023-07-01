@@ -2,7 +2,9 @@ import 'package:famto_admin_app/firebase_options.dart';
 import 'package:famto_admin_app/views/delivery_person_registration.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import 'controller/registration_controller.dart';
 import 'views/create_task_screen.dart';
 import 'views/delivery_person_dashboard.dart';
 import 'views/home_screen.dart';
@@ -23,8 +25,24 @@ Future<void> main() async {
   ));
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MainApp extends StatefulWidget {
+  MainApp({super.key});
+
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  @override
+  void initState() {
+    _registrationController.getDeliveryPersonRegistrationDetailsAll();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  final RegistrationController _registrationController =
+      Get.put(RegistrationController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +61,11 @@ class MainApp extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const DeliveryAgentDashboard()),
+              builder: (context) => DeliveryAgentDashboard(
+                itemFreePersonList: _registrationController.freeDeliveryPerson,
+                itemBusy: _registrationController.busyDeliveryPerson,
+              ),
+            ),
           );
         },
         child: const Icon(Icons.login),
