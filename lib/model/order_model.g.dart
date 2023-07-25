@@ -16,6 +16,7 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
           ?.map((e) => Delivery.fromJson(e as Map<String, dynamic>))
           .toList(),
       agent: json['agent'] as String?,
+      status: json['status'] as String?,
     )..taskId = json['taskId'] as String?;
 
 Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
@@ -27,4 +28,5 @@ Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
       'deliveryDetails':
           instance.deliveryDetails?.map((e) => e.toJson()).toList(),
       'agent': instance.agent,
+      'status': instance.status,
     };

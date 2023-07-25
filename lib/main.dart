@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'controller/registration_controller.dart';
+import 'views/admin_dashboard_home.dart';
 import 'views/create_task_screen.dart';
 import 'views/delivery_person_dashboard.dart';
 import 'views/home_screen.dart';
@@ -61,10 +62,12 @@ class _MainAppState extends State<MainApp> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DeliveryAgentDashboard(
-                itemFreePersonList: _registrationController.freeDeliveryPerson,
-                itemBusy: _registrationController.busyDeliveryPerson,
-              ),
+              builder: (context) => AdminDashBoardHome(),
+
+              // DeliveryAgentDashboard(
+              //   itemFreePersonList: _registrationController.freeDeliveryPerson,
+              //   itemBusy: _registrationController.busyDeliveryPerson,
+              // ),
             ),
           );
         },
