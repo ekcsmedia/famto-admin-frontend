@@ -2,8 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
-class CustomerDetailsWidget extends StatelessWidget {
-  const CustomerDetailsWidget({super.key});
+class RestaurantDetailsWidget extends StatefulWidget {
+  const RestaurantDetailsWidget({super.key});
+
+  final bool value = false;
+
+  @override
+  State<RestaurantDetailsWidget> createState() =>
+      _RestaurantDetailsWidgetState();
+}
+
+class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    // TODO: implement setState
+    super.setState(fn);
+  }
+
+  bool isSponsorshipSwitched = false;
+
+  void sponsorshipToggleSwitch(bool value) {
+    if (isSponsorshipSwitched == false) {
+      setState(() {
+        isSponsorshipSwitched = true;
+      });
+    } else {
+      setState(() {
+        isSponsorshipSwitched = false;
+      });
+    }
+  }
+
+  bool isTagSwitched = false;
+
+  void tagToggleSwitch(bool value) {
+    if (isTagSwitched == false) {
+      setState(() {
+        isTagSwitched = true;
+      });
+    } else {
+      setState(() {
+        isTagSwitched = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +64,15 @@ class CustomerDetailsWidget extends StatelessWidget {
               _header(),
               _dataSet1(),
               _dataSet2(),
+              _dataSet3(),
+              _dataSet4(),
               _divider(),
-              _version(),
+              _servingArea(),
+              _divider(),
+              _sponsorship(),
               _divider(),
               _tags(),
               _divider(),
-              _ratings(),
-              _divider(),
-              _orderDetailsWidget(context),
             ],
           )),
         ));
@@ -120,9 +168,20 @@ class CustomerDetailsWidget extends StatelessWidget {
         children: [
           SizedBox(
               width: 200,
-              child: Text(
-                'Customers',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              child: Column(
+                children: [
+                  Text(
+                    'Restaurant',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  Text(
+                    'Eats',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.grey),
+                  ),
+                ],
               )),
         ],
       ),
@@ -134,11 +193,11 @@ class CustomerDetailsWidget extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          _customerDataWidget(key: "Id", value: "12345"),
-          _customerDataWidget(key: "Name", value: "John Doe"),
-          _customerDataWidget(key: "Email", value: "mail@yahoo.com"),
-          _customerDataWidget(key: "Phone", value: "1234567890"),
-          _customerDataWidget(key: "Platform", value: "Android"),
+          _restaurantDataWidget(key: "Id", value: "12345"),
+          _restaurantDataWidget(key: "Name", value: "John Doe"),
+          _restaurantDataWidget(key: "Email", value: "mail@yahoo.com"),
+          _restaurantDataWidget(key: "Phone", value: "1234567890"),
+          _restaurantDataWidget(key: "Address", value: "abc, xyz"),
         ],
       ),
     );
@@ -149,17 +208,47 @@ class CustomerDetailsWidget extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          _customerDataWidget(key: "Wallet Balance", value: "Rs.1000"),
-          _customerDataWidget(key: "Registration Date", value: "12/12/2020"),
-          _customerDataWidget(key: "COD Status", value: "True"),
-          _customerDataWidget(key: "Pay Later Status", value: "True"),
-          _customerDataWidget(key: "Referral code", value: "ab6og0q2qb"),
+          _restaurantDataWidget(key: "Display Address", value: "Abc, xyz"),
+          _restaurantDataWidget(key: "Restaurant Name", value: "Eats"),
+          _restaurantDataWidget(
+              key: "Description", value: "Restaurant Description"),
+          _restaurantDataWidget(key: "Slug", value: "Slug description"),
+          _restaurantDataWidget(key: "Logo", value: "Logo Url"),
         ],
       ),
     );
   }
 
-  Padding _version() {
+  Padding _dataSet3() {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Row(
+        children: [
+          _restaurantDataWidget(
+              key: "Banner Image Web", value: "Image Url Web"),
+          _restaurantDataWidget(
+              key: "Banner Image Mobile", value: "Image Url Mobile"),
+          _restaurantDataWidget(key: "Background Color", value: "Blue"),
+          _restaurantDataWidget(key: "Rating Bar Color", value: "Red"),
+          _restaurantDataWidget(key: "Link City", value: "Trivandraum"),
+        ],
+      ),
+    );
+  }
+
+  Padding _dataSet4() {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Row(
+        children: [
+          _restaurantDataWidget(key: "Status", value: "True"),
+          _restaurantDataWidget(key: "Custom Tag", value: "tag1"),
+        ],
+      ),
+    );
+  }
+
+  Padding _servingArea() {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
@@ -168,10 +257,10 @@ class CustomerDetailsWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Versions",
+                "Serving Area",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              _customerDataWidget(key: "WEB", value: "Version 1.0.0"),
+              Radio(value: "value", groupValue: "Group", onChanged: (value) {}),
             ],
           ),
         ],
@@ -179,20 +268,19 @@ class CustomerDetailsWidget extends StatelessWidget {
     );
   }
 
-  Padding _ratings() {
+  Padding _sponsorship() {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Rating",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              _customerDataWidget(key: "John Doe", value: "4.5"),
-            ],
+          const Text("Sponsorship"),
+          Switch(
+            onChanged: sponsorshipToggleSwitch,
+            value: isSponsorshipSwitched,
+            activeColor: Colors.blue,
+            activeTrackColor: Colors.blue,
+            inactiveThumbColor: Colors.white,
+            inactiveTrackColor: Colors.grey,
           ),
         ],
       ),
@@ -204,7 +292,15 @@ class CustomerDetailsWidget extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          _customerDataWidget(key: "Tags", value: "Cloud Kitchen"),
+          const Text("Tags"),
+          Switch(
+            onChanged: tagToggleSwitch,
+            value: isTagSwitched,
+            activeColor: Colors.blue,
+            activeTrackColor: Colors.blue,
+            inactiveThumbColor: Colors.white,
+            inactiveTrackColor: Colors.grey,
+          ),
         ],
       ),
     );
@@ -219,7 +315,7 @@ class CustomerDetailsWidget extends StatelessWidget {
     );
   }
 
-  Padding _customerDataWidget({key, value}) {
+  Padding _restaurantDataWidget({key, value}) {
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(

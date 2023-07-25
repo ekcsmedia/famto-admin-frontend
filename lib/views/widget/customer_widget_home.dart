@@ -44,7 +44,8 @@ class CustomerListing extends StatelessWidget {
                           .withOpacity(0.30);
                     }),
                     columns: [
-                      DataColumn(label: Text('Id')),
+                      DataColumn(
+                          label: InkWell(onTap: () {}, child: Text('Id'))),
                       DataColumn(label: Text('Name')),
                       DataColumn(label: Text('Email')),
                       DataColumn(

@@ -3,9 +3,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:input_quantity/input_quantity.dart';
 
-import 'customer_widget_home.dart';
+import 'widget/customer_widget_home.dart';
 import 'restaurants_widget_home.dart';
 import 'widget/customer_details_widget.dart';
+import 'widget/restaurant_details_widget.dart';
 
 class AdminDashBoardHome extends StatefulWidget {
   const AdminDashBoardHome({super.key});
@@ -911,7 +912,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                 : page == "customer listing"
                     ? CustomerDetailsWidget()
                     : page == "restaurant listing"
-                        ? RestaurantListing()
+                        ? RestaurantDetailsWidget()
                         : Flexible(flex: 4, child: SizedBox.shrink())
       ]),
     );

@@ -36,7 +36,7 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   @override
   void initState() {
-    _registrationController.getDeliveryPersonRegistrationDetailsAll();
+    // _registrationController.getDeliveryPersonRegistrationDetailsAll();
     // TODO: implement initState
     super.initState();
   }
