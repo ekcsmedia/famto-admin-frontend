@@ -6,6 +6,7 @@ import 'package:input_quantity/input_quantity.dart';
 import 'widget/customer_widget_home.dart';
 import 'restaurants_widget_home.dart';
 import 'widget/customer_details_widget.dart';
+import 'widget/product_catalogue_widget.dart';
 import 'widget/restaurant_details_widget.dart';
 
 class AdminDashBoardHome extends StatefulWidget {
@@ -83,10 +84,10 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                 ListTile(
                   leading: Icon(Icons.shopping_bag),
                   title: Text('Products'),
-                  selected: page == 'Products' ? true : false,
+                  selected: page == 'catalogue' ? true : false,
                   selectedColor: Colors.blue,
                   onTap: () {
-                    page = 'Products';
+                    page = 'catalogue';
                     setState(() {});
                   },
                 ),
@@ -913,7 +914,9 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                     ? CustomerDetailsWidget()
                     : page == "restaurant listing"
                         ? RestaurantDetailsWidget()
-                        : Flexible(flex: 4, child: SizedBox.shrink())
+                        : page == "catalogue"
+                            ? ProductCatalogueScreen()
+                            : Flexible(flex: 4, child: SizedBox.shrink())
       ]),
     );
   }
