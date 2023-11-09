@@ -29,7 +29,7 @@ class _MyMapPlaceAppState extends State<MyMapPlaceApp> {
             searchController: _controller,
             apiKey: "AIzaSyDG58jFDbAQQN5ycqbDUOnaY97ufgQ3C2E",
             mounted: mounted,
-            showBackButton: false,
+            hideBackButton: true,
             onGetDetailsByPlaceId: (PlacesDetailsResponse? result) {
               if (result != null) {
                 setState(() {
@@ -50,7 +50,7 @@ class _MyMapPlaceAppState extends State<MyMapPlaceApp> {
                       apiKey: "AIzaSyDG58jFDbAQQN5ycqbDUOnaY97ufgQ3C2E",
                       searchHintText: "Search for a place",
                       mounted: mounted,
-                      showBackButton: false,
+                      hideBackButton: true,
                       initialValue: initialValue,
                       onSuggestionSelected: (value) {
                         setState(() {
@@ -111,7 +111,7 @@ class _MyMapPlaceAppState extends State<MyMapPlaceApp> {
                     builder: (context) {
                       return MapLocationPicker(
                         apiKey: "AIzaSyDG58jFDbAQQN5ycqbDUOnaY97ufgQ3C2E",
-                        canPopOnNextButtonTaped: true,
+                        popOnNextButtonTaped: true,
                         currentLatLng: const LatLng(8.524139, 76.936638),
                         onNext: (GeocodingResult? result) {
                           if (result != null) {

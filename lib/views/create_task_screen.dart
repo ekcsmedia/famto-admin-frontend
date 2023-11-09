@@ -337,9 +337,9 @@ class _CreateTaskState extends State<CreateTask> {
                       apiKey: "AIzaSyDoEWQJI9N4EtAH11h7p3yKzm73rlgcFxY",
                       proxyURL: 'https://cors-anywhere.herokuapp.com/',
                       required: true,
-                      controller: TextEditingController(
-                          text: _taskManagementController
-                              .pickupList[i].pickupAddress),
+                      // controller: TextEditingController(
+                      //     text: _taskManagementController
+                      //         .pickupList[i].pickupAddress),
                     ),
                     _pickupDropTextField(
                         label: "Pickup Before",
@@ -488,9 +488,9 @@ class _CreateTaskState extends State<CreateTask> {
                 apiKey: "AIzaSyDoEWQJI9N4EtAH11h7p3yKzm73rlgcFxY",
                 proxyURL: 'https://cors-anywhere.herokuapp.com/',
                 required: true,
-                controller: TextEditingController(
-                    text: _taskManagementController
-                        .deliveryList[i].pickupAddress),
+                // controller: TextEditingController(
+                //     text: _taskManagementController
+                //         .deliveryList[i].pickupAddress),
               ),
               _pickupDropTextField(
                   label: "Delivery Before",
@@ -601,6 +601,7 @@ class _CreateTaskState extends State<CreateTask> {
             width: 200,
             height: 40,
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
               border: Border.all(
                 color: Colors.grey,
                 width: 0.5,
@@ -616,6 +617,7 @@ class _CreateTaskState extends State<CreateTask> {
             width: 400,
             height: 40,
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
               border: Border.all(
                 color: Colors.grey,
                 width: 0.5,
@@ -641,6 +643,7 @@ class _CreateTaskState extends State<CreateTask> {
           Container(
             width: 200,
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
               border: Border.all(
                 color: Colors.transparent,
                 width: 0.5,
@@ -653,6 +656,7 @@ class _CreateTaskState extends State<CreateTask> {
               Container(
                 width: 400,
                 decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
                   border: Border.all(
                     color: Colors.grey,
                     width: 0.5,
@@ -744,6 +748,7 @@ class _CreateTaskState extends State<CreateTask> {
             width: 200,
             height: 50,
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
               border: Border.all(
                 color: Colors.grey,
                 width: 0.5,
@@ -755,6 +760,7 @@ class _CreateTaskState extends State<CreateTask> {
             width: 400,
             height: 50,
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
               border: Border.all(
                 color: Colors.grey,
                 width: 0.5,
@@ -858,7 +864,7 @@ class _CreateTaskState extends State<CreateTask> {
       // child: mapView(),
       child: mlp.MapLocationPicker(
         apiKey: "AIzaSyDoEWQJI9N4EtAH11h7p3yKzm73rlgcFxY",
-        canPopOnNextButtonTaped: false,
+        popOnNextButtonTaped: false,
         currentLatLng: const mlp.LatLng(8.524139, 76.936638),
         onNext: (mlp.GeocodingResult? result) {
           if (result != null) {
