@@ -1,9 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'  hide DatePickerTheme;
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:get/get.dart';
+
+import '../../controller/dashboard_controller.dart';
 
 class CustomerDetailsWidget extends StatelessWidget {
-  const CustomerDetailsWidget({super.key});
+  CustomerDetailsWidget({super.key});
+  final DashboardController _dashboardController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +109,11 @@ class CustomerDetailsWidget extends StatelessWidget {
   Padding _backArrow() {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 8.0),
-        child: Icon(
-          Icons.arrow_back,
-          color: Colors.black,
+        child: IconButton(
+         icon: Icon(Icons.arrow_back),
+          color: Colors.black, onPressed: () {
+          _dashboardController.setPage("customer listing");
+        },
         ));
   }
 

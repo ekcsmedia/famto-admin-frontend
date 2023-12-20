@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'  hide DatePickerTheme;
 import 'package:flutter/services.dart';
 import 'package:map_location_picker/map_location_picker.dart';
 

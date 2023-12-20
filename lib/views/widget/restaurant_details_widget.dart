@@ -1,9 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide DatePickerTheme;
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:get/get.dart';
+
+import '../../controller/dashboard_controller.dart';
 
 class RestaurantDetailsWidget extends StatefulWidget {
-  const RestaurantDetailsWidget({super.key});
+   RestaurantDetailsWidget({super.key});
+
 
   final bool value = false;
 
@@ -13,6 +17,9 @@ class RestaurantDetailsWidget extends StatefulWidget {
 }
 
 class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
+  final DashboardController _dashboardController = Get.find();
+  final ScrollController2 = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -96,10 +103,14 @@ class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
   Padding _dataTableWidget(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: _dataTable(context),
-      ),
+      child: Scrollbar(
+      thumbVisibility: true,
+      controller: ScrollController2,
+    child: SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    controller: ScrollController2,
+    child:  _dataTable(context),
+      ),),
     );
   }
 
@@ -153,8 +164,11 @@ class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
   Padding _backArrow() {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 8.0),
-        child: Icon(
-          Icons.arrow_back,
+        child: IconButton(
+          icon : Icon(Icons.arrow_back),
+          onPressed: () {
+            _dashboardController.setPage("restaurant listing");
+          },
           color: Colors.black,
         ));
   }

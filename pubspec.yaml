@@ -10,7 +10,7 @@ dependencies:
   dartz: ^0.10.1
   flutter:
     sdk: flutter
-  get: ^4.6.1
+  get:
   get_storage: ^2.0.3
   http: ^0.13.6
   json_annotation: ^4.6.0

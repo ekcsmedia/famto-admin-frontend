@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide DatePickerTheme;
 import 'package:flutter/services.dart';
 import 'package:mapmyindia_gl/mapmyindia_gl.dart';
 

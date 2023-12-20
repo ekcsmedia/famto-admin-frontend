@@ -1,7 +1,7 @@
 import 'package:famto_admin_app/firebase_options.dart';
 import 'package:famto_admin_app/views/delivery_person_registration.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'  hide DatePickerTheme;
 import 'package:get/get.dart';
 
 import 'controller/registration_controller.dart';

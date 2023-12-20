@@ -1,11 +1,12 @@
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'  hide DatePickerTheme;
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../controller/registration_controller.dart';
 import '../model/delivery_person_registration_model.dart';
+import 'admin_dashboard_home.dart';
 import 'create_task_screen.dart';
 import 'package:google_maps/google_maps.dart' hide Icon hide Padding;
 import 'dart:ui' as ui hide VoidCallback;
@@ -13,10 +14,10 @@ import 'dart:html' hide VoidCallback;
 
 class DeliveryAgentDashboard extends StatefulWidget {
   DeliveryAgentDashboard(
-      {required this.itemFreePersonList, required this.itemBusy, super.key});
+      {this.itemFreePersonList, this.itemBusy, super.key});
 
-  List<DeliveryPersonRegistration> itemFreePersonList = [];
-  List<DeliveryPersonRegistration> itemBusy = [];
+  List<DeliveryPersonRegistration>? itemFreePersonList = [];
+  List<DeliveryPersonRegistration>? itemBusy = [];
 
   @override
   State<DeliveryAgentDashboard> createState() => _DeliveryAgentDashboardState();
@@ -132,19 +133,19 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
 
       List<Marker> markers = <Marker>[];
 
-      print("item free length == ${widget.itemFreePersonList.length}");
+      print("item free length == ${widget.itemFreePersonList?.length ?? 0}");
 
-      if (widget.itemFreePersonList.isNotEmpty) {
-        print("item length == ${widget.itemFreePersonList.length}");
+      if (widget.itemFreePersonList?.isNotEmpty ?? false) {
+        print("item length == ${widget.itemFreePersonList?.length ?? 0  }");
 
-        for (var i = 0; i < widget.itemFreePersonList.length; i++) {
-          if (widget.itemFreePersonList[i].latitude != null &&
-              widget.itemFreePersonList[i].longitude != null) {
+        for (var i = 0; i < widget.itemFreePersonList!.length; i++) {
+          if (widget.itemFreePersonList?[i].latitude != null &&
+              widget.itemFreePersonList?[i].longitude != null) {
             var marker = Marker(MarkerOptions()
-              ..position = LatLng(widget.itemFreePersonList[i].latitude,
-                  widget.itemFreePersonList[i].longitude)
+              ..position = LatLng(widget.itemFreePersonList?[i].latitude,
+                  widget.itemFreePersonList?[i].longitude)
               ..map = map
-              ..title = '${widget.itemFreePersonList[i].firstName}!');
+              ..title = '${widget.itemFreePersonList?[i].firstName}!');
             markers.add(marker);
           }
         }
@@ -174,19 +175,19 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
 
       List<Marker> markers = <Marker>[];
 
-      print("item busy length == ${widget.itemBusy.length}");
+      print("item busy length == ${widget.itemBusy?.length}");
 
-      if (widget.itemBusy.isNotEmpty) {
-        print("item length == ${widget.itemBusy.length}");
+      if (widget.itemBusy?.isNotEmpty ?? false) {
+        print("item length == ${widget.itemBusy?.length}");
 
-        for (var i = 0; i < widget.itemBusy.length; i++) {
-          if (widget.itemBusy[i].latitude != null &&
-              widget.itemBusy[i].longitude != null) {
+        for (var i = 0; i < widget.itemBusy!.length; i++) {
+          if (widget.itemBusy?[i].latitude != null &&
+              widget.itemBusy?[i].longitude != null) {
             var marker = Marker(MarkerOptions()
               ..position = LatLng(
-                  widget.itemBusy[i].latitude, widget.itemBusy[i].longitude)
+                  widget.itemBusy?[i].latitude, widget.itemBusy?[i].longitude)
               ..map = map
-              ..title = '${widget.itemBusy[i].firstName}!');
+              ..title = '${widget.itemBusy?[i].firstName}!');
             markers.add(marker);
           }
         }
@@ -223,7 +224,25 @@ class _DeliveryAgentDashboardState extends State<DeliveryAgentDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Delivery Agent Dashboard'), actions: [
+      appBar: AppBar(title: Row(
+        children: [
+          const Text('Delivery Agent Dashboard'),
+          IconButton(
+            icon: Icon(Icons.home_filled), onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdminDashBoardHome(),
+                // DeliveryAgentDashboard(
+                //   itemFreePersonList: _registrationController.freeDeliveryPerson,
+                //   itemBusy: _registrationController.busyDeliveryPerson,
+                // ),
+              ),
+            );
+          },
+          )
+        ],
+      ), actions: [
         SizedBox(
           width: 400,
           child: Row(

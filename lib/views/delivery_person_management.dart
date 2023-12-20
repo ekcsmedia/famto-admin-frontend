@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:famto_admin_app/controller/registration_controller.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'  hide DatePickerTheme;
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
