@@ -29,3 +29,14 @@ flutter run -d chrome --web-hostname 127.0.0.1  --web-port 9999
 
 // Upgrade pub
 flutter pub upgrade
+
+// git push commands
+Git push commands:
+git init
+git add .
+git commit -m "delivery person add agent ui"
+git remote add origin https://github.com/ekcsmedia/ekcsmedia.github.io.git
+git branch -M main
+git push -f origin main
+
+git push -u origin main
