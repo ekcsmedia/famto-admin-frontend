@@ -1,12 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'order_model.dart';
+import 'task_model.dart';
 
 part 'order_all_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class OrderAll {
-  List<OrderModel>? payload;
+  List<TaskModel>? payload;
 
   OrderAll({
     this.payload,

@@ -1,17 +1,18 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'order_all_model.dart';
+part of 'customer_all_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderAll _$OrderAllFromJson(Map<String, dynamic> json) => OrderAll(
+CustomerAll _$CustomerAllFromJson(Map<String, dynamic> json) => CustomerAll(
       payload: (json['payload'] as List<dynamic>?)
-          ?.map((e) => TaskModel.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => Customer.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$OrderAllToJson(OrderAll instance) => <String, dynamic>{
+Map<String, dynamic> _$CustomerAllToJson(CustomerAll instance) =>
+    <String, dynamic>{
       'payload': instance.payload?.map((e) => e.toJson()).toList(),
     };

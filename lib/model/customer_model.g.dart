@@ -10,13 +10,24 @@ Customer _$CustomerFromJson(Map<String, dynamic> json) => Customer(
       name: json['name'] as String?,
       phone: json['phone'] as String?,
       email: json['email'] as String?,
+      password: json['password'] as String?,
       customerId: json['customerId'] as int?,
-      platform: json['platform'] as String?,
+      lastUsedPlatform: json['lastUsedPlatform'] as String?,
       rating: json['rating'] as int?,
       registerAt: json['registerAt'] == null
           ? null
           : DateTime.parse(json['registerAt'] as String),
       walletBalance: (json['walletBalance'] as num?)?.toDouble(),
+      codStatus: json['codStatus'] as bool?,
+      payLaterStatus: json['payLaterStatus'] as bool?,
+      rateAndReview: (json['rateAndReview'] as num?)?.toDouble(),
+      referralCode: json['referralCode'] as String?,
+      tagsModel: (json['tagsModel'] as List<dynamic>?)
+          ?.map((e) => TagModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      versions: (json['versions'] as List<dynamic>?)
+          ?.map((e) => VersionModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$CustomerToJson(Customer instance) => <String, dynamic>{
@@ -24,8 +35,15 @@ Map<String, dynamic> _$CustomerToJson(Customer instance) => <String, dynamic>{
       'name': instance.name,
       'email': instance.email,
       'phone': instance.phone,
-      'platform': instance.platform,
+      'password': instance.password,
+      'lastUsedPlatform': instance.lastUsedPlatform,
       'rating': instance.rating,
       'walletBalance': instance.walletBalance,
       'registerAt': instance.registerAt?.toIso8601String(),
+      'codStatus': instance.codStatus,
+      'payLaterStatus': instance.payLaterStatus,
+      'referralCode': instance.referralCode,
+      'rateAndReview': instance.rateAndReview,
+      'tagsModel': instance.tagsModel?.map((e) => e.toJson()).toList(),
+      'versions': instance.versions?.map((e) => e.toJson()).toList(),
     };

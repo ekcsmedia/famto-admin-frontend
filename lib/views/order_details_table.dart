@@ -1,6 +1,6 @@
 import 'package:famto_admin_app/controller/task_management_controller.dart';
 import 'package:famto_admin_app/model/order_details_model.dart';
-import 'package:famto_admin_app/model/order_model.dart';
+import 'package:famto_admin_app/model/task_model.dart';
 import 'package:flutter/material.dart'  hide DatePickerTheme;
 import 'package:get/get.dart';
 
@@ -28,7 +28,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   // List<TaskDetails> taskDetailsListInherited = [];
   late int indexAtReference;
 
-  var orderDetails = OrderModel();
+  var orderDetails = TaskModel();
 
   @override
   void initState() {

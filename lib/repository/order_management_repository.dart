@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import '../model/order_all_model.dart';
-import '../model/order_model.dart';
+import '../model/task_model.dart';
 import '../services/api_endpoints.dart';
 import '../services/api_exception.dart';
 import '../services/api_manager.dart';
@@ -9,12 +9,12 @@ import '../utils/failure.dart';
 class OrderRepository {
   final _apiManager = ApiManager();
 
-  Future<Either<Failure, OrderModel>> createOrder({parameters}) async {
+  Future<Either<Failure, TaskModel>> createOrder({parameters}) async {
     try {
       print("inside order repository");
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.post(
-        "http://ec2-3-111-2-150.ap-south-1.compute.amazonaws.com:8080/famto-backend/api/orders/",
+        "https://tzzg86ms1m.execute-api.ap-south-1.amazonaws.com/v1/api/orders/",
         // "http://192.168.1.3:8080/api/orders/",
         // "http://10.0.2.2:8080/api/orders/",
 
@@ -22,7 +22,7 @@ class OrderRepository {
         isTokenMandatory: false,
       );
 
-      var response = OrderModel.fromJson(jsonResponse);
+      var response = TaskModel.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));
@@ -31,18 +31,18 @@ class OrderRepository {
     }
   }
 
-  Future<Either<Failure, OrderModel>> getOrderDetailsByID(int id) async {
+  Future<Either<Failure, TaskModel>> getOrderDetailsByID(int id) async {
     try {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.get(
         // "localhost:8080//api/delivery-category/$id",
-        "${ApiEndpoints.apiBaseUrl}orders/$id",
+        "https://tzzg86ms1m.execute-api.ap-south-1.amazonaws.com/v1/api/orders/$id",
         // "http://10.0.2.2:8080/api/delivery-category/$id",
 
         isTokenMandatory: false,
       );
 
-      var response = OrderModel.fromJson(jsonResponse);
+      var response = TaskModel.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));
@@ -58,7 +58,7 @@ class OrderRepository {
         // "localhost:8080//api/delivery-category/",
         // "http://127.0.0.1:9999/api/delivery-category/",
         // "${ApiEndpoints.apiBaseUrl}orders/",
-        "https://5ti3frg6nk.execute-api.ap-south-1.amazonaws.com/v1/get-tasks",
+        "https://tzzg86ms1m.execute-api.ap-south-1.amazonaws.com/v1/api/orders",
         // "https://utb9cx6tx1.execute-api.ap-south-1.amazonaws.com/orders",
 
         // "http://10.0.2.2:8080/api/delivery-category/",
@@ -73,7 +73,7 @@ class OrderRepository {
     }
   }
 
-  Future<Either<Failure, OrderModel>> updateOrderByID(
+  Future<Either<Failure, TaskModel>> updateOrderByID(
       {int? id,
       String? phoneNumber,
       String? name,
@@ -90,7 +90,7 @@ class OrderRepository {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.put(
         // "localhost:8080//api/delivery-category/$id",
-        "${ApiEndpoints.apiBaseUrl}orders/$id",
+        "https://tzzg86ms1m.execute-api.ap-south-1.amazonaws.com/v1/api/orders/$id",
         {
           "phoneNumber": phoneNumber,
           "name": name,
@@ -109,7 +109,7 @@ class OrderRepository {
         isTokenMandatory: false,
       );
 
-      var response = OrderModel.fromJson(jsonResponse);
+      var response = TaskModel.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));
@@ -118,20 +118,20 @@ class OrderRepository {
     }
   }
 
-  Future<Either<Failure, OrderModel>> updateOrderStatus(
+  Future<Either<Failure, TaskModel>> updateOrderStatus(
       {required int id, String? status}) async {
     try {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.put(
         // "localhost:8080//api/delivery-category/$id",
-        "${ApiEndpoints.apiBaseUrl}orders/$id",
+        "https://tzzg86ms1m.execute-api.ap-south-1.amazonaws.com/v1/api/orders/$id",
         {"status": status},
         // "http://10.0.2.2:8080/api/delivery-category/$id",
 
         isTokenMandatory: false,
       );
 
-      var response = OrderModel.fromJson(jsonResponse);
+      var response = TaskModel.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));
@@ -140,18 +140,18 @@ class OrderRepository {
     }
   }
 
-  Future<Either<Failure, OrderModel>> deleteOrderById(int id) async {
+  Future<Either<Failure, TaskModel>> deleteOrderById(int id) async {
     try {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.delete(
         // "localhost:8080//api/delivery-category/$id",
-        "${ApiEndpoints.apiBaseUrl}orders/$id",
+        "https://tzzg86ms1m.execute-api.ap-south-1.amazonaws.com/v1/api/orders/$id",
         // "http://10.0.2.2:8080/api/delivery-category/$id",
         id,
         isTokenMandatory: false,
       );
 
-      var response = OrderModel.fromJson(jsonResponse);
+      var response = TaskModel.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));

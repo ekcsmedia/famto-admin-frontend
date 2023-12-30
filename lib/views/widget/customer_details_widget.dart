@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart'  hide DatePickerTheme;
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 
+import '../../controller/customer_controller.dart';
 import '../../controller/dashboard_controller.dart';
 
 class CustomerDetailsWidget extends StatelessWidget {
   CustomerDetailsWidget({super.key});
   final DashboardController _dashboardController = Get.find();
+  final CustomerController _customerController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
+    return Obx(() => Flexible(
         flex: 4,
-        child: SingleChildScrollView(
+        child: _customerController.isDataLoading ? Center(
+          child: CircularProgressIndicator(),
+        ) : SingleChildScrollView(
           child: Container(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +34,7 @@ class CustomerDetailsWidget extends StatelessWidget {
               _orderDetailsWidget(context),
             ],
           )),
-        ));
+        )));
   }
 
   Padding _orderDetailsWidget(BuildContext context) {
@@ -135,34 +138,34 @@ class CustomerDetailsWidget extends StatelessWidget {
     );
   }
 
-  Padding _dataSet1() {
-    return Padding(
+  _dataSet1() {
+    return Obx(() => Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          _customerDataWidget(key: "Id", value: "12345"),
-          _customerDataWidget(key: "Name", value: "John Doe"),
-          _customerDataWidget(key: "Email", value: "mail@yahoo.com"),
-          _customerDataWidget(key: "Phone", value: "1234567890"),
-          _customerDataWidget(key: "Platform", value: "Android"),
+          _customerDataWidget(key: "Id", value: _customerController.customerData?.customerId.toString()),
+          _customerDataWidget(key: "Name", value: _customerController.customerData?.name ?? ""),
+          _customerDataWidget(key: "Email", value: _customerController.customerData?.email ?? ""),
+          _customerDataWidget(key: "Phone", value: _customerController.customerData?.phone ?? ""),
+          _customerDataWidget(key: "Platform", value: _customerController.customerData?.lastUsedPlatform ?? ""),
         ],
       ),
-    );
+    ),);
   }
 
-  Padding _dataSet2() {
-    return Padding(
+   _dataSet2() {
+    return Obx(() => Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          _customerDataWidget(key: "Wallet Balance", value: "Rs.1000"),
-          _customerDataWidget(key: "Registration Date", value: "12/12/2020"),
-          _customerDataWidget(key: "COD Status", value: "True"),
-          _customerDataWidget(key: "Pay Later Status", value: "True"),
-          _customerDataWidget(key: "Referral code", value: "ab6og0q2qb"),
+          _customerDataWidget(key: "Wallet Balance", value: _customerController.customerData?.walletBalance.toString()),
+          _customerDataWidget(key: "Registration Date", value: _customerController.customerData?.registerAt.toString()),
+          _customerDataWidget(key: "COD Status", value: _customerController.customerData?.codStatus.toString()),
+          _customerDataWidget(key: "Pay Later Status", value: _customerController.customerData?.payLaterStatus.toString()),
+          _customerDataWidget(key: "Referral code", value: _customerController.customerData?.referralCode ?? ""),
         ],
       ),
-    );
+    ));
   }
 
   Padding _version() {
@@ -185,8 +188,8 @@ class CustomerDetailsWidget extends StatelessWidget {
     );
   }
 
-  Padding _ratings() {
-    return Padding(
+  _ratings() {
+    return Obx(() => Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
@@ -197,12 +200,12 @@ class CustomerDetailsWidget extends StatelessWidget {
                 "Rating",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              _customerDataWidget(key: "John Doe", value: "4.5"),
+              _customerDataWidget(key: "John Doe", value: _customerController.customerData?.rateAndReview.toString() ?? "0"),
             ],
           ),
         ],
       ),
-    );
+    ),);
   }
 
   Padding _tags() {
@@ -238,7 +241,7 @@ class CustomerDetailsWidget extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               SizedBox(height: 10),
-              Text(value)
+              Text(value.toString())
             ],
           ),
         ));

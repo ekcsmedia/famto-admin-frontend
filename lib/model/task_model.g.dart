@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'order_model.dart';
+part of 'task_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
+TaskModel _$TaskModelFromJson(Map<String, dynamic> json) => TaskModel(
       assignee: json['assignee'] as String?,
       type: json['type'] as String?,
       pickupDetails: (json['pickupDetails'] as List<dynamic>?)
@@ -19,8 +19,7 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
       status: json['status'] as String?,
     )..taskId = json['taskId'] as String?;
 
-Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$TaskModelToJson(TaskModel instance) => <String, dynamic>{
       'taskId': instance.taskId,
       'assignee': instance.assignee,
       'type': instance.type,

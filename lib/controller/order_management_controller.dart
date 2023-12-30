@@ -1,28 +1,34 @@
 import 'package:get/get.dart';
-import '../model/order_model.dart';
+import '../model/task_model.dart';
 import '../repository/order_management_repository.dart';
 
 class OrderController extends GetxController {
   final OrderRepository _orderRepository = OrderRepository();
 
-  final _orderModel = OrderModel().obs;
-  OrderModel get orderModel => _orderModel.value;
+  final RxBool _isDataLoading =  false.obs;
+  bool get isDataLoading  => _isDataLoading.value;
 
-  final RxList<OrderModel> _orderModelAll = <OrderModel>[].obs;
-  List<OrderModel> get orderModelAll => _orderModelAll;
+  final RxString _errorMessage = "".obs;
+  String get errorMessage  => _errorMessage.value;
+  final _orderModel = TaskModel().obs;
+  TaskModel get orderModel => _orderModel.value;
+
+  final RxList<TaskModel> _orderModelAll = <TaskModel>[].obs;
+  List<TaskModel> get orderModelAll => _orderModelAll;
+
 
   createOrder({parameters}) async {
-    // _isDataLoading(true);
+    _isDataLoading(true);
 
     var response = await _orderRepository.createOrder(parameters: parameters);
 
     response.fold((failure) {
       print("FAILED");
-      // _isDataLoading(false);
-      // _errorMessage.value = failure.message;
+      _isDataLoading(false);
+      _errorMessage.value = failure.message;
     }, (data) async {
-      // _isDataLoading(false);
-      // _errorMessage.value = "";
+      _isDataLoading(false);
+      _errorMessage.value = "";
       _orderModel.value = data;
       // print("Test Name: ${data.name} ${data.deliveryType}");
     });

@@ -3,10 +3,10 @@ import 'package:json_annotation/json_annotation.dart';
 import 'delivery_model.dart';
 import 'pickup_model.dart';
 
-part 'order_model.g.dart';
+part 'task_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class OrderModel {
+class TaskModel {
   String? taskId;
   String? assignee;
   String? type;
@@ -15,7 +15,7 @@ class OrderModel {
   String? agent;
   String? status;
 
-  OrderModel({
+  TaskModel({
     this.assignee,
     this.type,
     this.pickupDetails,
@@ -24,8 +24,8 @@ class OrderModel {
     this.status,
   });
 
-  factory OrderModel.fromJson(Map<String, dynamic> json) =>
-      _$OrderModelFromJson(json);
+  factory TaskModel.fromJson(Map<String, dynamic> json) =>
+      _$TaskModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$OrderModelToJson(this);
+  Map<String, dynamic> toJson() => _$TaskModelToJson(this);
 }

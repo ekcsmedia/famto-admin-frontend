@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 import 'package:input_quantity/input_quantity.dart';
 
+import '../controller/customer_controller.dart';
 import '../controller/dashboard_controller.dart';
 import 'delivery_person_dashboard.dart';
 import 'widget/customer_widget_home.dart';
@@ -22,6 +23,7 @@ class AdminDashBoardHome extends StatefulWidget {
 class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
   final DashboardController _dashboardController =
       Get.put(DashboardController());
+  final CustomerController _customerController = Get.put(CustomerController());
   String deliveryMethod = "Take Away";
   String deliveryOption = "On Demand";
   bool addCustomer = false;
@@ -137,6 +139,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                       selectedColor: Colors.blue,
                       onTap: () {
                         _dashboardController.setPage("customer listing");
+                        _customerController.getCustomerDataAll();
                       },
                     )
                   ],
@@ -320,6 +323,16 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                       icon: Icon(Icons.arrow_back_sharp),
                                     ),
                                     Text('Create Order'),
+                                    Obx(() => Visibility(
+                                      visible: _customerController.errorMessage.isNotEmpty,
+                                        child: Row(
+                                          children: [
+                                            Text(_customerController.errorMessage),
+                                            IconButton(onPressed: () {
+                                              _customerController.setErrorMessage();
+                                            }, icon: const Icon(Icons.close))
+                                          ],
+                                        )))
                                     // _createOrderButton(),
                                   ],
                                 ),
@@ -360,7 +373,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                               width: 300,
                                               child: Text('Add Customer')),
                                           _spacer(),
-                                          SizedBox(
+                                          Obx(() => SizedBox(
                                             width: 600,
                                             height: 300,
                                             child: Column(
@@ -377,6 +390,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                                           OutlineInputBorder(),
                                                       hintText: 'Name',
                                                     ),
+                                                    controller: _customerController.nameController,
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -387,6 +401,8 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                                           OutlineInputBorder(),
                                                       hintText: 'Email',
                                                     ),
+                                                    controller: _customerController.emailController,
+
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -397,6 +413,8 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                                           OutlineInputBorder(),
                                                       hintText: 'Password',
                                                     ),
+                                                    controller: _customerController.passwordController,
+
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -407,6 +425,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                                           OutlineInputBorder(),
                                                       hintText: 'Phone Number',
                                                     ),
+                                                    controller: _customerController.phoneNumberController,
                                                   ),
                                                 ),
                                                 Row(
@@ -415,7 +434,9 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                                           .spaceEvenly,
                                                   children: [
                                                     ElevatedButton(
-                                                        onPressed: () {},
+                                                        onPressed: () {
+                                                          _customerController.createCustomer();
+                                                        },
                                                         child: Text(
                                                             "Add Customer")),
                                                     ElevatedButton(
@@ -428,7 +449,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                                 ),
                                               ],
                                             ),
-                                          ),
+                                          ),),
                                         ],
                                       ),
                                 _spacer(),

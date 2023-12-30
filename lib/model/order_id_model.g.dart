@@ -9,7 +9,7 @@ part of 'order_id_model.dart';
 OrderById _$OrderByIdFromJson(Map<String, dynamic> json) => OrderById(
       payload: json['payload'] == null
           ? null
-          : OrderModel.fromJson(json['payload'] as Map<String, dynamic>),
+          : TaskModel.fromJson(json['payload'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$OrderByIdToJson(OrderById instance) => <String, dynamic>{

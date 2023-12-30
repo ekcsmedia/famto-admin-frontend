@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:famto_admin_app/views/create_task_screen.dart';
 
-import '../model/order_model.dart';
+import '../model/task_model.dart';
 import '../services/api_exception.dart';
 import '../services/api_manager.dart';
 import '../utils/failure.dart';
@@ -9,7 +9,7 @@ import '../utils/failure.dart';
 class TaskRepo {
   final _apiManager = ApiManager();
 
-  Future<Either<Failure, OrderModel>> createTask({parameters}) async {
+  Future<Either<Failure, TaskModel>> createTask({parameters}) async {
     // var parameters = {
     //   "taskId": "T2",
     //   "assignee": "admin",
@@ -55,7 +55,7 @@ class TaskRepo {
         isTokenMandatory: false,
       );
 
-      var response = OrderModel.fromJson(jsonResponse);
+      var response = TaskModel.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));

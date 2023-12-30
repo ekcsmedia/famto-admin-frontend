@@ -2,23 +2,23 @@ import 'package:famto_admin_app/model/order_details_model.dart';
 import 'package:get/get.dart';
 
 import '../model/delivery_model.dart';
-import '../model/order_model.dart';
+import '../model/task_model.dart';
 import '../model/pickup_model.dart';
 import '../model/task_details.dart';
 import '../repository/task_management_repo.dart';
 
 class TaskManagementController extends GetxController {
-  final _orderModel = OrderModel().obs;
-  OrderModel get orderModel => _orderModel.value;
+  final _orderModel = TaskModel().obs;
+  TaskModel get orderModel => _orderModel.value;
 
   RxList<TaskDetails> taskListPickup = <TaskDetails>[].obs;
-  List<TaskDetails> get taskListPickupValue => taskListPickup.value;
+  List<TaskDetails> get taskListPickupValue => taskListPickup;
 
   RxList<List<TaskDetails>> taskListPickupList = <List<TaskDetails>>[
     [TaskDetails()],
   ].obs;
   List<List<TaskDetails>> get taskListPickupListValue =>
-      taskListPickupList.value;
+      taskListPickupList;
 
   // addTaskDetailsListPickup(TaskDetails taskDetails) {
   //   taskListPickup.add(taskDetails);
@@ -64,7 +64,7 @@ class TaskManagementController extends GetxController {
     )
   ].obs;
 
-  List<Pickup> get pickupListValue => pickupList.value;
+  List<Pickup> get pickupListValue => pickupList;
 
   addPickupAndOrderDetails() {
     pickupList.add(Pickup(
@@ -126,7 +126,7 @@ class TaskManagementController extends GetxController {
     )
   ].obs;
 
-  List<Delivery> get deliveryListValue => deliveryList.value;
+  List<Delivery> get deliveryListValue => deliveryList;
 
   addDeliveryAndOrderDetails() {
     deliveryList.add(Delivery(
