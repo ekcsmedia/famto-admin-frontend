@@ -106,6 +106,7 @@ class ApiManager {
                 };*/
 
       // Make the post method api call with header and given parameter
+      print("before post");
       final response = await http.post(
         Uri.parse(url),
         headers: headers,

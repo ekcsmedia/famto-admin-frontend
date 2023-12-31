@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-
 import 'customer_model.dart';
 
 part 'customer_response_model.g.dart';

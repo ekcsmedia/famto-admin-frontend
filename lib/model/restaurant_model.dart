@@ -6,9 +6,7 @@ part 'restaurant_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 
-
  // List<RestaurantTagsModel> restaurantTags;
-
 
 class RestaurantModel {
   int? restaurantId;

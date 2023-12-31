@@ -4,10 +4,10 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
 
 import '../../controller/dashboard_controller.dart';
+import '../../controller/restaurant_management_controller.dart';
 
 class RestaurantDetailsWidget extends StatefulWidget {
-   RestaurantDetailsWidget({super.key});
-
+  RestaurantDetailsWidget({super.key});
 
   final bool value = false;
 
@@ -19,6 +19,8 @@ class RestaurantDetailsWidget extends StatefulWidget {
 class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
   final DashboardController _dashboardController = Get.find();
   final ScrollController2 = ScrollController();
+  final RestaurantManagementController _restaurantController =
+      Get.put(RestaurantManagementController());
 
   @override
   void initState() {
@@ -62,27 +64,31 @@ class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
   @override
   Widget build(BuildContext context) {
     return Flexible(
-        flex: 4,
-        child: SingleChildScrollView(
-          child: Container(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _header(),
-              _dataSet1(),
-              _dataSet2(),
-              _dataSet3(),
-              _dataSet4(),
-              _divider(),
-              _servingArea(),
-              _divider(),
-              _sponsorship(),
-              _divider(),
-              _tags(),
-              _divider(),
-            ],
-          )),
-        ));
+      flex: 4,
+      child: SingleChildScrollView(
+        child: Obx(
+          () => Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _header(),
+                _dataSet1(),
+                _dataSet2(),
+                _dataSet3(),
+                _dataSet4(),
+                _divider(),
+                _servingArea(),
+                _divider(),
+                _sponsorship(),
+                _divider(),
+                _tags(),
+                _divider(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Padding _orderDetailsWidget(BuildContext context) {
@@ -104,13 +110,14 @@ class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Scrollbar(
-      thumbVisibility: true,
-      controller: ScrollController2,
-    child: SingleChildScrollView(
-    scrollDirection: Axis.horizontal,
-    controller: ScrollController2,
-    child:  _dataTable(context),
-      ),),
+        thumbVisibility: true,
+        controller: ScrollController2,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          controller: ScrollController2,
+          child: _dataTable(context),
+        ),
+      ),
     );
   }
 
@@ -165,7 +172,7 @@ class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         child: IconButton(
-          icon : Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
             _dashboardController.setPage("restaurant listing");
           },
@@ -188,13 +195,13 @@ class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
                     'Restaurant',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
-                  Text(
-                    'Eats',
+                  Obx(() => Text(
+                    _restaurantController.restaurantData?.restaurantName ?? "",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                         color: Colors.grey),
-                  ),
+                  ),)
                 ],
               )),
         ],
@@ -207,11 +214,23 @@ class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          _restaurantDataWidget(key: "Id", value: "12345"),
-          _restaurantDataWidget(key: "Name", value: "John Doe"),
-          _restaurantDataWidget(key: "Email", value: "mail@yahoo.com"),
-          _restaurantDataWidget(key: "Phone", value: "1234567890"),
-          _restaurantDataWidget(key: "Address", value: "abc, xyz"),
+          _restaurantDataWidget(
+              key: "Id",
+              value: _restaurantController.restaurantData?.restaurantId
+                      .toString() ??
+                  ""),
+          _restaurantDataWidget(
+              key: "Name",
+              value: _restaurantController.restaurantData?.contactName ?? ""),
+          _restaurantDataWidget(
+              key: "Email",
+              value: _restaurantController.restaurantData?.email ?? ""),
+          _restaurantDataWidget(
+              key: "Phone",
+              value: _restaurantController.restaurantData?.phone ?? ""),
+          _restaurantDataWidget(
+              key: "Address",
+              value: _restaurantController.restaurantData?.address ?? ""),
         ],
       ),
     );
@@ -222,12 +241,19 @@ class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          _restaurantDataWidget(key: "Display Address", value: "Abc, xyz"),
-          _restaurantDataWidget(key: "Restaurant Name", value: "Eats"),
           _restaurantDataWidget(
-              key: "Description", value: "Restaurant Description"),
+              key: "Display Address",
+              value: _restaurantController.restaurantData?.displayAddress ?? ""),
+          _restaurantDataWidget(
+              key: "Restaurant Name",
+              value: _restaurantController.restaurantData?.restaurantName ?? ""),
+          _restaurantDataWidget(
+              key: "Description",
+              value: _restaurantController.restaurantData?.description ?? ""),
           _restaurantDataWidget(key: "Slug", value: "Slug description"),
-          _restaurantDataWidget(key: "Logo", value: "Logo Url"),
+          _restaurantDataWidget(
+              key: "Logo",
+              value: _restaurantController.restaurantData?.logoUrl ?? "logoUrl"),
         ],
       ),
     );
@@ -239,12 +265,15 @@ class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
       child: Row(
         children: [
           _restaurantDataWidget(
-              key: "Banner Image Web", value: "Image Url Web"),
+              key: "Banner Image Web",
+              value: _restaurantController.restaurantData?.bannerUrl ?? ""),
           _restaurantDataWidget(
               key: "Banner Image Mobile", value: "Image Url Mobile"),
           _restaurantDataWidget(key: "Background Color", value: "Blue"),
           _restaurantDataWidget(key: "Rating Bar Color", value: "Red"),
-          _restaurantDataWidget(key: "Link City", value: "Trivandraum"),
+          _restaurantDataWidget(
+              key: "Link City",
+              value: _restaurantController.restaurantData?.city ?? ""),
         ],
       ),
     );
@@ -255,8 +284,15 @@ class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          _restaurantDataWidget(key: "Status", value: "True"),
-          _restaurantDataWidget(key: "Custom Tag", value: "tag1"),
+          _restaurantDataWidget(
+              key: "Status",
+              value: _restaurantController.restaurantData?.serviceStatus ?? ""),
+          _restaurantDataWidget(
+              key: "Custom Tag",
+              value: _restaurantController.restaurantData?.restaurantTags == null
+                  ? ""
+                  : _restaurantController.restaurantData?.restaurantTags
+                      .toString()),
         ],
       ),
     );
@@ -342,7 +378,7 @@ class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               SizedBox(height: 10),
-              Text(value)
+              Text(value.toString())
             ],
           ),
         ));

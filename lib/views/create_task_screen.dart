@@ -277,9 +277,11 @@ class _CreateTaskState extends State<CreateTask> {
                         .value['streetAddress']); // '1600 Amphitheatre Parkway'
                     print(FlutterGooglePlacesWeb.value['city']); // 'CA'
                     print(FlutterGooglePlacesWeb.value['country']);
-                    setState(() {
-                      test = FlutterGooglePlacesWeb.value['name'] ?? '';
-                    });
+                    if(mounted){
+                      setState(() {
+                        test = FlutterGooglePlacesWeb.value['name'] ?? '';
+                      });
+                    }
                   },
                   child: Text('Press to test'),
                 ),
@@ -337,9 +339,9 @@ class _CreateTaskState extends State<CreateTask> {
                       apiKey: "AIzaSyDoEWQJI9N4EtAH11h7p3yKzm73rlgcFxY",
                       proxyURL: 'https://cors-anywhere.herokuapp.com/',
                       required: true,
-                      controller: TextEditingController(
-                          text: _taskManagementController
-                              .pickupList[i].pickupAddress),
+                      // controller: TextEditingController(
+                      //     text: _taskManagementController
+                      //         .pickupList[i].pickupAddress),
                     ),
                     _pickupDropTextField(
                         label: "Pickup Before",
@@ -488,9 +490,9 @@ class _CreateTaskState extends State<CreateTask> {
                 apiKey: "AIzaSyDoEWQJI9N4EtAH11h7p3yKzm73rlgcFxY",
                 proxyURL: 'https://cors-anywhere.herokuapp.com/',
                 required: true,
-                controller: TextEditingController(
-                    text: _taskManagementController
-                        .deliveryList[i].pickupAddress),
+                // controller: TextEditingController(
+                //     text: _taskManagementController
+                //         .deliveryList[i].pickupAddress),
               ),
               _pickupDropTextField(
                   label: "Delivery Before",
@@ -581,9 +583,11 @@ class _CreateTaskState extends State<CreateTask> {
                   ))
               .toList(),
           onChanged: (value) {
-            setState(() {
-              _taskManagementController.templateTypeValue = value.toString();
-            });
+            if(mounted) {
+              setState(() {
+                _taskManagementController.templateTypeValue = value.toString();
+              });
+            }
           },
           hint: const Text("Select Template"),
         ),
@@ -685,9 +689,11 @@ class _CreateTaskState extends State<CreateTask> {
             child: Center(
                 child: IconButton(
                     onPressed: () {
-                      setState(() {
+                      if(mounted) {
+                        setState(() {
                         countRow--;
                       });
+                      }
                     },
                     icon: const Icon(Icons.delete))),
           )
@@ -862,18 +868,22 @@ class _CreateTaskState extends State<CreateTask> {
         currentLatLng: const mlp.LatLng(8.524139, 76.936638),
         onNext: (mlp.GeocodingResult? result) {
           if (result != null) {
-            setState(() {
-              address = result.formattedAddress ?? "";
-              print("$address");
-            });
+            if(mounted) {
+              setState(() {
+                address = result.formattedAddress ?? "";
+                print("$address");
+              });
+            }
           }
         },
         onSuggestionSelected: (mlp.PlacesDetailsResponse? result) {
           if (result != null) {
-            setState(() {
-              autocompletePlace = result.result.formattedAddress ?? "";
-              print("$autocompletePlace --  hi");
-            });
+    if(mounted) {
+      setState(() {
+        autocompletePlace = result.result.formattedAddress ?? "";
+        print("$autocompletePlace --  hi");
+      });
+    }
           }
         },
       ),

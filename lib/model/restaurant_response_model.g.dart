@@ -1,21 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'customer_response_model.dart';
+part of 'restaurant_response_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-CustomerResponseModel _$CustomerResponseModelFromJson(
+RestaurantResponseModel _$RestaurantResponseModelFromJson(
         Map<String, dynamic> json) =>
-    CustomerResponseModel(
+    RestaurantResponseModel(
       json['payload'] == null
           ? null
-          : Customer.fromJson(json['payload'] as Map<String, dynamic>),
+          : RestaurantModel.fromJson(json['payload'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$CustomerResponseModelToJson(
-        CustomerResponseModel instance) =>
+Map<String, dynamic> _$RestaurantResponseModelToJson(
+        RestaurantResponseModel instance) =>
     <String, dynamic>{
       'payload': instance.payload?.toJson(),
     };

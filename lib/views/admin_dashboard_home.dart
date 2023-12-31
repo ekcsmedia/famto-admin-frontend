@@ -6,6 +6,7 @@ import 'package:input_quantity/input_quantity.dart';
 
 import '../controller/customer_controller.dart';
 import '../controller/dashboard_controller.dart';
+import '../controller/restaurant_management_controller.dart';
 import 'delivery_person_dashboard.dart';
 import 'widget/customer_widget_home.dart';
 import 'restaurants_widget_home.dart';
@@ -24,6 +25,8 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
   final DashboardController _dashboardController =
       Get.put(DashboardController());
   final CustomerController _customerController = Get.put(CustomerController());
+  final RestaurantManagementController _restaurantManagementController = Get.put(RestaurantManagementController());
+
   String deliveryMethod = "Take Away";
   String deliveryOption = "On Demand";
   bool addCustomer = false;
@@ -116,6 +119,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                               : false,
                       selectedColor: Colors.blue,
                       onTap: () {
+                        _restaurantManagementController.getRestaurantDetailsAll();
                         _dashboardController.setPage("restaurant listing");
                       },
                     ),
