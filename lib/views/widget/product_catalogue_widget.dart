@@ -1,6 +1,11 @@
-import 'package:flutter/material.dart'  hide DatePickerTheme;
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'dart:typed_data';
+import 'package:famto_admin_app/controller/customer_controller.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart' hide DatePickerTheme;
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../controller/product_management_controller.dart';
 
 class ProductCatalogueScreen extends StatefulWidget {
   const ProductCatalogueScreen({super.key});
@@ -12,7 +17,7 @@ class ProductCatalogueScreen extends StatefulWidget {
 class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
   // Initial Selected Value
   String dropdownvalue = 'Restaurant 1';
-
+  String photoImageUrl = "";
   // List of items in our dropdown menu
   var items = [
     'Restaurant 1',
@@ -21,6 +26,8 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
     'Restaurant 4',
     'Restaurant 5',
   ];
+
+  final ProductController _productController = Get.put(ProductController());
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +39,8 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
           children: [
             Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
+                const Padding(
+                  padding: EdgeInsets.all(20.0),
                   child: Text("Products", style: TextStyle(fontSize: 20)),
                 ),
                 Padding(
@@ -71,6 +78,9 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
                       Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Container(
+                          width: 300,
+                          height: MediaQuery.of(context).size.height * 0.8,
+                          color: Colors.white,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -80,13 +90,132 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Catagory (3)",
+                                    const Text("Category (3)",
                                         style: TextStyle(fontSize: 16)),
-                                    Icon(Icons.add),
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible:
+                                              true, // user must tap button!
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Add Category'),
+                                              content: SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.6,
+                                                child: SingleChildScrollView(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text('Category Name'),
+                                                      TextField(
+                                                        controller:
+                                                            _productController
+                                                                .categoryNameController,
+                                                      ),
+                                                      _spaceField(),
+                                                      Text('Description'),
+                                                      TextField(
+                                                        controller:
+                                                            _productController
+                                                                .categoryDescriptionController,
+                                                      ),
+                                                      _spaceField(),
+                                                      ElevatedButton(
+                                                          onPressed: () async {
+                                                            String url = "";
+                                                            XFile? image =
+                                                                await selectPicture(
+                                                                    ImageSource
+                                                                        .gallery);
+                                                            String? path =
+                                                                image?.path;
+                                                            String? name =
+                                                                image?.name;
+                                                            if (image != null &&
+                                                                path != null &&
+                                                                name != null) {
+                                                              Uint8List
+                                                                  imageData =
+                                                                  await XFile(
+                                                                          path)
+                                                                      .readAsBytes();
+                                                              FirebaseStorage
+                                                                  storage =
+                                                                  FirebaseStorage
+                                                                      .instance;
+                                                              Reference ref =
+                                                                  storage
+                                                                      .ref()
+                                                                      .child(
+                                                                          "images/$name-${DateTime.now()}");
+                                                              UploadTask
+                                                                  uploadTask =
+                                                                  ref.putData(
+                                                                      imageData);
+                                                              uploadTask.then(
+                                                                  (res) async {
+                                                                url = await res
+                                                                    .ref
+                                                                    .getDownloadURL();
+
+                                                                setState(() {
+                                                                  photoImageUrl =
+                                                                      url;
+                                                                });
+                                                              });
+                                                            }
+                                                            // var picked = await FilePicker.platform.pickFiles();
+
+                                                            // if (picked != null) {
+                                                            //   print(picked.files.first.name);
+                                                            //   uploadPic(io.File(picked.files.first.name));
+                                                            // }
+                                                          },
+                                                          child: Text(
+                                                              "Upload Photo")),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              actions: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    TextButton(
+                                                      child:
+                                                          const Text('Cancel'),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                    TextButton(
+                                                      child: const Text('Save'),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
                                   ],
                                 ),
                               ),
-                              ListTile(
+                              const ListTile(
                                 title: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -96,7 +225,7 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
                                   ],
                                 ),
                               ),
-                              ListTile(
+                              const ListTile(
                                 title: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -106,7 +235,7 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
                                   ],
                                 ),
                               ),
-                              ListTile(
+                              const ListTile(
                                 title: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -118,14 +247,14 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
                               ),
                             ],
                           ),
-                          width: 300,
-                          height: MediaQuery.of(context).size.height * 0.8,
-                          color: Colors.white,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Container(
+                          width: 300,
+                          height: MediaQuery.of(context).size.height * 0.8,
+                          color: Colors.white,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -135,13 +264,221 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Product (3)",
+                                    const Text("Product (3)",
                                         style: TextStyle(fontSize: 16)),
-                                    Icon(Icons.add),
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible:
+                                              true, // user must tap button!
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Add Products'),
+                                              content: SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.6,
+                                                child: SingleChildScrollView(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      const Text(
+                                                          'Product Name'),
+                                                      TextField(
+                                                        controller:
+                                                            _productController
+                                                                .productNameController
+                                                      ),
+                                                      _spaceField(),
+                                                      const Text('Search Tag'),
+                                                      TextField(
+                                                        controller:
+                                                            _productController
+                                                                .searchTagController,
+                                                      ),
+                                                      _spaceField(),
+                                                      const Text('Price'),
+                                                      TextField(
+                                                        controller:
+                                                            _productController
+                                                                .priceController,
+                                                      ),
+                                                      _spaceField(),
+                                                      const Text(
+                                                          'Minimum quantity to order'),
+                                                      TextField(
+                                                        controller:
+                                                            _productController
+                                                                .minOrderQtyController,
+                                                      ),
+                                                      _spaceField(),
+                                                      const Text(
+                                                          'Maximum quantity per order'),
+                                                      TextField(
+                                                        controller:
+                                                            _productController
+                                                                .maxQtyPerOrderController,
+                                                      ),
+                                                      _spaceField(),
+                                                      const Text('Cost Price'),
+                                                      TextField(
+                                                        controller:
+                                                            _productController
+                                                                .costPriceController,
+                                                      ),
+                                                      _spaceField(),
+                                                      const Text('SKU'),
+                                                      TextField(
+                                                        controller:
+                                                            _productController
+                                                                .skuController,
+                                                      ),
+                                                      _spaceField(),
+                                                      const Text('Discount'),
+                                                      TextField(
+                                                        controller:
+                                                            _productController
+                                                                .discountController,
+                                                      ),
+                                                      _spaceField(),
+                                                      const Text(
+                                                          'Often bought together'),
+                                                      DropdownMenu(
+                                                        controller:
+                                                            _productController
+                                                                .oftenBoughtTogetherController,
+                                                        dropdownMenuEntries: [
+                                                          DropdownMenuEntry(value: "product1", label: "product1"),
+                                                          DropdownMenuEntry(value: "product2", label: "product2"),
+                                                          DropdownMenuEntry(value: "product3", label: "product3"),
+                                                          DropdownMenuEntry(value: "product4", label: "product4")
+                                                        ],
+                                                      ),
+                                                      _spaceField(),
+                                                      const Text(
+                                                          'Preparation time (in min)'),
+                                                      TextField(
+                                                        controller:
+                                                            _productController
+                                                                .preparationTimeController,
+                                                      ),
+                                                      _spaceField(),
+                                                      const Text('Inventory'),
+                                                      Obx(() => Switch(value: _productController.inventory, onChanged: (bool value) {
+                                                        _productController.setInventoryValue(value);
+                                                      },),),
+                                                      _spaceField(),
+                                                      const Text('Description'),
+                                                      TextField(
+                                                        controller:
+                                                            _productController
+                                                                .productDescriptionController,
+                                                      ),
+                                                      _spaceField(),
+                                                      const Text(
+                                                          'Long Description'),
+                                                      TextField(
+                                                        controller:
+                                                            _productController
+                                                                .productLongDescriptionController,
+                                                      ),
+                                                      _spaceField(),
+                                                      ElevatedButton(
+                                                          onPressed: () async {
+                                                            String url = "";
+                                                            XFile? image =
+                                                                await selectPicture(
+                                                                    ImageSource
+                                                                        .gallery);
+                                                            String? path =
+                                                                image?.path;
+                                                            String? name =
+                                                                image?.name;
+                                                            if (image != null &&
+                                                                path != null &&
+                                                                name != null) {
+                                                              Uint8List
+                                                                  imageData =
+                                                                  await XFile(
+                                                                          path)
+                                                                      .readAsBytes();
+                                                              FirebaseStorage
+                                                                  storage =
+                                                                  FirebaseStorage
+                                                                      .instance;
+                                                              Reference ref =
+                                                                  storage
+                                                                      .ref()
+                                                                      .child(
+                                                                          "images/$name-${DateTime.now()}");
+                                                              UploadTask
+                                                                  uploadTask =
+                                                                  ref.putData(
+                                                                      imageData);
+                                                              uploadTask.then(
+                                                                  (res) async {
+                                                                url = await res
+                                                                    .ref
+                                                                    .getDownloadURL();
+
+                                                                setState(() {
+                                                                  photoImageUrl =
+                                                                      url;
+                                                                });
+                                                              });
+                                                            }
+                                                            // var picked = await FilePicker.platform.pickFiles();
+
+                                                            // if (picked != null) {
+                                                            //   print(picked.files.first.name);
+                                                            //   uploadPic(io.File(picked.files.first.name));
+                                                            // }
+                                                          },
+                                                          child: Text(
+                                                              "Upload Image")),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              actions: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    TextButton(
+                                                      child:
+                                                          const Text('Cancel'),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                    TextButton(
+                                                      child: const Text('Add'),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
                                   ],
                                 ),
                               ),
-                              ListTile(
+                              const ListTile(
                                 title: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -151,7 +488,7 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
                                   ],
                                 ),
                               ),
-                              ListTile(
+                              const ListTile(
                                 title: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -161,7 +498,7 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
                                   ],
                                 ),
                               ),
-                              ListTile(
+                              const ListTile(
                                 title: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -173,19 +510,19 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
                               ),
                             ],
                           ),
-                          width: 300,
-                          height: MediaQuery.of(context).size.height * 0.8,
-                          color: Colors.white,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Container(
+                          width: 300,
+                          height: MediaQuery.of(context).size.height * 0.8,
+                          color: Colors.white,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
+                              const Padding(
+                                padding: EdgeInsets.all(8.0),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -205,7 +542,7 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
                                     color: Colors.grey,
                                   ),
                                   SizedBox(width: 10),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 200,
                                     child: Column(
                                       crossAxisAlignment:
@@ -222,9 +559,6 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
                               ),
                             ],
                           ),
-                          width: 300,
-                          height: MediaQuery.of(context).size.height * 0.8,
-                          color: Colors.white,
                         ),
                       ),
                     ]),
@@ -234,5 +568,19 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
         ),
       ),
     );
+  }
+
+  _spaceField() {
+    return SizedBox(height: 10);
+  }
+
+  Future<XFile?> selectPicture(ImageSource source) async {
+    XFile? image;
+    image = await ImagePicker().pickImage(
+      source: source,
+      maxHeight: 1000,
+      maxWidth: 1000,
+    );
+    return image;
   }
 }
