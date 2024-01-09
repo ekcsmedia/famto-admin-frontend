@@ -18,6 +18,42 @@ class ProductController extends GetxController {
     _errorMessage.value = "";
   }
 
+  final RxString _restaurantName = "".obs;
+  String get restaurantName => _restaurantName.value;
+  setRestaurantName(value) {
+    _restaurantName.value = value;
+  }
+
+  final RxInt _restaurantId = 0.obs;
+  int get restaurantId => _restaurantId.value;
+  setRestaurantId(value) {
+    _restaurantId.value = value;
+  }
+
+  final RxInt _productId = 0.obs;
+  int get productId => _productId.value;
+  setProductId(value) {
+    _productId.value = value;
+  }
+
+  final RxString _productImageUrl = "".obs;
+  String get productImageUrl => _productImageUrl.value;
+  setProductImageUrl(value) {
+    _productImageUrl.value = value;
+  }
+
+  final RxInt _quantity = 0.obs;
+  int get quantity => _quantity.value;
+  setQuantity(value) {
+    _quantity.value = value;
+  }
+
+  final RxInt _alert = 0.obs;
+  int get alert => _alert.value;
+  setAlert(value) {
+    _alert.value = value;
+  }
+
   final Rx<ProductModel?> _productData = ProductModel().obs;
   ProductModel? get productData => _productData.value;
 
@@ -76,28 +112,28 @@ class ProductController extends GetxController {
   createProduct() async {
     _isDataLoading(true);
     var params = {
-      "restaurantName": "",
-      "restaurantId": "",
-      "productName": "",
-      "productImageUrl": "",
-      "shortDescription": "chennai",
-      "longDescription": "",
-      "price": "",
-      "inventoryStatus": "",
-      "quantity": "",
-      "alert": "",
-      "prepartionTime": "",
-      "category": "",
-      "categoryDesc": "",
-      "minOrderQty": "",
-      "maxQtyPerOrder": "",
-      "sku": "",
-      "cost": "",
+      "restaurantName": _restaurantName.value,
+      "restaurantId": _restaurantId.value,
+      "productName": productNameController.text,
+      "productImageUrl": _productImageUrl.value,
+      "shortDescription": productDescriptionController.text,
+      "longDescription": productLongDescriptionController.text,
+      "price": double.parse(priceController.text),
+      "inventoryStatus": inventory,
+      "quantity": quantity,
+      "alert": alert,
+      "prepartionTime": int.parse(preparationTimeController.text),
+      "category": categoryNameController.text,
+      "categoryDesc": categoryDescriptionController.text,
+      "minOrderQty": int.parse(minOrderQtyController.text),
+      "maxQtyPerOrder": int.parse(maxQtyPerOrderController.text),
+      "sku": int.parse(skuController.text),
+      "cost": double.parse(costPriceController.text),
       "addOnName": "",
       "addOnSelectionType": "",
-      "tags": "",
-      "oftenBoughtTogether": "",
-      "addOnsList": "",
+      "tags": [],
+      "oftenBoughtTogether": [],
+      "addOnsList": [],
     };
     var response = await _productManagementRepository.createProduct(params);
     response.fold((failure) {
@@ -150,6 +186,47 @@ class ProductController extends GetxController {
       _isDataLoading(false);
       _errorMessage.value = "";
       _productList.value = data;
+    });
+  }
+
+  getProductDetailsOfRestaurant() async {
+    _isDataLoading(true);
+    var response = await _productManagementRepository.getProductDetailsOfRestaurant(restaurantId);
+    response.fold((failure) {
+      _isDataLoading(false);
+      _errorMessage.value = failure.message;
+    }, (data) async {
+      _isDataLoading(false);
+      _errorMessage.value = "";
+      _productList.value = data;
+    });
+  }
+
+  getProductDetailsOfRestaurantAndCategory() async {
+    String category = categoryNameController.text;
+    _isDataLoading(true);
+    var response = await _productManagementRepository.getProductDetailsOfRestaurantAndCategory(restaurantId, category);
+    response.fold((failure) {
+      _isDataLoading(false);
+      _errorMessage.value = failure.message;
+    }, (data) async {
+      _isDataLoading(false);
+      _errorMessage.value = "";
+      _productList.value = data;
+    });
+  }
+
+  getProductDetailsOfRestaurantAndCategoryAndProductId() async {
+    String category = categoryNameController.text;
+    _isDataLoading(true);
+    var response = await _productManagementRepository.getProductByRestaurantAndCategoryAndProductId(restaurantId, category, productId);
+    response.fold((failure) {
+      _isDataLoading(false);
+      _errorMessage.value = failure.message;
+    }, (data) async {
+      _isDataLoading(false);
+      _errorMessage.value = "";
+      _productData.value = data.payload;
     });
   }
 }
