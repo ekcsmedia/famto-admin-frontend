@@ -47,6 +47,8 @@ class RestaurantManagementController extends GetxController {
   final Rx<RestaurantAll> _restaurantList = RestaurantAll().obs;
   RestaurantAll get restaurantList => _restaurantList.value;
 
+  List<RestaurantModel> restaurants = [];
+
   createRestaurant() async {
     _isDataLoading(true);
     print(restaurantNameController.text);
@@ -72,6 +74,8 @@ class RestaurantManagementController extends GetxController {
       _isDataLoading(false);
       _errorMessage.value = "";
       _restaurantData.value = data;
+      _restaurantData.refresh();
+      getRestaurantDetailsAll();
       print(data.toJson());
     });
   }
@@ -113,6 +117,8 @@ class RestaurantManagementController extends GetxController {
       _isDataLoading(false);
       _errorMessage.value = "";
       _restaurantList.value = data;
+      _restaurantList.refresh();
+      restaurants = data.payload ?? [];
     });
   }
 

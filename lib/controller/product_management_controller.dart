@@ -129,11 +129,11 @@ class ProductController extends GetxController {
       "maxQtyPerOrder": int.parse(maxQtyPerOrderController.text),
       "sku": int.parse(skuController.text),
       "cost": double.parse(costPriceController.text),
-      "addOnName": "",
-      "addOnSelectionType": "",
-      "tags": [],
-      "oftenBoughtTogether": [],
-      "addOnsList": [],
+      // "addOnName": "",
+      // "addOnSelectionType": "",
+      // "tags": [],
+      // "oftenBoughtTogether": [],
+      // "addOnsList": [],
     };
     var response = await _productManagementRepository.createProduct(params);
     response.fold((failure) {
