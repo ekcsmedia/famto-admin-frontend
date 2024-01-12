@@ -202,8 +202,7 @@ class ProductController extends GetxController {
     });
   }
 
-  getProductDetailsOfRestaurantAndCategory() async {
-    String category = categoryNameController.text;
+  getProductDetailsOfRestaurantAndCategory(int restaurantId, String category) async {
     _isDataLoading(true);
     var response = await _productManagementRepository.getProductDetailsOfRestaurantAndCategory(restaurantId, category);
     response.fold((failure) {
@@ -213,11 +212,11 @@ class ProductController extends GetxController {
       _isDataLoading(false);
       _errorMessage.value = "";
       _productList.value = data;
+      _productList.refresh();
     });
   }
 
-  getProductDetailsOfRestaurantAndCategoryAndProductId() async {
-    String category = categoryNameController.text;
+  getProductDetailsOfRestaurantAndCategoryAndProductId(int restaurantId, String category, int productId) async {
     _isDataLoading(true);
     var response = await _productManagementRepository.getProductByRestaurantAndCategoryAndProductId(restaurantId, category, productId);
     response.fold((failure) {
