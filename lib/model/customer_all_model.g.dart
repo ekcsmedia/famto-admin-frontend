@@ -8,7 +8,7 @@ part of 'customer_all_model.dart';
 
 CustomerAll _$CustomerAllFromJson(Map<String, dynamic> json) => CustomerAll(
       payload: (json['payload'] as List<dynamic>?)
-          ?.map((e) => Customer.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => CustomerModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

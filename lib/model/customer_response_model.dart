@@ -5,7 +5,7 @@ part 'customer_response_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class CustomerResponseModel {
-  Customer? payload;
+  CustomerModel? payload;
 
   CustomerResponseModel(
       this.payload

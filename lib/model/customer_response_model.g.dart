@@ -11,7 +11,7 @@ CustomerResponseModel _$CustomerResponseModelFromJson(
     CustomerResponseModel(
       json['payload'] == null
           ? null
-          : Customer.fromJson(json['payload'] as Map<String, dynamic>),
+          : CustomerModel.fromJson(json['payload'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$CustomerResponseModelToJson(

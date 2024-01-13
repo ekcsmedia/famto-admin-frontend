@@ -5,7 +5,7 @@ part 'customer_all_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class CustomerAll {
-  List<Customer>? payload;
+  List<CustomerModel>? payload;
 
   CustomerAll({
     this.payload,

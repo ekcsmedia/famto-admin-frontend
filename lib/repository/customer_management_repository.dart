@@ -62,7 +62,7 @@ class CustomerManagementRepository {
     }
   }
 
-  Future<Either<Failure, Customer>> deleteCustomer(
+  Future<Either<Failure, CustomerModel>> deleteCustomer(
       int id) async {
     try {
       var jsonResponse = await _apiManager.delete(
@@ -71,7 +71,7 @@ class CustomerManagementRepository {
         isTokenMandatory: false,
       );
 
-      var response = Customer.fromJson(jsonResponse);
+      var response = CustomerModel.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));

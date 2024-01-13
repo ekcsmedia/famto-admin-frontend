@@ -18,8 +18,8 @@ class CustomerController extends GetxController {
     _errorMessage.value = "";
   }
 
-  final Rx<Customer?> _customerData = Customer().obs;
-  Customer? get customerData  => _customerData.value;
+  final Rx<CustomerModel?> _customerData = CustomerModel().obs;
+  CustomerModel? get customerData  => _customerData.value;
 
   final Rx<CustomerAll> _customerList = CustomerAll().obs;
   CustomerAll get customerList  => _customerList.value;

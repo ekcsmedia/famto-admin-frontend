@@ -7,6 +7,7 @@ import 'package:input_quantity/input_quantity.dart';
 import '../controller/customer_controller.dart';
 import '../controller/dashboard_controller.dart';
 import '../controller/restaurant_management_controller.dart';
+import '../model/customer_model.dart';
 import 'delivery_person_dashboard.dart';
 import 'widget/customer_widget_home.dart';
 import 'restaurants_widget_home.dart';
@@ -33,6 +34,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
   final scrollController3 =  ScrollController();
   @override
   void initState() {
+    _customerController.getCustomerDataAll();
     // TODO: implement initState
     super.initState();
   }
@@ -349,13 +351,37 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                           SizedBox(
                                               width: 300,
                                               child: Text('Select Customer')),
-                                          SizedBox(
-                                            width: 600,
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                hintText: 'Customer',
+                                          Padding(
+                                            padding: const EdgeInsets.all(20.0),
+                                            child: DropdownMenu<CustomerModel>(
+                                              // controller: iconController,
+                                              enableFilter: false,
+                                              requestFocusOnTap: true,
+                                              leadingIcon: const Icon(Icons.search),
+                                              label: const Text('Restaurants'),
+                                              inputDecorationTheme: const InputDecorationTheme(
+                                                filled: true,
+                                                contentPadding:
+                                                EdgeInsets.symmetric(vertical: 5.0),
                                               ),
+                                              onSelected: (CustomerModel? customer) {
+
+                                              },
+                                              dropdownMenuEntries: _customerController
+                                                  .customerList.payload ==
+                                                  null
+                                                  ? []
+                                                  : _customerController
+                                                  .customerList.payload!
+                                                  .map<DropdownMenuEntry<CustomerModel>>(
+                                                    (CustomerModel customer) {
+                                                  return DropdownMenuEntry<CustomerModel>(
+                                                    value: customer,
+                                                    label: customer.name ?? "null",
+                                                    leadingIcon: Icon(Icons.person_add_sharp),
+                                                  );
+                                                },
+                                              ).toList(),
                                             ),
                                           ),
                                           SizedBox(width: 20),

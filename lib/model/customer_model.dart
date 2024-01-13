@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'customer_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class Customer {
+class CustomerModel {
   int? customerId;
   String? name;
   String? email;
@@ -22,7 +22,7 @@ class Customer {
   List<TagModel>? tagsModel;
   List<VersionModel>? versions;
 
-  Customer(
+  CustomerModel(
       {this.name,
       this.phone,
       this.email,
@@ -39,7 +39,7 @@ class Customer {
       this.tagsModel,
       this.versions});
 
-  factory Customer.fromJson(Map<String, dynamic> json) =>
+  factory CustomerModel.fromJson(Map<String, dynamic> json) =>
       _$CustomerFromJson(json);
 
   Map<String, dynamic> toJson() => _$CustomerToJson(this);
