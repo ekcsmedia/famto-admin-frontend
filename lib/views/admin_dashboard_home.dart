@@ -6,8 +6,12 @@ import 'package:input_quantity/input_quantity.dart';
 
 import '../controller/customer_controller.dart';
 import '../controller/dashboard_controller.dart';
+import '../controller/order_management_controller.dart';
+import '../controller/product_management_controller.dart';
 import '../controller/restaurant_management_controller.dart';
 import '../model/customer_model.dart';
+import '../model/product_model.dart';
+import '../model/restaurant_model.dart';
 import 'delivery_person_dashboard.dart';
 import 'widget/customer_widget_home.dart';
 import 'restaurants_widget_home.dart';
@@ -26,18 +30,23 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
   final DashboardController _dashboardController =
       Get.put(DashboardController());
   final CustomerController _customerController = Get.put(CustomerController());
-  final RestaurantManagementController _restaurantManagementController = Get.put(RestaurantManagementController());
+  final RestaurantManagementController _restaurantManagementController =
+      Get.put(RestaurantManagementController());
+  final OrderController _orderController = Get.put(OrderController());
+  final ProductController _productController = Get.put(ProductController());
 
   String deliveryMethod = "Take Away";
   String deliveryOption = "On Demand";
   bool addCustomer = false;
-  final scrollController3 =  ScrollController();
+  final scrollController3 = ScrollController();
   @override
   void initState() {
     _customerController.getCustomerDataAll();
+    _restaurantManagementController.getRestaurantDetailsAll();
     // TODO: implement initState
     super.initState();
   }
+
 //
   @override
   void setState(VoidCallback fn) {
@@ -121,7 +130,8 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                               : false,
                       selectedColor: Colors.blue,
                       onTap: () {
-                        _restaurantManagementController.getRestaurantDetailsAll();
+                        _restaurantManagementController
+                            .getRestaurantDetailsAll();
                         _dashboardController.setPage("restaurant listing");
                       },
                     ),
@@ -158,7 +168,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                 //     title: Text('Home'),
                 //   ),
                 // ),
-                // InkWell(
+                // InkWell(F
                 //   onTap: () {
                 //     Navigator.push(
                 //       context,
@@ -330,13 +340,18 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                     ),
                                     Text('Create Order'),
                                     Obx(() => Visibility(
-                                      visible: _customerController.errorMessage.isNotEmpty,
+                                        visible: _customerController
+                                            .errorMessage.isNotEmpty,
                                         child: Row(
                                           children: [
-                                            Text(_customerController.errorMessage),
-                                            IconButton(onPressed: () {
-                                              _customerController.setErrorMessage();
-                                            }, icon: const Icon(Icons.close))
+                                            Text(_customerController
+                                                .errorMessage),
+                                            IconButton(
+                                                onPressed: () {
+                                                  _customerController
+                                                      .setErrorMessage();
+                                                },
+                                                icon: const Icon(Icons.close))
                                           ],
                                         )))
                                     // _createOrderButton(),
@@ -344,54 +359,96 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                 ),
                                 _spacer(),
                                 !addCustomer
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          SizedBox(
-                                              width: 300,
-                                              child: Text('Select Customer')),
-                                          Padding(
-                                            padding: const EdgeInsets.all(20.0),
-                                            child: DropdownMenu<CustomerModel>(
-                                              // controller: iconController,
-                                              enableFilter: false,
-                                              requestFocusOnTap: true,
-                                              leadingIcon: const Icon(Icons.search),
-                                              label: const Text('Restaurants'),
-                                              inputDecorationTheme: const InputDecorationTheme(
-                                                filled: true,
-                                                contentPadding:
-                                                EdgeInsets.symmetric(vertical: 5.0),
-                                              ),
-                                              onSelected: (CustomerModel? customer) {
-
-                                              },
-                                              dropdownMenuEntries: _customerController
-                                                  .customerList.payload ==
-                                                  null
-                                                  ? []
-                                                  : _customerController
-                                                  .customerList.payload!
-                                                  .map<DropdownMenuEntry<CustomerModel>>(
-                                                    (CustomerModel customer) {
-                                                  return DropdownMenuEntry<CustomerModel>(
-                                                    value: customer,
-                                                    label: customer.name ?? "null",
-                                                    leadingIcon: Icon(Icons.person_add_sharp),
-                                                  );
+                                    ? Obx(
+                                        () => Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            SizedBox(
+                                                width: 300,
+                                                child: Text('Select Customer')),
+                                            _customerController.isDataLoading
+                                                ? CircularProgressIndicator()
+                                                : Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            20.0),
+                                                    child: DropdownMenu<
+                                                        CustomerModel>(
+                                                      controller: _orderController
+                                                          .filterCustomerData,
+                                                      enableFilter: true,
+                                                      requestFocusOnTap: true,
+                                                      hintText:
+                                                          "Select Customer",
+                                                      leadingIcon: const Icon(
+                                                          Icons.search),
+                                                      trailingIcon: IconButton(
+                                                          onPressed: () {
+                                                            _orderController
+                                                                .clearCustomerSearchInput();
+                                                          },
+                                                          icon: Icon(
+                                                              Icons.clear)),
+                                                      inputDecorationTheme:
+                                                          const InputDecorationTheme(
+                                                        filled: true,
+                                                        contentPadding:
+                                                            EdgeInsets
+                                                                .symmetric(
+                                                                    vertical:
+                                                                        5.0),
+                                                      ),
+                                                      onSelected:
+                                                          (CustomerModel?
+                                                              customer) {
+                                                        _orderController
+                                                            .setCustomer(
+                                                                customer);
+                                                      },
+                                                      dropdownMenuEntries: _customerController
+                                                                  .customerList
+                                                                  .payload ==
+                                                              null
+                                                          ? []
+                                                          : _customerController
+                                                              .customerList
+                                                              .payload!
+                                                              .map<
+                                                                  DropdownMenuEntry<
+                                                                      CustomerModel>>(
+                                                              (CustomerModel
+                                                                  customer) {
+                                                                return DropdownMenuEntry<
+                                                                    CustomerModel>(
+                                                                  value:
+                                                                      customer,
+                                                                  label:
+                                                                      "${customer.name ?? ""}, ${customer.phone ?? ""}",
+                                                                  leadingIcon:
+                                                                      Icon(Icons
+                                                                          .person_add_sharp),
+                                                                );
+                                                              },
+                                                            ).toList(),
+                                                    ),
+                                                  ),
+                                            SizedBox(width: 20),
+                                            IconButton(
+                                                onPressed: () {
+                                                  _customerController
+                                                      .getCustomerDataAll();
+                                                  setState(() {});
                                                 },
-                                              ).toList(),
-                                            ),
-                                          ),
-                                          SizedBox(width: 20),
-                                          ElevatedButton(
-                                              onPressed: () {
-                                                addCustomer = true;
-                                                setState(() {});
-                                              },
-                                              child: Text("Add")),
-                                        ],
+                                                icon: Icon(Icons.refresh)),
+                                            ElevatedButton(
+                                                onPressed: () {
+                                                  addCustomer = true;
+                                                  setState(() {});
+                                                },
+                                                child: Text("Add")),
+                                          ],
+                                        ),
                                       )
                                     : Row(
                                         mainAxisAlignment:
@@ -403,83 +460,103 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                               width: 300,
                                               child: Text('Add Customer')),
                                           _spacer(),
-                                          Obx(() => SizedBox(
-                                            width: 600,
-                                            height: 300,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                SizedBox(
-                                                  width: 400,
-                                                  child: TextField(
-                                                    decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      hintText: 'Name',
+                                          Obx(
+                                            () => SizedBox(
+                                              width: 600,
+                                              height: 300,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  SizedBox(
+                                                    width: 400,
+                                                    child: TextField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        hintText: 'Name',
+                                                      ),
+                                                      controller:
+                                                          _customerController
+                                                              .nameController,
                                                     ),
-                                                    controller: _customerController.nameController,
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  width: 400,
-                                                  child: TextField(
-                                                    decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      hintText: 'Email',
+                                                  SizedBox(
+                                                    width: 400,
+                                                    child: TextField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        hintText: 'Email',
+                                                      ),
+                                                      controller:
+                                                          _customerController
+                                                              .emailController,
                                                     ),
-                                                    controller: _customerController.emailController,
-
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  width: 400,
-                                                  child: TextField(
-                                                    decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      hintText: 'Password',
+                                                  SizedBox(
+                                                    width: 400,
+                                                    child: TextField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        hintText: 'Password',
+                                                      ),
+                                                      controller:
+                                                          _customerController
+                                                              .passwordController,
                                                     ),
-                                                    controller: _customerController.passwordController,
-
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  width: 400,
-                                                  child: TextField(
-                                                    decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      hintText: 'Phone Number',
+                                                  SizedBox(
+                                                    width: 400,
+                                                    child: TextField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        hintText:
+                                                            'Phone Number',
+                                                      ),
+                                                      controller:
+                                                          _customerController
+                                                              .phoneNumberController,
                                                     ),
-                                                    controller: _customerController.phoneNumberController,
                                                   ),
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    ElevatedButton(
-                                                        onPressed: () {
-                                                          _customerController.createCustomer();
-                                                        },
-                                                        child: Text(
-                                                            "Add Customer")),
-                                                    ElevatedButton(
-                                                        onPressed: () {
-                                                          addCustomer = false;
-                                                          setState(() {});
-                                                        },
-                                                        child: Text("Cancel")),
-                                                  ],
-                                                ),
-                                              ],
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      ElevatedButton(
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              _customerController
+                                                                  .createCustomer();
+                                                              addCustomer =
+                                                                  false;
+                                                            });
+                                                          },
+                                                          child: Text(
+                                                              "Add Customer")),
+                                                      ElevatedButton(
+                                                          onPressed: () {
+                                                            addCustomer = false;
+                                                            setState(() {});
+                                                          },
+                                                          child:
+                                                              Text("Cancel")),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),),
+                                          ),
                                         ],
                                       ),
                                 _spacer(),
@@ -507,6 +584,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                                   groupValue: deliveryMethod,
                                                   onChanged: (value) {
                                                     setState(() {
+                                                      _orderController.setDeliveryMethod(value);
                                                       deliveryMethod =
                                                           value.toString();
                                                     });
@@ -521,6 +599,8 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                                   groupValue: deliveryMethod,
                                                   onChanged: (value) {
                                                     setState(() {
+                                                      _orderController.setDeliveryMethod(value);
+
                                                       deliveryMethod =
                                                           value.toString();
                                                     });
@@ -535,6 +615,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                                   groupValue: deliveryMethod,
                                                   onChanged: (value) {
                                                     setState(() {
+                                                      _orderController.setDeliveryMethod(value);
                                                       deliveryMethod =
                                                           value.toString();
                                                     });
@@ -602,6 +683,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                                     SizedBox(
                                                       width: 200,
                                                       child: TextField(
+                                                        controller: _orderController.pickupName,
                                                         decoration:
                                                             InputDecoration(
                                                           border:
@@ -613,6 +695,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                                     SizedBox(
                                                       width: 200,
                                                       child: TextField(
+                                                        controller: _orderController.pickupPhone,
                                                         decoration:
                                                             InputDecoration(
                                                           border:
@@ -627,6 +710,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                                 SizedBox(
                                                   width: 400,
                                                   child: TextField(
+                                                    controller: _orderController.pickupEmail,
                                                     decoration: InputDecoration(
                                                       border:
                                                           OutlineInputBorder(),
@@ -788,6 +872,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                                   groupValue: deliveryOption,
                                                   onChanged: (value) {
                                                     setState(() {
+                                                      _orderController.setDeliveryOption(value);
                                                       deliveryOption =
                                                           value.toString();
                                                     });
@@ -802,6 +887,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                                   groupValue: deliveryOption,
                                                   onChanged: (value) {
                                                     setState(() {
+                                                      _orderController.setDeliveryOption(value);
                                                       deliveryOption =
                                                           value.toString();
                                                     });
@@ -822,13 +908,54 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                     SizedBox(
                                         width: 300,
                                         child: Text('Select Restaurants')),
-                                    SizedBox(
-                                      width: 600,
-                                      child: TextField(
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText: 'Restaurants',
+                                    Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: DropdownMenu<RestaurantModel>(
+                                        // controller: iconController,
+                                        enableFilter: true,
+                                        requestFocusOnTap: true,
+                                        hintText: "Select Restaurant",
+                                        leadingIcon: const Icon(Icons.search),
+                                        inputDecorationTheme:
+                                            const InputDecorationTheme(
+                                          filled: true,
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 5.0),
                                         ),
+                                        onSelected:
+                                            (RestaurantModel? restaurant) {
+                                          _orderController
+                                              .setRestaurant(restaurant);
+                                          int? restaurantId =
+                                              restaurant?.restaurantId ?? 0;
+                                          _productController
+                                              .getProductDetailsOfRestaurant(
+                                                  restaurantId);
+                                        },
+                                        dropdownMenuEntries:
+                                            _restaurantManagementController
+                                                        .restaurantList
+                                                        .payload ==
+                                                    null
+                                                ? []
+                                                : _restaurantManagementController
+                                                    .restaurantList.payload!
+                                                    .map<
+                                                        DropdownMenuEntry<
+                                                            RestaurantModel>>(
+                                                    (RestaurantModel
+                                                        restaurant) {
+                                                      return DropdownMenuEntry<
+                                                          RestaurantModel>(
+                                                        value: restaurant,
+                                                        label: restaurant
+                                                                .restaurantName ??
+                                                            "null",
+                                                        leadingIcon: Icon(
+                                                            Icons.restaurant),
+                                                      );
+                                                    },
+                                                  ).toList(),
                                       ),
                                     ),
                                   ],
@@ -848,81 +975,163 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                 //   ],
                                 // ),
 
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SizedBox(
-                                        width: 300,
-                                        child: Text('Search Product')),
-                                    SizedBox(
-                                      width: 600,
-                                      child: TextField(
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          hintText: 'Products',
+                                Obx(
+                                  () => Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      SizedBox(
+                                          width: 300,
+                                          child: Text('Search Products')),
+                                      Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: DropdownMenu<ProductModel>(
+                                          // controller: iconController,
+                                          enableFilter: true,
+                                          requestFocusOnTap: true,
+                                          hintText: "Select Product",
+                                          leadingIcon: const Icon(Icons.search),
+                                          inputDecorationTheme:
+                                              const InputDecorationTheme(
+                                            filled: true,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 5.0),
+                                          ),
+                                          onSelected: (ProductModel? product) {
+                                            _orderController
+                                                .setProductList(product);
+                                          },
+                                          dropdownMenuEntries:
+                                              _productController.productList
+                                                          .payload ==
+                                                      null
+                                                  ? []
+                                                  : _productController
+                                                      .productList.payload!
+                                                      .map<
+                                                          DropdownMenuEntry<
+                                                              ProductModel>>(
+                                                      (ProductModel product) {
+                                                        return DropdownMenuEntry<
+                                                            ProductModel>(
+                                                          value: product,
+                                                          label: product
+                                                                  .productName ??
+                                                              "null",
+                                                          leadingIcon: Icon(Icons
+                                                              .production_quantity_limits_sharp),
+                                                        );
+                                                      },
+                                                    ).toList(),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
 
                                 _spacer(),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SizedBox(width: 300),
-                                    SizedBox(
-                                      width: 350,
-                                      height: 100,
-                                      child: Card(
-                                          child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Text('Gobi Manchurian (Rs.40)'),
-                                              InputQty(
-                                                btnColor1: Colors.blue,
-                                                btnColor2: Colors.blue,
-                                                showMessageLimit: false,
-                                                textFieldDecoration:
-                                                    InputDecoration(
-                                                  border: InputBorder.none,
-                                                ),
-                                                boxDecoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: Colors.transparent,
-                                                      width: 0.0),
-                                                ),
-                                                maxVal: double
-                                                    .maxFinite, //max val to go
-                                                initVal: 1,
-                                                minVal: 1, //min starting val
-                                                onQtyChanged: (val) {
-                                                  print(val);
+                                SizedBox(
+                                  width: 800,
+                                  child: ListView.builder(
+                                      itemCount: _orderController
+                                              .selectedProducts.length ??
+                                          0,
+                                      shrinkWrap: true,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            SizedBox(width: 300),
+                                            SizedBox(
+                                              width: 350,
+                                              height: 100,
+                                              child: Card(
+                                                  child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                          '${_orderController.selectedProducts[index].productName} (Rs.${_orderController.selectedProducts[index].cost})'),
+                                                      InputQty(
+                                                        btnColor1: Colors.blue,
+                                                        btnColor2: Colors.blue,
+                                                        showMessageLimit: false,
+                                                        textFieldDecoration:
+                                                            InputDecoration(
+                                                          border:
+                                                              InputBorder.none,
+                                                        ),
+                                                        boxDecoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              width: 0.0),
+                                                        ),
+                                                        maxVal: double
+                                                            .maxFinite, //max val to go
+                                                        initVal: 1,
+                                                        minVal:
+                                                            1, //min starting val
+                                                        onQtyChanged:
+                                                            (val) async {
+                                                          num cost =
+                                                              _orderController
+                                                                      .selectedProducts[
+                                                                          index]
+                                                                      .cost ??
+                                                                  0;
+                                                          int? qty = val as int;
+                                                          num price =
+                                                              await _orderController
+                                                                  .totalProductCostCalculation(
+                                                                      cost,
+                                                                      qty);
+                                                          _orderController
+                                                                  .selectedProducts[
+                                                                      index]
+                                                                  .totalPrice =
+                                                              price as double?;
+                                                          _orderController.subTotal();
+                                                          _orderController
+                                                              .refreshProductList();
 
-                                                  //on value changed we may set the value
-                                                  //setstate could be called
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsets.only(right: 20.0),
-                                            child: Text('Rs.160'),
-                                          ),
-                                        ],
-                                      )),
-                                    ),
-                                  ],
+                                                          //on value changed we may set the value
+                                                          //setstate could be called
+                                                        },
+                                                      ),
+                                                      IconButton(
+                                                          onPressed: () {
+                                                            _orderController
+                                                                .deleteProductFromList(
+                                                                    index);
+                                                          },
+                                                          icon: Icon(
+                                                              Icons.delete)),
+                                                    ],
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: 20.0),
+                                                    child: Text(
+                                                        'Rs.${_orderController.selectedProducts[index].totalPrice ?? 0}'),
+                                                  ),
+                                                ],
+                                              )),
+                                            ),
+                                          ],
+                                        );
+                                      }),
                                 ),
 
                                 _spacer(),
@@ -950,6 +1159,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                     SizedBox(
                                       width: 600,
                                       child: TextField(
+                                        controller: _orderController.suggestions,
                                         maxLines: 3,
                                         decoration: InputDecoration(
                                           border: OutlineInputBorder(),
@@ -964,11 +1174,14 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 20.0),
                                     child: ElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          _orderController.subTotal();
+                                          _orderController.refreshProductList();
+                                        },
                                         child: Text("Invoices")),
                                   ),
                                 ),
-                                Row(
+                                Obx(() => Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
@@ -983,38 +1196,52 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          _orderCostDetails(
-                                            "Gobi Manchurian",
-                                            "Rs.40",
-                                          ),
+                                          ListView.builder(
+                                              itemCount: _orderController
+                                                      .selectedProducts
+                                                      .length ??
+                                                  0,
+                                              shrinkWrap: true,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return _orderCostDetails(
+                                                  _orderController
+                                                      .selectedProducts[index].productName,
+                                                  _orderController
+                                                      .selectedProducts[index].totalPrice.toString(),
+                                                );
+                                              }),
                                           Divider(),
                                           _orderCostDetails(
                                             'Sub Total',
-                                            "Rs.40",
+                                            "Rs.${_orderController.subtotal}",
                                           ),
                                           _orderCostDetails(
                                             'Sales Tax @5%',
-                                            'Rs.2',
+                                            'Rs.${_orderController.subtotal * 0.05}',
                                           ),
                                           _orderCostDetails(
                                             'GST @100%',
-                                            'Rs.40',
+                                            'Rs.${_orderController.subtotal * 1.0}',
                                           ),
                                         ],
                                       )),
                                     ),
                                   ],
-                                ),
+                                ),),
 
-                                Center(
+                              Obx(() =>  Center(
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 20.0),
                                     child: ElevatedButton(
-                                        onPressed: () {},
-                                        child: Text("Create Order - Rs.84")),
+                                        onPressed: () {
+                                          _orderController.createOrder();
+                                        },
+                                        child: Text("Create Order - Rs.${_orderController.subtotal * 2.05}")),
                                   ),
-                                ),
+                                ),),
                                 // Row(
                                 //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 //   children: [

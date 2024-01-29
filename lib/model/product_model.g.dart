@@ -34,6 +34,7 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
       addOnsList: (json['addOnsList'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      totalPrice: (json['totalPrice'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
@@ -61,4 +62,5 @@ Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
       'tags': instance.tags,
       'oftenBoughtTogether': instance.oftenBoughtTogether,
       'addOnsList': instance.addOnsList,
+      'totalPrice': instance.totalPrice,
     };

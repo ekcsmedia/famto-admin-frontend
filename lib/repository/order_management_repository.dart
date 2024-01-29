@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import '../model/manage_order_model.dart';
 import '../model/order_all_model.dart';
 import '../model/task_model.dart';
 import '../services/api_endpoints.dart';
@@ -9,20 +10,15 @@ import '../utils/failure.dart';
 class OrderRepository {
   final _apiManager = ApiManager();
 
-  Future<Either<Failure, TaskModel>> createOrder({parameters}) async {
+  Future<Either<Failure, OrderModel>> createOrder({parameters}) async {
     try {
-      print("inside order repository");
-      // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.post(
-        "https://tzzg86ms1m.execute-api.ap-south-1.amazonaws.com/v1/api/orders/",
-        // "http://192.168.1.3:8080/api/orders/",
-        // "http://10.0.2.2:8080/api/orders/",
-
+        "https://6qg7wh8nga.execute-api.ap-south-1.amazonaws.com/v1/order-management",
         parameters,
         isTokenMandatory: false,
       );
 
-      var response = TaskModel.fromJson(jsonResponse);
+      var response = OrderModel.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));

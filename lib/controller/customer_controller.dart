@@ -1,3 +1,4 @@
+import 'package:famto_admin_app/controller/order_management_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../model/customer_all_model.dart';
@@ -16,6 +17,14 @@ class CustomerController extends GetxController {
   String get errorMessage  => _errorMessage.value;
   setErrorMessage() {
     _errorMessage.value = "";
+  }
+
+  OrderController orderController = OrderController();
+
+  final Rx<CustomerModel> _selectedCustomer = CustomerModel().obs;
+  CustomerModel get selectedCustomer  => _selectedCustomer.value;
+  setCustomer(value) {
+    _selectedCustomer.value = value;
   }
 
   final Rx<CustomerModel?> _customerData = CustomerModel().obs;
@@ -58,8 +67,9 @@ class CustomerController extends GetxController {
       _isDataLoading(false);
       _errorMessage.value = "successfully added a customer";
       _customerData.value = data.payload;
-      print (data.toJson());
-    });
+      // orderController.setCustomerData("${data.payload?.name ?? ""} + ${data.payload?.phone ?? ""}");
+      getCustomerDataAll();
+      });
   }
 
   getCustomerById(int id) async {
@@ -72,7 +82,6 @@ class CustomerController extends GetxController {
       _isDataLoading(false);
       _errorMessage.value = "";
       _customerData.value = data.payload;
-      print(data.toJson());
       _customerData.refresh();
     });
   }
@@ -84,7 +93,6 @@ class CustomerController extends GetxController {
       _isDataLoading(false);
       _errorMessage.value = failure.message;
     }, (data) async {
-      print(data);
       _isDataLoading(false);
       _errorMessage.value = "";
     });
@@ -100,8 +108,7 @@ class CustomerController extends GetxController {
       _isDataLoading(false);
       _errorMessage.value = "";
       _customerList.value = data;
-      print("///success");
-      print(data.toJson());
+      _customerList.refresh();
     });
   }
 
@@ -111,14 +118,11 @@ class CustomerController extends GetxController {
     response.fold((failure) {
       _isDataLoading(false);
       _errorMessage.value = failure.message;
-      print("failure");
     }, (data) async {
       _isDataLoading(false);
       _errorMessage.value = "";
       _customerList.value = data;
       _customerList.refresh();
-      print("success");
-      print(data.toJson());
     });
   }
 

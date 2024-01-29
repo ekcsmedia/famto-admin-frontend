@@ -123,7 +123,8 @@ class ProductController extends GetxController {
       "quantity": quantity,
       "alert": alert,
       "prepartionTime": int.parse(preparationTimeController.text),
-      "category": categoryNameController.text,
+      "category": "Bread" ,
+      // categoryNameController.text,
       "categoryDesc": categoryDescriptionController.text,
       "minOrderQty": int.parse(minOrderQtyController.text),
       "maxQtyPerOrder": int.parse(maxQtyPerOrderController.text),
@@ -133,7 +134,7 @@ class ProductController extends GetxController {
       // "addOnSelectionType": "",
       // "tags": [],
       // "oftenBoughtTogether": [],
-      // "addOnsList": [],
+      "addOnsList": [],
     };
     var response = await _productManagementRepository.createProduct(params);
     response.fold((failure) {
@@ -189,7 +190,7 @@ class ProductController extends GetxController {
     });
   }
 
-  getProductDetailsOfRestaurant() async {
+  getProductDetailsOfRestaurant(int? restaurantId) async {
     _isDataLoading(true);
     var response = await _productManagementRepository.getProductDetailsOfRestaurant(restaurantId);
     response.fold((failure) {

@@ -17,6 +17,7 @@ class CustomerDetailsWidget extends StatelessWidget {
         child: _customerController.isDataLoading ? Center(
           child: CircularProgressIndicator(),
         ) : SingleChildScrollView(
+
           child: Container(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

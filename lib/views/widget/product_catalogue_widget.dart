@@ -616,6 +616,7 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
                                                               child: const Text(
                                                                   'Add'),
                                                               onPressed: () {
+                                                                _productController.createProduct();
                                                                 Navigator.of(
                                                                         context)
                                                                     .pop();
@@ -663,7 +664,10 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
                                                               .productName ??
                                                               "Product $index"),
                                                           onPressed: () {
-
+                                                            _productController.getProductById(_productController
+                                                                .productList
+                                                                .payload?[
+                                                            index].productId ?? 0);
                                                           },
                                                         ),
                                                         Icon(Icons
@@ -708,22 +712,30 @@ class _ProductCatalogueScreenState extends State<ProductCatalogueScreen> {
                                           Container(
                                             width: 50,
                                             height: 50,
-                                            color: Colors.grey,
+                                            color: Colors.white,
+                                            child: Image.network(
+                                                "https://www.thedeliciouscrescent.com/wp-content/uploads/2020/12/Fruit-Salad-2.jpg",
+                                            headers: {
+                                              "Access-Control-Allow-Origin": "*",
+                                              "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE, HEAD",
+                                                  "Access-Control-Allow-Headers" : "Origin, X-Requested-With, Content-Type, Accept",
+                                              'Content-Type': 'text/plain'
+                                            },),
                                           ),
                                           SizedBox(width: 10),
-                                          const SizedBox(
+                                          Obx (() => (_productController.productList.payload == null || _productController.productList.payload!.isEmpty) ?
+                                          SizedBox.shrink() : SizedBox(
                                             width: 200,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text("Prawn Dumplings"),
-                                                Text("₹ 20.00"),
-                                                Text(
-                                                    "Steamed dumplings filled with Prawns"),
+                                                Text(_productController.productData?.productName ?? ""),
+                                                Text("₹ ${_productController.productData?.price ?? ""}"),
+                                                Text(_productController.productData?.shortDescription ?? ""),
                                               ],
                                             ),
-                                          ),
+                                          ),),
                                         ],
                                       ),
                                     ],

@@ -17,79 +17,81 @@ class CustomerListing extends StatelessWidget {
     return Obx (() => Flexible(
         flex: 4,
         child: Container(
-            child: Column(
+            child: SingleChildScrollView(
+              child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(width: 200, child: Text('Customers')),
-                ],
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(width: 200, child: Text('Customers')),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              width: 400,
-              child: TextField(
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(), hintText: 'Search Customer'),
-                onChanged: (value) {
-                  _customerController.getCustomerDataSearchResult(value);
-                },
+              SizedBox(
+                width: 400,
+                child: TextField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), hintText: 'Search Customer'),
+                  onChanged: (value) {
+                    _customerController.getCustomerDataSearchResult(value);
+                  },
+                ),
               ),
-            ),
-            _customerController.isDataLoading ? Center( child: CircularProgressIndicator()) : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Scrollbar(
-                  thumbVisibility: true,
-                  controller: ScrollController1,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
+              _customerController.isDataLoading ? Center( child: CircularProgressIndicator()) : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Scrollbar(
+                    thumbVisibility: true,
                     controller: ScrollController1,
-                    child: Obx(
-                      () => DataTable(
-                          border: TableBorder.all(color: Colors.blue),
-                          headingRowColor:
-                              MaterialStateProperty.resolveWith<Color?>(
-                                  (Set<MaterialState> states) {
-                            return Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withOpacity(0.30);
-                          }),
-                          columns: [
-                            DataColumn(
-                                label:
-                                    InkWell(onTap: () {}, child: Text('Id'))),
-                            DataColumn(label: Text('Name')),
-                            DataColumn(label: Text('Email')),
-                            DataColumn(
-                              label: Text('Phone'),
-                            ),
-                            DataColumn(label: Text('Platform')),
-                            DataColumn(
-                              label: Text("Registration Date"),
-                              onSort: (columnIndex, ascending) {},
-                            ),
-                            DataColumn(label: Text('Rating')),
-                            DataColumn(
-                              label: Text('Wallet Balance'),
-                            ),
-                            DataColumn(label: Text('Actions')),
-                          ],
-                          rows:     _customerController.customerList!.payload != null ?
-                          _rowList() : [DataRow(cells: [])])),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      controller: ScrollController1,
+                      child: Obx(
+                        () => DataTable(
+                            border: TableBorder.all(color: Colors.blue),
+                            headingRowColor:
+                                MaterialStateProperty.resolveWith<Color?>(
+                                    (Set<MaterialState> states) {
+                              return Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.30);
+                            }),
+                            columns: [
+                              DataColumn(
+                                  label:
+                                      InkWell(onTap: () {}, child: Text('Id'))),
+                              DataColumn(label: Text('Name')),
+                              DataColumn(label: Text('Email')),
+                              DataColumn(
+                                label: Text('Phone'),
+                              ),
+                              DataColumn(label: Text('Platform')),
+                              DataColumn(
+                                label: Text("Registration Date"),
+                                onSort: (columnIndex, ascending) {},
+                              ),
+                              DataColumn(label: Text('Rating')),
+                              DataColumn(
+                                label: Text('Wallet Balance'),
+                              ),
+                              DataColumn(label: Text('Actions')),
+                            ],
+                            rows:     _customerController.customerList!.payload != null ?
+                            _rowList() : [DataRow(cells: [])])),
+                      ),
                     ),
                   ),
                 ),
-              ),
 
           ],
-        ))));
+        ),
+            ))));
   }
 
   List<DataRow> _rowList() {

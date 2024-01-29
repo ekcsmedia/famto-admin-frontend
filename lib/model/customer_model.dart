@@ -40,7 +40,7 @@ class CustomerModel {
       this.versions});
 
   factory CustomerModel.fromJson(Map<String, dynamic> json) =>
-      _$CustomerFromJson(json);
+      _$CustomerModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CustomerToJson(this);
+  Map<String, dynamic> toJson() => _$CustomerModelToJson(this);
 }
