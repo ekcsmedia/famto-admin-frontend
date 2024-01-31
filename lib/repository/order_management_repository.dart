@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
 import '../model/manage_order_model.dart';
+import '../model/manage_order_response_model.dart';
 import '../model/order_all_model.dart';
+import '../model/order_management_all.dart';
 import '../model/task_model.dart';
 import '../services/api_endpoints.dart';
 import '../services/api_exception.dart';
@@ -10,15 +12,17 @@ import '../utils/failure.dart';
 class OrderRepository {
   final _apiManager = ApiManager();
 
-  Future<Either<Failure, OrderModel>> createOrder({parameters}) async {
+  Future<Either<Failure, OrderResponseModel>> createOrder({parameters}) async {
     try {
       var jsonResponse = await _apiManager.post(
         "https://6qg7wh8nga.execute-api.ap-south-1.amazonaws.com/v1/order-management",
         parameters,
         isTokenMandatory: false,
       );
+      print("$jsonResponse -- ");
+      var response = OrderResponseModel.fromJson(jsonResponse);
+      print("$response ++");
 
-      var response = OrderModel.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));
@@ -32,7 +36,7 @@ class OrderRepository {
       // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.get(
         // "localhost:8080//api/delivery-category/$id",
-        "https://tzzg86ms1m.execute-api.ap-south-1.amazonaws.com/v1/api/orders/$id",
+        "https://6qg7wh8nga.execute-api.ap-south-1.amazonaws.com/v1/order-management/$id",
         // "http://10.0.2.2:8080/api/delivery-category/$id",
 
         isTokenMandatory: false,
@@ -47,20 +51,13 @@ class OrderRepository {
     }
   }
 
-  Future<Either<Failure, OrderAll>> getOrdersAll() async {
+  Future<Either<Failure, OrderManageAll>> getOrdersAll() async {
     try {
-      // var jsonResponse = json.decode(await getJson());
       var jsonResponse = await _apiManager.get(
-        // "localhost:8080//api/delivery-category/",
-        // "http://127.0.0.1:9999/api/delivery-category/",
-        // "${ApiEndpoints.apiBaseUrl}orders/",
-        "https://tzzg86ms1m.execute-api.ap-south-1.amazonaws.com/v1/api/orders",
-        // "https://utb9cx6tx1.execute-api.ap-south-1.amazonaws.com/orders",
-
-        // "http://10.0.2.2:8080/api/delivery-category/",
+        "https://6qg7wh8nga.execute-api.ap-south-1.amazonaws.com/v1/order-management",
         isTokenMandatory: false,
       );
-      var response = OrderAll.fromJson(jsonResponse);
+      var response = OrderManageAll.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));
@@ -68,6 +65,8 @@ class OrderRepository {
       return left(ApiFailure(message: error.toString()));
     }
   }
+
+
 
   Future<Either<Failure, TaskModel>> updateOrderByID(
       {int? id,

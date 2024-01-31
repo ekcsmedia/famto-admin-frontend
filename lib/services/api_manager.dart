@@ -120,7 +120,7 @@ class ApiManager {
       // Map<dynamic, dynamic> responseJson = _returnResponse(response);
 
       var responseJson = _returnResponse(response);
-      return responseJson;
+      return {"payload" : responseJson};
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }

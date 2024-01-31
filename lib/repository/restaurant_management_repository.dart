@@ -12,7 +12,7 @@ import '../utils/failure.dart';
 class RestaurantManagementRepository {
   final _apiManager = ApiManager();
 
-  Future<Either<Failure, RestaurantModel>> createRestaurant(
+  Future<Either<Failure, RestaurantResponseModel>> createRestaurant(
       params) async {
     try {
       // var jsonResponse = json.decode(await getJson());
@@ -22,7 +22,7 @@ class RestaurantManagementRepository {
         isTokenMandatory: false,
       );
 
-      var response = RestaurantModel.fromJson(jsonResponse);
+      var response = RestaurantResponseModel.fromJson(jsonResponse);
       return right(response);
     } on AppException catch (error) {
       return left(ApiFailure(message: error.message));

@@ -30,9 +30,9 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
           ? null
           : RestaurantModel.fromJson(
               json['restaurantDetails'] as Map<String, dynamic>),
-      productsData: json['productsData'] == null
-          ? null
-          : ProductModel.fromJson(json['productsData'] as Map<String, dynamic>),
+      productsData: (json['productsData'] as List<dynamic>?)
+          ?.map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       suggestions: json['suggestions'] as String?,
       invoice: json['invoice'] == null
           ? null
@@ -48,11 +48,11 @@ Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
       'pickupPhone': instance.pickupPhone,
       'pickupEmail': instance.pickupEmail,
       'orderStatus': instance.orderStatus,
-      'pickupAddress': instance.pickupAddress?.toJson(),
-      'deliveryAddress': instance.deliveryAddress?.toJson(),
+      'suggestions': instance.suggestions,
       'deliveryOption': instance.deliveryOption,
       'restaurantDetails': instance.restaurantDetails?.toJson(),
-      'productsData': instance.productsData?.toJson(),
-      'suggestions': instance.suggestions,
+      'pickupAddress': instance.pickupAddress?.toJson(),
+      'deliveryAddress': instance.deliveryAddress?.toJson(),
+      'productsData': instance.productsData?.map((e) => e.toJson()).toList(),
       'invoice': instance.invoice?.toJson(),
     };

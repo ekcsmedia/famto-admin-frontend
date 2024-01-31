@@ -22,7 +22,7 @@ class OrderModel {
   RestaurantModel? restaurantDetails;
   AddressModel? pickupAddress;
   AddressModel? deliveryAddress;
-  ProductModel? productsData;
+  List<ProductModel>? productsData;
   InvoiceModel? invoice;
 
 

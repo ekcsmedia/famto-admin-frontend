@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   page = 'Order Management';
                   _registrationController
                       .getDeliveryPersonRegistrationDetailsAll();
-                  _orderController.getOrderDetails();
+                  _orderController.getTaskOrderDetails();
 
                   Navigator.pop(context);
                 });

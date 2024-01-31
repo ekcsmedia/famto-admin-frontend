@@ -73,7 +73,8 @@ class RestaurantManagementController extends GetxController {
       print("success");
       _isDataLoading(false);
       _errorMessage.value = "";
-      _restaurantData.value = data;
+      _restaurantData.value = data.payload;
+      print("restaurant name"); print(data.payload?.restaurantName);
       _restaurantData.refresh();
       getRestaurantDetailsAll();
       print(data.toJson());
@@ -117,6 +118,7 @@ class RestaurantManagementController extends GetxController {
       _isDataLoading(false);
       _errorMessage.value = "";
       _restaurantList.value = data;
+
       _restaurantList.refresh();
       restaurants = data.payload ?? [];
     });

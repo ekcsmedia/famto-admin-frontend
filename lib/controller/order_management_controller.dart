@@ -22,8 +22,11 @@ class OrderController extends GetxController {
   final _orderModel = TaskModel().obs;
   TaskModel get orderModel => _orderModel.value;
 
-  final _orderManageModel = OrderModel().obs;
-  OrderModel get orderManageModel => _orderManageModel.value;
+  final Rx<OrderModel?> _orderManageModel = OrderModel().obs;
+  OrderModel? get orderManageModel => _orderManageModel.value;
+
+  final RxList<OrderModel> _orderManageModelAll = <OrderModel>[].obs;
+  List<OrderModel> get orderManageModelAll => _orderManageModelAll;
 
   final _pickupAddressModel = AddressModel().obs;
   AddressModel get pickupAddressModel => _pickupAddressModel.value;
@@ -167,43 +170,44 @@ class OrderController extends GetxController {
       "invoice" : null,
       "orderStatus" : orderStatus.text,
     };
-
-    print("===========");
-    print(parameters);
-
     var response = await _orderRepository.createOrder(parameters: parameters);
-
     response.fold((failure) {
-      print("FAILED");
       _isDataLoading(false);
       _errorMessage.value = failure.message;
     }, (data) async {
-      print("SUCCESS");
       _isDataLoading(false);
       _errorMessage.value = "";
-      _orderManageModel.value = data;
+      _orderManageModel.value = data.payload;
+      getManageOrderDetails();
     });
   }
 
-  getOrderDetails() async {
+  getManageOrderDetails() async {
     var response = await _orderRepository.getOrdersAll();
     response.fold((failure) {
-      // _isDataLoading(false);
-      // _errorMessage.value = failure.message;
+      print("FAILED GET ORDER ALL");
+      _isDataLoading(false);
+      _errorMessage.value = failure.message;
     }, (data) async {
-      print("-------------");
-      print(data.payload?.length);
-      print("-------------");
-      print(orderModelAll.toString());
-      _orderModelAll.value = data.payload ?? [];
+      _orderManageModelAll.value = data.payload ?? [];
+    });
+  }
+
+  getTaskOrderDetails() async {
+    var response = await _orderRepository.getOrdersAll();
+    response.fold((failure) {
+      _isDataLoading(false);
+      _errorMessage.value = failure.message;
+    }, (data) async {
+      // _orderModelAll.value = data.payload ?? [];
     });
   }
 
   getOrderDetailById(int id) async {
     var response = await _orderRepository.getOrderDetailsByID(id);
     response.fold((failure) {
-      // _isDataLoading(false);
-      // _errorMessage.value = failure.message;
+      _isDataLoading(false);
+      _errorMessage.value = failure.message;
     }, (data) async {
       _orderModel.value = data;
     });
@@ -213,8 +217,8 @@ class OrderController extends GetxController {
     var response =
         await _orderRepository.updateOrderStatus(id: id, status: status);
     response.fold((failure) {
-      // _isDataLoading(false);
-      // _errorMessage.value = failure.message;
+      _isDataLoading(false);
+      _errorMessage.value = failure.message;
     }, (data) async {
       _orderModel.value = data;
     });
@@ -245,8 +249,8 @@ class OrderController extends GetxController {
         deliveryPerson: deliveryPerson,
         deliveryPersonNumber: deliveryPersonNumber);
     response.fold((failure) {
-      // _isDataLoading(false);
-      // _errorMessage.value = failure.message;
+      _isDataLoading(false);
+      _errorMessage.value = failure.message;
     }, (data) async {
       _orderModel.value = data;
     });
