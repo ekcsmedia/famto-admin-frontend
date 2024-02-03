@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart' hide DatePickerTheme;
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:input_quantity/input_quantity.dart';
 
@@ -13,7 +12,7 @@ import '../../model/product_model.dart';
 import '../../model/restaurant_model.dart';
 
 class CreateOrderWidget extends StatefulWidget {
-  CreateOrderWidget({super.key});
+  const CreateOrderWidget({super.key});
 
   @override
   State<CreateOrderWidget> createState() => _CreateOrderWidgetState();
@@ -56,7 +55,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
             scrollDirection: Axis.vertical,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -129,11 +128,11 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                         _dashboardController.setPage("Orders Listing");
                         addCustomer = false;
                       },
-                      icon: Icon(Icons.arrow_back_sharp),
+                      icon: const Icon(Icons.arrow_back_sharp),
                     );
   }
 
-  Text _orderTitleWidget() => Text('Create Order');
+  Text _orderTitleWidget() => const Text('Create Order');
 
   Obx _errorWidget() {
     return Obx(() => Visibility(
@@ -150,7 +149,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                         )));
   }
 
-  SizedBox _sizedBoxShrinkWidget() => SizedBox.shrink();
+  SizedBox _sizedBoxShrinkWidget() => const SizedBox.shrink();
 
   Obx _createOrderButton() {
     return Obx(
@@ -173,7 +172,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                   () => Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      SizedBox(width: 300),
+                      const SizedBox(width: 300),
                       SizedBox(
                         width: 350,
                         height: 150,
@@ -184,8 +183,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                           children: [
                             ListView.builder(
                                 itemCount: _orderController
-                                        .selectedProducts.length ??
-                                    0,
+                                        .selectedProducts.length,
                                 shrinkWrap: true,
                                 itemBuilder:
                                     (BuildContext context, int index) {
@@ -197,7 +195,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                         .toString(),
                                   );
                                 }),
-                            Divider(),
+                            const Divider(),
                             _orderCostDetails(
                               'Sub Total',
                               "Rs.${_orderController.subtotal}",
@@ -227,7 +225,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                           _orderController.subTotal();
                           _orderController.refreshProductList();
                         },
-                        child: Text("Invoices")),
+                        child: const Text("Invoices")),
                   ),
                 );
   }
@@ -236,13 +234,13 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
     return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    SizedBox(width: 300, child: Text('Any Suggestions?')),
+                    const SizedBox(width: 300, child: Text('Any Suggestions?')),
                     SizedBox(
                       width: 600,
                       child: TextField(
                         controller: _orderController.suggestions,
                         maxLines: 3,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           hintText: 'Suggestions',
                         ),
@@ -257,13 +255,13 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                   width: 800,
                   child: ListView.builder(
                       itemCount:
-                          _orderController.selectedProducts.length ?? 0,
+                          _orderController.selectedProducts.length,
                       shrinkWrap: true,
                       itemBuilder: (BuildContext context, int index) {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            SizedBox(width: 300),
+                            const SizedBox(width: 300),
                             SizedBox(
                               width: 350,
                               height: 100,
@@ -283,7 +281,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                         btnColor1: Colors.blue,
                                         btnColor2: Colors.blue,
                                         showMessageLimit: false,
-                                        textFieldDecoration: InputDecoration(
+                                        textFieldDecoration: const InputDecoration(
                                           border: InputBorder.none,
                                         ),
                                         boxDecoration: BoxDecoration(
@@ -310,9 +308,6 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                           _orderController.subTotal();
                                           _orderController
                                               .refreshProductList();
-
-                                          //on value changed we may set the value
-                                          //setstate could be called
                                         },
                                       ),
                                       IconButton(
@@ -320,11 +315,11 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                             _orderController
                                                 .deleteProductFromList(index);
                                           },
-                                          icon: Icon(Icons.delete)),
+                                          icon: const Icon(Icons.delete)),
                                     ],
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(right: 20.0),
+                                    padding: const EdgeInsets.only(right: 20.0),
                                     child: Text(
                                         'Rs.${_orderController.selectedProducts[index].totalPrice ?? 0}'),
                                   ),
@@ -342,7 +337,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                   () => Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      SizedBox(width: 300, child: Text('Search Products')),
+                      const SizedBox(width: 300, child: Text('Search Products')),
                       Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: DropdownMenu<ProductModel>(
@@ -369,7 +364,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                     return DropdownMenuEntry<ProductModel>(
                                       value: product,
                                       label: product.productName ?? "null",
-                                      leadingIcon: Icon(Icons
+                                      leadingIcon: const Icon(Icons
                                           .production_quantity_limits_sharp),
                                     );
                                   },
@@ -385,7 +380,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
     return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    SizedBox(width: 300, child: Text('Select Restaurants')),
+                    const SizedBox(width: 300, child: Text('Select Restaurants')),
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: DropdownMenu<RestaurantModel>(
@@ -416,7 +411,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                     value: restaurant,
                                     label:
                                         restaurant.restaurantName ?? "null",
-                                    leadingIcon: Icon(Icons.restaurant),
+                                    leadingIcon: const Icon(Icons.restaurant),
                                   );
                                 },
                               ).toList(),
@@ -430,7 +425,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
     return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                         width: 300, child: Text('Select Delivery Option')),
                     SizedBox(
                         width: 600,
@@ -441,7 +436,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                             SizedBox(
                               width: 200,
                               child: RadioListTile(
-                                title: Text("On Demand"),
+                                title: const Text("On Demand"),
                                 value: "On Demand",
                                 groupValue: deliveryOption,
                                 onChanged: (value) {
@@ -456,7 +451,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                             SizedBox(
                               width: 200,
                               child: RadioListTile(
-                                title: Text("Scheduling"),
+                                title: const Text("Scheduling"),
                                 value: "Scheduling",
                                 groupValue: deliveryOption,
                                 onChanged: (value) {
@@ -477,7 +472,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
   Column selectDeliveryAddress() {
     return Column(
                         children: [
-                          Row(
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               SizedBox(
@@ -512,7 +507,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 100,
                                               child: Text("Home"),
                                             ),
@@ -528,19 +523,19 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                                   IconButton(
                                                     iconSize: 15,
                                                     onPressed: () {},
-                                                    icon: Icon(Icons.edit),
+                                                    icon: const Icon(Icons.edit),
                                                   ),
                                                   IconButton(
                                                     iconSize: 15,
                                                     onPressed: () {},
-                                                    icon: Icon(Icons.delete),
+                                                    icon: const Icon(Icons.delete),
                                                   ),
                                                 ],
                                               ),
                                             ),
                                           ],
                                         ),
-                                        Row(
+                                        const Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
@@ -564,7 +559,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                           _spacer(),
                           InkWell(
                               onTap: () {},
-                              child: Text(
+                              child: const Text(
                                 "Add Addresses",
                                 style: TextStyle(color: Colors.blue),
                               ))
@@ -577,7 +572,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(width: 300, child: Text('Pickup Details')),
+                          const SizedBox(width: 300, child: Text('Pickup Details')),
                           SizedBox(
                             width: 600,
                             height: 150,
@@ -595,7 +590,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                       child: TextField(
                                         controller:
                                             _orderController.pickupName,
-                                        decoration: InputDecoration(
+                                        decoration: const InputDecoration(
                                           border: OutlineInputBorder(),
                                           hintText: 'Name',
                                         ),
@@ -606,7 +601,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                       child: TextField(
                                         controller:
                                             _orderController.pickupPhone,
-                                        decoration: InputDecoration(
+                                        decoration: const InputDecoration(
                                           border: OutlineInputBorder(),
                                           hintText: 'Phone Number',
                                         ),
@@ -618,7 +613,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                   width: 400,
                                   child: TextField(
                                     controller: _orderController.pickupEmail,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       hintText: 'Email',
                                     ),
@@ -632,7 +627,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
   }
 
   Row pickUpAddress() {
-    return Row(
+    return const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           SizedBox(width: 300, child: Text('Pickup Address')),
@@ -653,7 +648,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
     return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                         width: 300, child: Text('Select Delivery Method')),
                     SizedBox(
                         width: 600,
@@ -664,7 +659,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                             SizedBox(
                               width: 200,
                               child: RadioListTile(
-                                title: Text("Take Away"),
+                                title: const Text("Take Away"),
                                 value: "Take Away",
                                 groupValue: deliveryMethod,
                                 onChanged: (value) {
@@ -679,7 +674,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                             SizedBox(
                               width: 200,
                               child: RadioListTile(
-                                title: Text("Home Delivery"),
+                                title: const Text("Home Delivery"),
                                 value: "Home Delivery",
                                 groupValue: deliveryMethod,
                                 onChanged: (value) {
@@ -695,7 +690,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                             SizedBox(
                               width: 200,
                               child: RadioListTile(
-                                title: Text("Pick and Drop"),
+                                title: const Text("Pick and Drop"),
                                 value: "Pick and Drop",
                                 groupValue: deliveryMethod,
                                 onChanged: (value) {
@@ -718,7 +713,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(width: 300, child: Text('Add Customer')),
+                          const SizedBox(width: 300, child: Text('Add Customer')),
                           _spacer(),
                           Obx(
                             () => SizedBox(
@@ -732,7 +727,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                   SizedBox(
                                     width: 400,
                                     child: TextField(
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                         border: OutlineInputBorder(),
                                         hintText: 'Name',
                                       ),
@@ -743,7 +738,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                   SizedBox(
                                     width: 400,
                                     child: TextField(
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                         border: OutlineInputBorder(),
                                         hintText: 'Email',
                                       ),
@@ -754,7 +749,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                   SizedBox(
                                     width: 400,
                                     child: TextField(
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                         border: OutlineInputBorder(),
                                         hintText: 'Password',
                                       ),
@@ -765,7 +760,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                   SizedBox(
                                     width: 400,
                                     child: TextField(
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                         border: OutlineInputBorder(),
                                         hintText: 'Phone Number',
                                       ),
@@ -785,13 +780,13 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                               addCustomer = false;
                                             });
                                           },
-                                          child: Text("Add Customer")),
+                                          child: const Text("Add Customer")),
                                       ElevatedButton(
                                           onPressed: () {
                                             addCustomer = false;
                                             setState(() {});
                                           },
-                                          child: Text("Cancel")),
+                                          child: const Text("Cancel")),
                                     ],
                                   ),
                                 ],
@@ -807,10 +802,10 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                         () => Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                                 width: 300, child: Text('Select Customer')),
                             _customerController.isDataLoading
-                                ? CircularProgressIndicator()
+                                ? const CircularProgressIndicator()
                                 : Padding(
                                     padding: const EdgeInsets.all(20.0),
                                     child: DropdownMenu<CustomerModel>(
@@ -825,7 +820,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                             _orderController
                                                 .clearCustomerSearchInput();
                                           },
-                                          icon: Icon(Icons.clear)),
+                                          icon: const Icon(Icons.clear)),
                                       inputDecorationTheme:
                                           const InputDecorationTheme(
                                         filled: true,
@@ -851,26 +846,26 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                                                   value: customer,
                                                   label:
                                                       "${customer.name ?? ""}, ${customer.phone ?? ""}",
-                                                  leadingIcon: Icon(
+                                                  leadingIcon: const Icon(
                                                       Icons.person_add_sharp),
                                                 );
                                               },
                                             ).toList(),
                                     ),
                                   ),
-                            SizedBox(width: 20),
+                            const SizedBox(width: 20),
                             IconButton(
                                 onPressed: () {
                                   _customerController.getCustomerDataAll();
                                   setState(() {});
                                 },
-                                icon: Icon(Icons.refresh)),
+                                icon: const Icon(Icons.refresh)),
                             ElevatedButton(
                                 onPressed: () {
                                   addCustomer = true;
                                   setState(() {});
                                 },
-                                child: Text("Add")),
+                                child: const Text("Add")),
                           ],
                         ),
                       );
@@ -878,7 +873,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
 }
 
 SizedBox _spacer() {
-  return SizedBox(
+  return const SizedBox(
     height: 20,
   );
 }
