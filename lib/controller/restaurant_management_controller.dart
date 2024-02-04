@@ -105,6 +105,8 @@ class RestaurantManagementController extends GetxController {
       print(data);
       _isDataLoading(false);
       _errorMessage.value = "";
+      getRestaurantDetailsAll();
+      _restaurantList.refresh();
     });
   }
 

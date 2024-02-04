@@ -159,6 +159,7 @@ class _CreateOrderWidgetState extends State<CreateOrderWidget> {
                       child: ElevatedButton(
                           onPressed: () {
                             _orderController.createOrder();
+                            _dashboardController.setPage("Orders Listing");
                           },
                           child: Text(
                               "Create Order - Rs.${_orderController.subtotal * 2.05}")),

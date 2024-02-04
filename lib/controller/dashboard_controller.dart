@@ -8,9 +8,10 @@ class DashboardController extends GetxController {
   final Rx<String> _pageSelected = "Home".obs;
 
   setPage(value) {
-    _pageSelected?.value = value;
+    _pageSelected.value = value;
+    _pageSelected.refresh();
   }
 
- String? get pageSelected => _pageSelected?.value;
+ String? get pageSelected => _pageSelected.value;
 
 }

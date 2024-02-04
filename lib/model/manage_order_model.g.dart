@@ -37,6 +37,21 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
       invoice: json['invoice'] == null
           ? null
           : InvoiceModel.fromJson(json['invoice'] as Map<String, dynamic>),
+      deliveryAgentData: json['deliveryAgentData'] == null
+          ? null
+          : DeliveryPersonRegistration.fromJson(
+              json['deliveryAgentData'] as Map<String, dynamic>),
+      orderTime: json['orderTime'] == null
+          ? null
+          : DateTime.parse(json['orderTime'] as String),
+      scheduledDeliveryTime: json['scheduledDeliveryTime'] == null
+          ? null
+          : DateTime.parse(json['scheduledDeliveryTime'] as String),
+      paymentMode: json['paymentMode'] as String?,
+      paymentStatus: json['paymentStatus'] as String?,
+      rating: json['rating'] as String?,
+      orderPreparationTime: json['orderPreparationTime'] as String?,
+      deviceType: json['deviceType'] as String?,
     );
 
 Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
@@ -54,5 +69,14 @@ Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
       'pickupAddress': instance.pickupAddress?.toJson(),
       'deliveryAddress': instance.deliveryAddress?.toJson(),
       'productsData': instance.productsData?.map((e) => e.toJson()).toList(),
+      'deliveryAgentData': instance.deliveryAgentData?.toJson(),
       'invoice': instance.invoice?.toJson(),
+      'orderTime': instance.orderTime?.toIso8601String(),
+      'scheduledDeliveryTime':
+          instance.scheduledDeliveryTime?.toIso8601String(),
+      'paymentMode': instance.paymentMode,
+      'paymentStatus': instance.paymentStatus,
+      'rating': instance.rating,
+      'orderPreparationTime': instance.orderPreparationTime,
+      'deviceType': instance.deviceType,
     };

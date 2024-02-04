@@ -14,27 +14,26 @@ class CustomerDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() => Flexible(
         flex: 4,
-        child: _customerController.isDataLoading ? Center(
-          child: CircularProgressIndicator(),
+        child:  _customerController.isDataLoading ? Center(
+            child:CircularProgressIndicator(),
         ) : SingleChildScrollView(
 
-          child: Container(
-              child: Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _header(),
-              _dataSet1(),
-              _dataSet2(),
-              _divider(),
-              _version(),
-              _divider(),
-              _tags(),
-              _divider(),
-              _ratings(),
-              _divider(),
-              _orderDetailsWidget(context),
+          _header(),
+          _dataSet1(),
+          _dataSet2(),
+          _divider(),
+          _version(),
+          _divider(),
+          _tags(),
+          _divider(),
+          _ratings(),
+          _divider(),
+          _orderDetailsWidget(context),
             ],
-          )),
+          ),
         )));
   }
 

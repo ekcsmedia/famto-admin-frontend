@@ -29,84 +29,87 @@ class _RestaurantListingState extends State<RestaurantListing> {
   Widget build(BuildContext context) {
     return Flexible(
         flex: 4,
-        child: Obx (() => Container(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(width: 200, child: Text('Restaurants')),
-                ],
-              ),
-            ),
-            Row(
+        child: Obx (() => _restaurantController.isDataLoading ? Center(
+          child:CircularProgressIndicator(),
+        ) : SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(
-                  child: Center(
-                    child: SizedBox(
-                      width: 400,
-                      child: TextField(
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Search Records'),
-                        onChanged: (value) {
-                          _restaurantController.getRestaurantDetailsByNameSearch(value);
-                        },
-                      ),
+                SizedBox(width: 200, child: Text('Restaurants')),
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: Center(
+                  child: SizedBox(
+                    width: 400,
+                    child: TextField(
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: 'Search Records'),
+                      onChanged: (value) {
+                        _restaurantController.getRestaurantDetailsByNameSearch(value);
+                      },
                     ),
                   ),
                 ),
-                _addRestaurant(context),
-              ],
-            ),
-            _restaurantController.isDataLoading ? Center( child: CircularProgressIndicator()) :Obx(() => Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Scrollbar(
-                thumbVisibility: true,
-                controller: scrollController2,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  controller: scrollController2,
-                  child: DataTable(
-                      border: TableBorder.all(color: Colors.blue),
-                      headingRowColor:
-                          MaterialStateProperty.resolveWith<Color?>(
-                              (Set<MaterialState> states) {
-                        return Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withOpacity(0.30);
-                      }),
-                      columns: [
-                        DataColumn(label: Text('StoreId')),
-                        DataColumn(label: Text('Restaurant Name')),
-                        DataColumn(label: Text('Address')),
-                        DataColumn(
-                          label: Text('Phone'),
-                        ),
-                        DataColumn(label: Text('Email')),
-                        DataColumn(
-                          label: Text("Rating"),
-                          onSort: (columnIndex, ascending) {},
-                        ),
-                        DataColumn(label: Text('Serviceable')),
-                        DataColumn(
-                          label: Text('Status'),
-                        ),
-                        DataColumn(label: Text('Stripe Account Status')),
-                        DataColumn(label: Text('City')),
-                        DataColumn(label: Text('Action')),
-                      ],
-                      rows: _rowList()),
-                ),
               ),
-            )),
-          ],
-        ))));
+              _addRestaurant(context),
+            ],
+          ),
+          _restaurantController.isDataLoading ? Center( child: CircularProgressIndicator()) :Obx(() => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Scrollbar(
+              thumbVisibility: true,
+              controller: scrollController2,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                controller: scrollController2,
+                child: DataTable(
+                    border: TableBorder.all(color: Colors.blue),
+                    headingRowColor:
+                        MaterialStateProperty.resolveWith<Color?>(
+                            (Set<MaterialState> states) {
+                      return Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.30);
+                    }),
+                    columns: [
+                      DataColumn(label: Text('StoreId')),
+                      DataColumn(label: Text('Restaurant Name')),
+                      DataColumn(label: Text('Address')),
+                      DataColumn(
+                        label: Text('Phone'),
+                      ),
+                      DataColumn(label: Text('Email')),
+                      DataColumn(
+                        label: Text("Rating"),
+                        onSort: (columnIndex, ascending) {},
+                      ),
+                      DataColumn(label: Text('Serviceable')),
+                      DataColumn(
+                        label: Text('Status'),
+                      ),
+                      DataColumn(label: Text('Stripe Account Status')),
+                      DataColumn(label: Text('City')),
+                      DataColumn(label: Text('Action')),
+                    ],
+                    rows: _rowList()),
+              ),
+            ),
+          )),
+            ],
+          ),
+        )));
   }
 
   List<DataRow> _rowList() {
@@ -146,10 +149,27 @@ class _RestaurantListingState extends State<RestaurantListing> {
         DataCell(Text(_restaurantController.restaurantList.payload![i].city
             .toString() ??
             "")),
-        DataCell(IconButton(
-          icon: Icon(Icons.more_horiz),
-          onPressed: () {},
-        )),
+        DataCell(
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    int? id = _restaurantController.restaurantList.payload?[i].restaurantId ?? 0;
+                    _restaurantController.deleteRestaurant(id);
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.more_horiz),
+                  onPressed: () {},
+                )
+              ],
+            ),
+            ),
       ]);
       _dataRow.add(dataRow);
     }

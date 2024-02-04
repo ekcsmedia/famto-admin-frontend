@@ -44,6 +44,7 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
   void initState() {
     _customerController.getCustomerDataAll();
     _restaurantManagementController.getRestaurantDetailsAll();
+    _orderController.getManageOrderDetails();
     // TODO: implement initState
     super.initState();
   }
@@ -161,162 +162,99 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                     )
                   ],
                 ),
-                // child: Column(children: [
-                // InkWell(
-                //   onTap: () {},
-                //   child: ListTile(
-                //     leading: Icon(Icons.home),
-                //     title: Text('Home'),
-                //   ),
-                // ),
-                // InkWell(F
-                //   onTap: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => const Placeholder()),
-                //     );
-                //   },
-                //   child: ListTile(
-                //     leading: Icon(Icons.list),
-                //     title: Text('Orders'),
-                //   ),
-                // ),
-                // InkWell(
-                //   onTap: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => const Placeholder()),
-                //     );
-                //   },
-                //   child: ListTile(
-                //     leading: Icon(Icons.restaurant),
-                //     title: Text('Restaurants'),
-                //   ),
-                // ),
-                // InkWell(
-                //   onTap: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => const Placeholder()),
-                //     );
-                //   },
-                //   child: ListTile(
-                //     leading: Icon(Icons.shopping_bag),
-                //     title: Text('Products'),
-                //   ),
-                // ),
-                // InkWell(
-                //   onTap: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //           builder: (context) => const Placeholder()),
-                //     );
-                //   },
-                //   child: ListTile(
-                //     leading: Icon(Icons.shopping_bag),
-                //     title: Text('Customers'),
-                //   ),
-                // )
-                // ]
-                // ),
               ),
             ),
             _dashboardController.pageSelected == "Orders Listing"
                 ? Flexible(
                     flex: 4,
-                    child: Container(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text('Order Status'),
-                              _createOrderButton(),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Scrollbar(
-                            thumbVisibility: true,
-                            controller: scrollController3,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              controller: scrollController3,
-                              child: DataTable(
-                                  border: TableBorder.all(color: Colors.blue),
-                                  headingRowColor:
-                                      MaterialStateProperty.resolveWith<Color?>(
-                                          (Set<MaterialState> states) {
-                                    return Theme.of(context)
-                                        .colorScheme
-                                        .primary
-                                        .withOpacity(0.30);
-                                  }),
-                                  columns: [
-                                    DataColumn(label: Text('Order ID')),
-                                    DataColumn(label: Text('Order Status')),
-                                    DataColumn(label: Text('Restaurant')),
-                                    DataColumn(
-                                      label: Text('Customer'),
+                    child: _orderController.isDataLoading
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text('Order Status'),
+                                      _createOrderButton(),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Scrollbar(
+                                    thumbVisibility: true,
+                                    controller: scrollController3,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      controller: scrollController3,
+                                      child: DataTable(
+                                          border: TableBorder.all(
+                                              color: Colors.blue),
+                                          headingRowColor: MaterialStateProperty
+                                              .resolveWith<Color?>(
+                                                  (Set<MaterialState> states) {
+                                            return Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                                .withOpacity(0.30);
+                                          }),
+                                          columns: [
+                                            DataColumn(label: Text('Order ID')),
+                                            DataColumn(
+                                                label: Text('Order Status')),
+                                            DataColumn(
+                                                label: Text('Restaurant')),
+                                            DataColumn(
+                                              label: Text('Customer'),
+                                            ),
+                                            DataColumn(
+                                                label: Text('Delivery Mode')),
+                                            DataColumn(
+                                                label: Text('Delivery Agent')),
+                                            DataColumn(
+                                              label: Text('Order Time'),
+                                              onSort:
+                                                  (columnIndex, ascending) {},
+                                            ),
+                                            DataColumn(
+                                                label: Text(
+                                                    'Scheduled Delivery Time')),
+                                            DataColumn(
+                                              label: Text('Payment Mode'),
+                                            ),
+                                            DataColumn(label: Text('Address')),
+                                            DataColumn(label: Text('Amount')),
+                                            DataColumn(
+                                              label: Text('Payment Status '),
+                                            ),
+                                            DataColumn(
+                                              label: Text('Rating '),
+                                            ),
+                                            DataColumn(
+                                              label: Text(
+                                                  'Order Preparation Time'),
+                                            ),
+                                            DataColumn(
+                                              label: Text('Device Type '),
+                                            ),
+                                            DataColumn(
+                                              label: Text('Actions'),
+                                            ),
+                                          ],
+                                          rows: _rowList()),
                                     ),
-                                    DataColumn(label: Text('Delivery Mode')),
-                                    DataColumn(label: Text('Delivery Agent')),
-                                    DataColumn(
-                                      label: Text('Order Time'),
-                                      onSort: (columnIndex, ascending) {},
-                                    ),
-                                    DataColumn(
-                                        label: Text('Scheduled Delivery Time')),
-                                    DataColumn(
-                                      label: Text('Payment Mode'),
-                                    ),
-                                    DataColumn(label: Text('Address')),
-                                    DataColumn(label: Text('Amount')),
-                                    DataColumn(
-                                      label: Text('Payment Status '),
-                                    ),
-                                    DataColumn(
-                                      label: Text('Rating '),
-                                    ),
-                                    DataColumn(
-                                      label: Text('Order Preparation Time'),
-                                    ),
-                                    DataColumn(
-                                      label: Text('Device Type '),
-                                    ),
-                                  ],
-                                  rows: [
-                                    DataRow(cells: [
-                                      DataCell(Text("12345")),
-                                      DataCell(Text("Completed")),
-                                      DataCell(Text("Restaurant")),
-                                      DataCell(Text("Ruban")),
-                                      DataCell(Text("Take Away")),
-                                      DataCell(Text("Agent Name")),
-                                      DataCell(Text("July 04 2023")),
-                                      DataCell(Text("July 04 2023")),
-                                      DataCell(Text("Cash")),
-                                      DataCell(Text("address: abc, xyz")),
-                                      DataCell(Text("Rs.110")),
-                                      DataCell(Text("-")),
-                                      DataCell(Text("-")),
-                                      DataCell(Text("5 min")),
-                                      DataCell(Text("Web")),
-                                    ])
-                                  ]),
+                                  ),
+                                )
+                              ],
                             ),
-                          ),
-                        )
-                      ],
-                    )))
+                          ))
                 : _dashboardController.pageSelected == "Create Order"
                     ? CreateOrderWidget()
                     : _dashboardController.pageSelected == "customer listing"
@@ -336,6 +274,81 @@ class _AdminDashBoardHomeState extends State<AdminDashBoardHome> {
                                             flex: 4, child: SizedBox.shrink())
           ]),
         ));
+  }
+
+  List<DataRow> _rowList() {
+    List<DataRow> _dataRow = [];
+    for (int i = 0; i < _orderController.orderManageModelAll!.length; i++) {
+      DataRow dataRow = DataRow(cells: [
+        DataCell(InkWell(
+          child:
+              Text(_orderController.orderManageModelAll[i].orderId.toString()),
+          onTap: () {
+            // int id = _restaurantController.restaurantList!.payload![i].restaurantId ?? 0;
+            // _dashboardController.setPage("restaurant details");
+            // _restaurantController.getRestaurantById(id);
+          },
+        )),
+        DataCell(
+            Text(_orderController.orderManageModelAll[i].orderStatus ?? "")),
+        DataCell(Text(_orderController
+                .orderManageModelAll[i].restaurantDetails?.restaurantName ??
+            "")),
+        DataCell(Text(
+            _orderController.orderManageModelAll[i].customerData?.name ?? "")),
+        DataCell(Text(
+            _orderController.orderManageModelAll[i].deliveryMethod.toString() ??
+                "")),
+        DataCell(Text(_orderController
+                .orderManageModelAll[i].deliveryAgentData?.firstName
+                .toString() ??
+            "")),
+        DataCell(Text(
+            _orderController.orderManageModelAll[i].orderTime.toString() ??
+                "")),
+        DataCell(Text(_orderController
+            .orderManageModelAll[i].scheduledDeliveryTime
+            .toString())),
+        DataCell(Text(
+            _orderController.orderManageModelAll[i].paymentMode.toString() ??
+                "")),
+        DataCell(Text(_orderController.orderManageModelAll[i].deliveryAddress
+                .toString() ??
+            "")),
+        DataCell(Text(
+            _orderController.orderManageModelAll[i].invoice?.total.toString() ??
+                "")),
+        DataCell(Text(
+            _orderController.orderManageModelAll[i].paymentStatus.toString() ??
+                "")),
+        DataCell(Text(
+            _orderController.orderManageModelAll[i].rating.toString() ?? "")),
+        DataCell(Text(_orderController
+                .orderManageModelAll[i].orderPreparationTime
+                .toString() ??
+            "")),
+        DataCell(Text(
+            _orderController.orderManageModelAll[i].deviceType.toString() ??
+                "")),
+        DataCell(Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                int? id = _orderController.orderManageModelAll[i].orderId ?? 0;
+                _orderController.deleteOrderManagementById(id);
+              },
+            ),
+          ],
+        )),
+      ]);
+      _dataRow.add(dataRow);
+    }
+    return _dataRow;
   }
 
   Row _orderCostDetails(text1, text2) {

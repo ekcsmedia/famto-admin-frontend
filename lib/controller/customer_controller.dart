@@ -86,6 +86,20 @@ class CustomerController extends GetxController {
     });
   }
 
+  deleteCustomerById(int id) async {
+    _isDataLoading(true);
+    var response = await _customerRepository.deleteCustomerById(id);
+    response.fold((failure) {
+      _isDataLoading(false);
+      _errorMessage.value = failure.message;
+    }, (data) async {
+      _isDataLoading(false);
+      _errorMessage.value = "";
+      getCustomerDataAll();
+      _customerList.refresh();
+    });
+  }
+
   deleteDeliveryCategory(int id) async {
     _isDataLoading(true);
     var response = await _customerRepository.deleteCustomer(id);

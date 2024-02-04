@@ -67,24 +67,22 @@ class _RestaurantDetailsWidgetState extends State<RestaurantDetailsWidget> {
       flex: 4,
       child: SingleChildScrollView(
         child: Obx(
-          () => Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _header(),
-                _dataSet1(),
-                _dataSet2(),
-                _dataSet3(),
-                _dataSet4(),
-                _divider(),
-                _servingArea(),
-                _divider(),
-                _sponsorship(),
-                _divider(),
-                _tags(),
-                _divider(),
-              ],
-            ),
+          () => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _header(),
+              _dataSet1(),
+              _dataSet2(),
+              _dataSet3(),
+              _dataSet4(),
+              _divider(),
+              _servingArea(),
+              _divider(),
+              _sponsorship(),
+              _divider(),
+              _tags(),
+              _divider(),
+            ],
           ),
         ),
       ),

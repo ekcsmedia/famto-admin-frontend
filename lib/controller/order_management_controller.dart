@@ -13,11 +13,11 @@ import '../repository/order_management_repository.dart';
 class OrderController extends GetxController {
   final OrderRepository _orderRepository = OrderRepository();
 
-  final RxBool _isDataLoading =  false.obs;
-  bool get isDataLoading  => _isDataLoading.value;
+  final RxBool _isDataLoading = false.obs;
+  bool get isDataLoading => _isDataLoading.value;
 
   final RxString _errorMessage = "".obs;
-  String get errorMessage  => _errorMessage.value;
+  String get errorMessage => _errorMessage.value;
 
   final _orderModel = TaskModel().obs;
   TaskModel get orderModel => _orderModel.value;
@@ -30,11 +30,11 @@ class OrderController extends GetxController {
 
   final _pickupAddressModel = AddressModel().obs;
   AddressModel get pickupAddressModel => _pickupAddressModel.value;
-  setPickUpAddress(value) => _pickupAddressModel.value =value;
+  setPickUpAddress(value) => _pickupAddressModel.value = value;
 
   final _deliveryAddressModel = AddressModel().obs;
   AddressModel get deliveryAddressModel => _deliveryAddressModel.value;
-  setDeliveryAddress(value) => _deliveryAddressModel.value =value;
+  setDeliveryAddress(value) => _deliveryAddressModel.value = value;
 
   final _customerModel = CustomerModel().obs;
   get customerModel => _customerModel;
@@ -52,37 +52,45 @@ class OrderController extends GetxController {
   get invoiceModel => _invoiceModel;
   setInvoice(value) => _invoiceModel.value = value;
 
-
-
-  final Rx<TextEditingController> _deliveryMethod = TextEditingController(text: "").obs;
+  final Rx<TextEditingController> _deliveryMethod =
+      TextEditingController(text: "").obs;
   TextEditingController get deliveryMethod => _deliveryMethod.value;
   setDeliveryMethod(value) {
     _deliveryMethod.value.text = value ?? "";
   }
-  final Rx<TextEditingController> _pickupName = TextEditingController(text: "").obs;
+
+  final Rx<TextEditingController> _pickupName =
+      TextEditingController(text: "").obs;
   TextEditingController get pickupName => _pickupName.value;
 
-  final Rx<TextEditingController> _pickupPhone = TextEditingController(text: "").obs;
+  final Rx<TextEditingController> _pickupPhone =
+      TextEditingController(text: "").obs;
   TextEditingController get pickupPhone => _pickupPhone.value;
 
-  final Rx<TextEditingController> _pickupEmail = TextEditingController(text: "").obs;
+  final Rx<TextEditingController> _pickupEmail =
+      TextEditingController(text: "").obs;
   TextEditingController get pickupEmail => _pickupEmail.value;
 
-  final Rx<TextEditingController> _orderStatus = TextEditingController(text: "Order Placed").obs;
+  final Rx<TextEditingController> _orderStatus =
+      TextEditingController(text: "Order Placed").obs;
   TextEditingController get orderStatus => _orderStatus.value;
 
-  final Rx<TextEditingController> _suggestions = TextEditingController(text: "").obs;
+  final Rx<TextEditingController> _suggestions =
+      TextEditingController(text: "").obs;
   TextEditingController get suggestions => _suggestions.value;
 
-  final Rx<TextEditingController> _deliveryOption = TextEditingController(text: "").obs;
+  final Rx<TextEditingController> _deliveryOption =
+      TextEditingController(text: "").obs;
   TextEditingController get deliveryOption => _deliveryOption.value;
   setDeliveryOption(value) {
     _deliveryOption.value.text = value ?? "";
   }
-  final Rx<TextEditingController> _filterCustomerData = TextEditingController(text: "").obs;
+
+  final Rx<TextEditingController> _filterCustomerData =
+      TextEditingController(text: "").obs;
   TextEditingController get filterCustomerData => _filterCustomerData.value;
 
-  clearCustomerSearchInput(){
+  clearCustomerSearchInput() {
     _filterCustomerData.value.clear();
     _filterCustomerData.refresh();
   }
@@ -92,18 +100,17 @@ class OrderController extends GetxController {
   //   _filterCustomerData.refresh();
   // }
 
-
   final RxList<TaskModel> _orderModelAll = <TaskModel>[].obs;
   List<TaskModel> get orderModelAll => _orderModelAll;
 
   final Rx<CustomerModel> _selectedCustomer = CustomerModel().obs;
-  CustomerModel get selectedCustomer  => _selectedCustomer.value;
+  CustomerModel get selectedCustomer => _selectedCustomer.value;
   setCustomer(value) {
     _selectedCustomer.value = value;
   }
 
   final Rx<RestaurantModel> _selectedRestaurant = RestaurantModel().obs;
-  RestaurantModel get selectedRestaurant  => _selectedRestaurant.value;
+  RestaurantModel get selectedRestaurant => _selectedRestaurant.value;
 
   setRestaurant(value) {
     _selectedRestaurant.value = value;
@@ -111,9 +118,8 @@ class OrderController extends GetxController {
     _selectedProducts.refresh();
   }
 
-
   final RxList<ProductModel> _selectedProducts = <ProductModel>[].obs;
-  List<ProductModel> get selectedProducts  => _selectedProducts.value;
+  List<ProductModel> get selectedProducts => _selectedProducts.value;
 
   setProductList(value) {
     _selectedProducts.add(value);
@@ -124,8 +130,8 @@ class OrderController extends GetxController {
     _selectedProducts.refresh();
   }
 
-  totalProductCostCalculation(num cost, int qty){
-    num total = cost * qty ;
+  totalProductCostCalculation(num cost, int qty) {
+    num total = cost * qty;
     return total;
   }
 
@@ -134,8 +140,8 @@ class OrderController extends GetxController {
 
   subTotal() {
     double subTotal = 0;
-    for(int i=0; i< _selectedProducts.length; i++) {
-      if(_selectedProducts[i].totalPrice != null ) {
+    for (int i = 0; i < _selectedProducts.length; i++) {
+      if (_selectedProducts[i].totalPrice != null) {
         subTotal = subTotal + _selectedProducts[i].totalPrice!;
       }
     }
@@ -143,12 +149,10 @@ class OrderController extends GetxController {
     return subTotal;
   }
 
-  deleteProductFromList(index){
+  deleteProductFromList(index) {
     _selectedProducts.removeAt(index);
     _selectedProducts.refresh();
   }
-
-
 
   createOrder() async {
     _isDataLoading(true);
@@ -156,19 +160,19 @@ class OrderController extends GetxController {
     var parameters = {};
 
     parameters = {
-      "customerData" : selectedCustomer,
-      "deliveryMethod" : deliveryMethod.text,
-      "pickupName" : pickupName.text,
-      "pickupPhone" : pickupPhone.text,
-      "pickupEmail" : pickupEmail.text,
-      "deliveryOption" : deliveryOption.text,
-      "suggestions" : suggestions.text,
-      "restaurantDetails" : selectedRestaurant,
-      "pickupAddress" : null,
-      "deliveryAddress" : null,
-      "productsData" : selectedProducts,
-      "invoice" : null,
-      "orderStatus" : orderStatus.text,
+      "customerData": selectedCustomer,
+      "deliveryMethod": deliveryMethod.text,
+      "pickupName": pickupName.text,
+      "pickupPhone": pickupPhone.text,
+      "pickupEmail": pickupEmail.text,
+      "deliveryOption": deliveryOption.text,
+      "suggestions": suggestions.text,
+      "restaurantDetails": selectedRestaurant,
+      "pickupAddress": null,
+      "deliveryAddress": null,
+      "productsData": selectedProducts,
+      "invoice": null,
+      "orderStatus": orderStatus.text,
     };
     var response = await _orderRepository.createOrder(parameters: parameters);
     response.fold((failure) {
@@ -210,6 +214,18 @@ class OrderController extends GetxController {
       _errorMessage.value = failure.message;
     }, (data) async {
       _orderModel.value = data;
+    });
+  }
+
+  deleteOrderManagementById(int id) async {
+    var response = await _orderRepository.deleteOrderManagementById(id: id);
+    response.fold((failure) {
+      _isDataLoading(false);
+      _errorMessage.value = failure.message;
+    }, (data) async {
+      print("Deleted Successfully");
+      getManageOrderDetails();
+      _orderManageModelAll.refresh();
     });
   }
 
@@ -263,6 +279,8 @@ class OrderController extends GetxController {
       // _errorMessage.value = failure.message;
     }, (data) async {
       print(data);
+      getManageOrderDetails();
+      _orderManageModelAll.refresh();
     });
   }
 }

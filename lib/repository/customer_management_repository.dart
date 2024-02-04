@@ -46,6 +46,25 @@ class CustomerManagementRepository {
     }
   }
 
+  Future<Either<Failure, String>> deleteCustomerById(
+      int id) async {
+    try {
+      var jsonResponse = await _apiManager.delete(
+        "https://65sj3flif7.execute-api.ap-south-1.amazonaws.com/v1/customers/$id",
+        id,
+        isTokenMandatory: false,
+      );
+
+      var response = jsonResponse.toString();
+      return right(response);
+    } on AppException catch (error) {
+      return left(ApiFailure(message: error.message));
+    } catch (error) {
+      return left(ApiFailure(message: error.toString()));
+    }
+  }
+
+
   Future<Either<Failure, CustomerAll>>
   getCustomerDetailsAll() async {
     try {

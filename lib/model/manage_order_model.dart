@@ -4,6 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'address_model.dart';
 import 'customer_model.dart';
+import 'delivery_person_registration_model.dart';
 import 'invoice_model.dart';
 
 part 'manage_order_model.g.dart';
@@ -23,8 +24,15 @@ class OrderModel {
   AddressModel? pickupAddress;
   AddressModel? deliveryAddress;
   List<ProductModel>? productsData;
+  DeliveryPersonRegistration? deliveryAgentData;
   InvoiceModel? invoice;
-
+  DateTime? orderTime;
+  DateTime? scheduledDeliveryTime;
+  String? paymentMode;
+  String? paymentStatus;
+  String? rating;
+  String? orderPreparationTime;
+  String? deviceType;
 
   OrderModel(
       {this.orderId,
@@ -40,7 +48,15 @@ class OrderModel {
       this.restaurantDetails,
       this.productsData,
       this.suggestions,
-      this.invoice});
+      this.invoice,
+      this.deliveryAgentData,
+      this.orderTime,
+      this.scheduledDeliveryTime,
+      this.paymentMode,
+      this.paymentStatus,
+      this.rating,
+      this.orderPreparationTime,
+      this.deviceType});
 
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
       _$OrderModelFromJson(json);

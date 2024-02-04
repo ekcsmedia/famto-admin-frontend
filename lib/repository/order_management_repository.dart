@@ -66,6 +66,21 @@ class OrderRepository {
     }
   }
 
+  Future<Either<Failure, String?>> deleteOrderManagementById({int? id}) async {
+    try {
+      var jsonResponse = await _apiManager.delete(
+        "https://6qg7wh8nga.execute-api.ap-south-1.amazonaws.com/v1/order-management/$id",
+        id,
+        isTokenMandatory: false,
+      );
+      var response = jsonResponse.toString();
+      return right(response);
+    } on AppException catch (error) {
+      return left(ApiFailure(message: error.message));
+    } catch (error) {
+      return left(ApiFailure(message: error.toString()));
+    }
+  }
 
 
   Future<Either<Failure, TaskModel>> updateOrderByID(
